@@ -394,7 +394,7 @@ app.delete('/api/products/:id/image', authMiddleware, adminOnly, (req, res) => {
 });
 
 app.delete('/api/products/:id', authMiddleware, adminOnly, (req, res) => {
-  db.prepare('UPDATE products SET is_active=0 WHERE id=?').run(req.params.id);
+  db.prepare('DELETE FROM products WHERE id=?').run(req.params.id);
   res.json({ success: true });
 });
 
