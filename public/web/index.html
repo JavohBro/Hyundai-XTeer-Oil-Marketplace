@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyundai Xteer Oil — оригинальное масло из Кореи</title>
+<meta name="description" content="Оригинальные моторные масла Hyundai Xteer из Южной Кореи. Доставка по Узбекистану и странам СНГ.">
+<link rel="icon" href="/assets/LOGO_2.png">
+<link rel="stylesheet" href="web.css">
+</head>
+<body>
+
+<header id="hdr">
+  <div class="hdr-inner">
+    <a class="brand" href="#/" aria-label="Hyundai Xteer Oil — на главную">
+      <img src="/assets/logo.png" alt="Hyundai Xteer Oil" onerror="this.style.display='none'">
+    </a>
+
+    <nav class="hdr-nav" id="hdr-nav">
+      <a href="#/" data-route="catalog">Каталог</a>
+      <a href="#/orders" data-route="orders">Заказы</a>
+      <a href="#/help" data-route="help">Помощь</a>
+      <a href="#/admin" data-route="admin" id="nav-admin" hidden>Админ</a>
+    </nav>
+
+    <div class="hdr-actions">
+      <button class="icon-action" id="btn-cart" aria-label="Корзина">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-count hidden" id="cart-count">0</span>
+      </button>
+      <div id="auth-slot"></div>
+      <button class="icon-action mobile-only" id="btn-menu" aria-label="Меню">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<footer id="ftr">
+  <div class="ftr-inner">
+    <div>
+      <div class="ftr-brand">Hyundai Xteer <b>Oil</b></div>
+      <p class="ftr-note">Оригинальные масла из Южной Кореи.<br>Доставка по Узбекистану и СНГ.</p>
+    </div>
+    <div>
+      <div class="ftr-h">Контакты</div>
+      <a href="https://t.me/r1m_nightrider" target="_blank" rel="noopener">Telegram — @r1m_nightrider</a>
+      <a href="tel:+821037682270">+82 10 3768 2270</a>
+    </div>
+    <div>
+      <div class="ftr-h">Разделы</div>
+      <a href="#/">Каталог</a>
+      <a href="#/orders">Мои заказы</a>
+      <a href="#/help">Помощь</a>
+    </div>
+  </div>
+  <div class="ftr-base">© <span id="yr"></span> Hyundai Xteer Oil</div>
+</footer>
+
+<!-- Cart drawer -->
+<div class="scrim hidden" id="scrim"></div>
+<aside class="drawer hidden" id="drawer" aria-label="Корзина">
+  <div class="drawer-head">
+    <h2 id="drawer-title">Корзина</h2>
+    <button class="icon-action" id="drawer-close" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-foot" id="drawer-foot"></div>
+</aside>
+
+<!-- Modal -->
+<div class="modal hidden" id="modal">
+  <div class="modal-card" id="modal-card"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="web.js"></script>
+</body>
+</html>

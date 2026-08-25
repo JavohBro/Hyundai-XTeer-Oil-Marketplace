@@ -1,0 +1,23 @@
+# Caddy obtains and renews a Let's Encrypt certificate automatically.
+# Replace the hostname with your DuckDNS subdomain (or real domain later).
+
+xteeroil.duckdns.org {
+	encode gzip
+
+	# Uploaded product photos: cache hard, they never change once written
+	@uploads path /uploads/*
+	header @uploads Cache-Control "public, max-age=31536000, immutable"
+
+	# App shell files change on deploy, so revalidate
+	@app path *.js *.css *.html /
+	header @app Cache-Control "no-cache"
+
+	# Basic hardening
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+
+	reverse_proxy 127.0.0.1:3000
+}

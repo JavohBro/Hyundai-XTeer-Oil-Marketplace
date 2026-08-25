@@ -1,0 +1,31 @@
+[Unit]
+Description=Hyundai Xteer Oil — Telegram bot & shop
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Oracle/Ubuntu images log in as "ubuntu". Change if you use another user.
+User=ubuntu
+WorkingDirectory=/opt/oilbot
+EnvironmentFile=/opt/oilbot/.env
+ExecStart=/usr/bin/node server.js
+
+# Always come back: on crash, on OOM, on reboot
+Restart=always
+RestartSec=5
+
+# Telegram polling allows exactly one instance — never scale this unit
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=oilbot
+
+# Hardening: the process only ever needs its own directory
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/oilbot
+
+[Install]
+WantedBy=multi-user.target
