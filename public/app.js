@@ -188,6 +188,8 @@ const APP_BRANDS = [
   { id: 'SK ZIC',        logo: '/assets/SK-ZIC-LOGO.png',    label: 'SK ZIC' },
   { id: 'Nexus',         logo: '/assets/nexus-logo.png',     label: 'Nexus' },
   { id: 'Apex',          logo: '/assets/apex-logo.png',      label: 'Apex' },
+  { id: 'Autous',        logo: '/assets/autous-logo.png',    label: 'Autous' },
+  { id: 'Kixx',          logo: '/assets/kixx-logo.png',      label: 'Kixx' },
 ];
 
 function renderBrandPills() {

@@ -97,11 +97,13 @@ function router() {
 const CATS = ['all', 'Моторное масло', 'Трансмиссионное масло', 'Гидравлическое масло', 'Другое'];
 const CATL = { all: 'Все', 'Моторное масло': 'Моторные', 'Трансмиссионное масло': 'Трансмиссионные', 'Гидравлическое масло': 'Гидравлические', 'Другое': 'Другое' };
 const BRANDS = [
-  { id: 'all',          label: 'Все',          logo: null },
+  { id: 'all',           label: 'Все',           logo: null },
   { id: 'Hyundai XTeer', label: 'Hyundai XTeer', logo: '/assets/hyundailogo1.png' },
   { id: 'SK ZIC',        label: 'SK ZIC',        logo: '/assets/SK-ZIC-LOGO.png' },
   { id: 'Nexus',         label: 'Nexus',         logo: '/assets/nexus-logo.png' },
   { id: 'Apex',          label: 'Apex',          logo: '/assets/apex-logo.png' },
+  { id: 'Autous',        label: 'Autous',        logo: '/assets/autous-logo.png' },
+  { id: 'Kixx',          label: 'Kixx',          logo: '/assets/kixx-logo.png' },
 ];
 const BRAND_IDS = BRANDS.slice(1).map(b => b.id);
 
@@ -110,16 +112,68 @@ function catalogPage() {
   <section class="hero"><div class="hero-in">
     <div>
       <h1>Оригинальное масло<br>из Кореи — Carmon Oil</h1>
-      <p>Прямые поставки Hyundai XTeer, SK ZIC, Nexus и Apex из Южной Кореи. Доставка по Узбекистану и странам СНГ.</p>
+      <p>Прямые поставки Hyundai XTeer, SK ZIC, Nexus, Apex, Autous и Kixx из Южной Кореи. Доставка по Узбекистану и странам СНГ.</p>
       <div class="hero-badges">
         <span class="hero-badge">🇰🇷 Импорт из Кореи</span>
         <span class="hero-badge">✅ Сертификаты качества</span>
         <span class="hero-badge">🚚 Доставка по СНГ</span>
       </div>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#catalog-section">Смотреть каталог</a>
+        <a class="btn-tg" href="https://t.me/hyundaixteeroilbot" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.013 4.52 13.1c-.658-.205-.67-.658.137-.975l10.84-4.179c.548-.2 1.027.12.85.975-.002.003-.005.003.005-.003l-.79-.67z"/></svg>
+          Написать эксперту
+        </a>
+      </div>
     </div>
     <img class="hero-logo" src="/assets/logo.png" alt="" onerror="this.style.display='none'">
   </div></section>
-  <div class="wrap">
+
+  <section class="brands-strip">
+    <div class="wrap">
+      <p class="brands-strip-label">Мы работаем с ведущими корейскими брендами</p>
+      <div class="brands-strip-logos">
+        ${BRANDS.slice(1).map(b => `<div class="brands-strip-logo"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></div>`).join('')}
+      </div>
+    </div>
+  </section>
+
+  <section class="about-strip wrap">
+    <div class="about-strip-grid">
+      <div class="about-strip-text">
+        <div class="about-strip-tag">О компании</div>
+        <h2>Carmon Lubricants — прямые поставки из Кореи</h2>
+        <p>Мы — официальный импортёр корейских масел в страны СНГ. Поставляем оригинальную продукцию ведущих корейских производителей напрямую со склада в Кояне, Южная Корея.</p>
+        <div class="about-facts">
+          <div class="about-fact"><span class="about-fact-n">6</span><span>брендов</span></div>
+          <div class="about-fact"><span class="about-fact-n">🇰🇷</span><span>Корея, Гоян</span></div>
+          <div class="about-fact"><span class="about-fact-n">СНГ</span><span>доставка</span></div>
+        </div>
+      </div>
+      <div class="about-strip-contact">
+        <div class="about-contact-card">
+          <div class="about-contact-title">Связаться с нами</div>
+          <a href="mailto:islombeksoyibboyev@gmail.com" class="about-contact-row">
+            <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+            islombeksoyibboyev@gmail.com
+          </a>
+          <a href="https://t.me/r1m_nightrider" target="_blank" rel="noopener" class="about-contact-row">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.013 4.52 13.1c-.658-.205-.67-.658.137-.975l10.84-4.179c.548-.2 1.027.12.85.975z"/></svg>
+            @r1m_nightrider
+          </a>
+          <a href="tel:+821037682270" class="about-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>
+            +82 10 3768 2270
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap" id="catalog-section">
+    <div class="catalog-head">
+      <h2 class="catalog-title">Каталог масел</h2>
+    </div>
     <div class="toolbar">
       <div class="search">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>

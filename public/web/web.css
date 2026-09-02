@@ -1,8 +1,9 @@
-/* ═══ Hyundai Xteer Oil — website ═══ */
+/* ═══ Carmon Oil — website ═══ */
 :root{
   --bg:#fff; --bg2:#f5f5f7; --bg3:#e8e8ed;
   --tx:#000; --tx2:#6e6e73; --tx3:#a1a1a6;
   --line:rgba(0,0,0,.1);
+  --ac:#C9A227;
   --err:#d70015; --ok:#1d8a34; --warn:#b25000; --info:#0058c7;
   --r:14px; --rs:10px;
   --sh:0 1px 3px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.06);
@@ -116,6 +117,80 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 /* Wordmark logo: size by width and let height follow, so the whole mark reads
    large. A fixed square box would shrink a wide wordmark to fit. */
 .hero-logo{width:min(460px,36vw);height:auto;object-fit:contain;opacity:.95}
+
+/* ── Hero actions ── */
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;align-items:center}
+.btn-primary{
+  padding:12px 24px;border-radius:var(--rs);font-size:14px;font-weight:600;
+  background:var(--tx);color:var(--bg);transition:opacity .15s;
+}
+.btn-primary:hover{opacity:.85}
+.btn-tg{
+  display:flex;align-items:center;gap:8px;
+  padding:11px 20px;border-radius:var(--rs);font-size:14px;font-weight:500;
+  background:#229ED9;color:#fff;transition:opacity .15s;
+}
+.btn-tg svg{width:18px;height:18px;flex-shrink:0}
+.btn-tg:hover{opacity:.88}
+
+/* ── Brands strip ── */
+.brands-strip{border-bottom:1px solid var(--line);padding:28px 0}
+.brands-strip-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--tx3);margin-bottom:18px}
+.brands-strip-logos{display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+.brands-strip-logo{
+  display:flex;align-items:center;justify-content:center;
+  height:44px;padding:6px 16px;border-radius:10px;
+  border:1px solid var(--line);background:var(--bg);
+  transition:border-color .15s;
+}
+.brands-strip-logo:hover{border-color:var(--tx3)}
+.brands-strip-logo img{height:30px;width:auto;max-width:100px;object-fit:contain}
+
+/* ── About strip ── */
+.about-strip{padding:48px 0}
+.about-strip-grid{display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:start}
+.about-strip-tag{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ac);margin-bottom:10px}
+.about-strip-text h2{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:12px}
+.about-strip-text p{font-size:15px;color:var(--tx2);line-height:1.7;max-width:50ch}
+.about-facts{display:flex;gap:28px;margin-top:24px}
+.about-fact{display:flex;flex-direction:column;gap:2px}
+.about-fact-n{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.about-fact span:last-child{font-size:12px;color:var(--tx2)}
+.about-contact-card{
+  background:var(--bg2);border:1px solid var(--line);border-radius:16px;
+  padding:24px;display:flex;flex-direction:column;gap:4px;
+}
+.about-contact-title{font-size:14px;font-weight:600;margin-bottom:12px}
+.about-contact-row{
+  display:flex;align-items:center;gap:10px;padding:10px 0;
+  font-size:13px;color:var(--tx2);border-bottom:1px solid var(--line);
+  transition:color .15s;word-break:break-all;
+}
+.about-contact-row:last-child{border-bottom:none}
+.about-contact-row:hover{color:var(--tx)}
+.about-contact-row svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none}
+.about-contact-row svg[fill="currentColor"]{fill:currentColor;stroke:none}
+
+/* ── Catalog section head ── */
+.catalog-head{padding:32px 0 4px;border-top:1px solid var(--line)}
+.catalog-title{font-size:24px;font-weight:700;letter-spacing:-.02em}
+
+/* ── Floating Telegram button ── */
+.tg-float{
+  position:fixed;bottom:28px;right:24px;z-index:200;
+  display:flex;align-items:center;gap:10px;
+  padding:13px 20px;border-radius:100px;
+  background:#229ED9;color:#fff;
+  box-shadow:0 4px 20px rgba(34,158,217,.4);
+  font-size:14px;font-weight:600;
+  transition:transform .15s,box-shadow .15s;
+}
+.tg-float svg{width:20px;height:20px;flex-shrink:0}
+.tg-float:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(34,158,217,.5)}
+@media(max-width:480px){
+  .tg-float span{display:none}
+  .tg-float{padding:14px;bottom:20px;right:16px}
+}
 
 /* ── Toolbar ── */
 .toolbar{
@@ -428,6 +503,8 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   .pd{grid-template-columns:1fr}
   .pd-info{padding:24px 20px 26px}
   .ftr-inner{grid-template-columns:1fr 1fr;gap:28px}
+  .about-strip-grid{grid-template-columns:1fr}
+  .about-strip-text h2{font-size:22px}
 }
 @media(max-width:720px){
   .brand{margin-right:auto}
