@@ -614,7 +614,7 @@ bot.onText(/\/start/, async (msg) => {
   `).run(chat.id, from.first_name, from.last_name || '', from.username || '');
 
   await bot.sendMessage(chat.id,
-    `Добро пожаловать в <b>Hyundai Xteer Oil</b>, ${esc(from.first_name)}! 🛢\n\n` +
+    `Добро пожаловать в <b>Carmon Oil</b>, ${esc(from.first_name)}! 🛢\n\n` +
     `Мы предлагаем оригинальные масла Hyundai Xteer из Кореи.\n\n` +
     `Нажмите кнопку ниже, чтобы открыть магазин 👇`,
     {
@@ -699,7 +699,7 @@ bot.on('polling_error', err => console.error('Bot polling error:', err.message))
 
 // ─── Start ────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`\n🛢  Hyundai Xteer Oil Bot running`);
+  console.log(`\n🛢  Carmon Oil Bot running`);
   console.log(`📡  Server: http://localhost:${PORT}`);
   console.log(`🤖  Bot: polling mode`);
   console.log(`👤  Admins (${ADMIN_IDS.length}): ${ADMIN_IDS.join(', ') || 'НЕ НАСТРОЕНЫ'}`);

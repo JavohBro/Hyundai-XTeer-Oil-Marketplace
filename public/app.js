@@ -1,5 +1,5 @@
 // ════════════════════════════════════════════════════
-//  Hyundai Xteer Oil – Telegram Mini App
+//  Carmon Oil – Telegram Mini App
 // ════════════════════════════════════════════════════
 
 const tg = window.Telegram?.WebApp;
@@ -12,6 +12,7 @@ const S = {
   products: [],
   filteredProducts: [],
   activeCategory: 'all',
+  activeBrand: 'all',
   searchQuery: '',
   cart: [],
   orders: [],
@@ -147,16 +148,17 @@ async function renderCatalog() {
     <div class="page-header">
       <div class="header-row">
         <div>
-          <h1>Hyundai Xteer Oil</h1>
+          <h1>Carmon Oil</h1>
           <p>Корейское качество для вашего авто</p>
         </div>
-        <img src="/assets/LOGO_2.png" style="height:36px;border-radius:8px;object-fit:contain;" onerror="this.style.display='none'">
+        <img src="/assets/shortlogo.jpg" style="height:36px;border-radius:8px;object-fit:contain;" onerror="this.style.display='none'">
       </div>
     </div>
     <div class="search-bar">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input id="search-input" type="search" placeholder="Поиск масла..." value="${S.searchQuery}">
     </div>
+    <div class="brand-scroll" id="brand-scroll"></div>
     <div class="cat-scroll" id="cat-scroll"></div>
     <div class="product-grid" id="product-grid"></div>
     <div class="scroll-pad"></div>
@@ -167,6 +169,7 @@ async function renderCatalog() {
     filterAndRenderProducts();
   });
 
+  renderBrandPills();
   renderCatPills();
 
   if (S.products.length === 0) {
@@ -179,6 +182,28 @@ async function renderCatalog() {
 
 const CATEGORIES = ['all', 'Моторное масло', 'Трансмиссионное масло', 'Гидравлическое масло', 'Другое'];
 const CAT_LABELS = { all: 'Все', 'Моторное масло': 'Моторное', 'Трансмиссионное масло': 'Трансмиссионное', 'Гидравлическое масло': 'Гидравлическое', 'Другое': 'Другое' };
+const APP_BRANDS = [
+  { id: 'all',           logo: null,                         label: 'Все' },
+  { id: 'Hyundai XTeer', logo: '/assets/hyundailogo1.png',   label: 'Hyundai XTeer' },
+  { id: 'SK ZIC',        logo: '/assets/SK-ZIC-LOGO.png',    label: 'SK ZIC' },
+  { id: 'Nexus',         logo: '/assets/nexus-logo.png',     label: 'Nexus' },
+  { id: 'Apex',          logo: '/assets/apex-logo.png',      label: 'Apex' },
+];
+
+function renderBrandPills() {
+  const el = document.getElementById('brand-scroll');
+  if (!el) return;
+  el.innerHTML = APP_BRANDS.map(b =>
+    `<button class="brand-pill ${S.activeBrand === b.id ? 'active' : ''}" data-brand="${b.id}">` +
+    (b.logo ? `<img src="${b.logo}" alt="${b.label}">` : `<span>${b.label}</span>`) +
+    `</button>`
+  ).join('');
+  el.querySelectorAll('.brand-pill').forEach(btn => btn.addEventListener('click', () => {
+    S.activeBrand = btn.dataset.brand;
+    renderBrandPills();
+    filterAndRenderProducts();
+  }));
+}
 
 function renderCatPills() {
   const scroll = document.getElementById('cat-scroll');
@@ -197,6 +222,7 @@ function filterAndRenderProducts() {
   const grid = document.getElementById('product-grid');
   if (!grid) return;
   let list = S.products;
+  if (S.activeBrand !== 'all') list = list.filter(p => p.brand === S.activeBrand);
   if (S.activeCategory !== 'all') list = list.filter(p => p.category === S.activeCategory);
   if (S.searchQuery) {
     const q = S.searchQuery.toLowerCase();
@@ -659,7 +685,7 @@ function renderHelp() {
       <div class="help-card">
         <div class="faq-item">
           <div class="faq-q">Откуда привозите масло?</div>
-          <div class="faq-a">Мы импортируем оригинальное масло Hyundai Xteer напрямую из Южной Кореи. Полная сертификация качества.</div>
+          <div class="faq-a">Carmon Oil — официальный импортёр масел Hyundai XTeer, SK ZIC, Nexus и Apex из Южной Кореи. Полная сертификация качества.</div>
         </div>
         <div class="faq-item">
           <div class="faq-q">Как быстро доставят заказ?</div>
@@ -952,7 +978,7 @@ function openProductForm(product) {
         </div>
         <div class="form-row">
           <div class="form-group"><label class="form-label">Бренд</label>
-            <input class="form-input" name="brand" placeholder="Hyundai Xteer" value="${p.brand || 'Hyundai Xteer'}">
+            <select class="form-input" name="brand">${APP_BRANDS.slice(1).map(b => `<option${(p.brand||'Hyundai XTeer')===b.id?' selected':''}>${b.id}</option>`).join('')}</select>
           </div>
           <div class="form-group"><label class="form-label">Категория</label>
             <select class="form-select" name="category">

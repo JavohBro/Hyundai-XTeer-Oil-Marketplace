@@ -33,7 +33,7 @@ db.exec(`
     price       REAL NOT NULL,
     quantity    INTEGER DEFAULT 0,
     images      TEXT DEFAULT '[]',
-    brand       TEXT DEFAULT 'Hyundai Xteer',
+    brand       TEXT DEFAULT 'Hyundai XTeer',
     viscosity   TEXT DEFAULT '',
     category    TEXT DEFAULT 'Моторное масло',
     is_active   INTEGER DEFAULT 1,

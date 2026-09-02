@@ -129,6 +129,17 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 }
 .search:focus-within{border-color:var(--tx);background:var(--bg)}
 .search svg{width:16px;height:16px;color:var(--tx3);flex-shrink:0}
+.brand-pills{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:4px}
+.brand-pill{
+  display:flex;align-items:center;justify-content:center;
+  height:40px;padding:4px 12px;border-radius:10px;
+  border:1.5px solid var(--line);background:var(--bg);
+  cursor:pointer;transition:all .15s;
+}
+.brand-pill img{height:26px;width:auto;max-width:90px;object-fit:contain}
+.brand-pill span{font-size:13px;font-weight:500;color:var(--tx2)}
+.brand-pill:hover{border-color:var(--tx2)}
+.brand-pill.on{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac)}
 .pills{display:flex;gap:7px;flex-wrap:wrap}
 .pill{
   padding:8px 15px;border-radius:100px;font-size:13px;font-weight:500;

@@ -1,9 +1,9 @@
-// ═══ Hyundai Xteer Oil — website ═══
+// ═══ Carmon Oil — website ═══
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
 const S = {
-  products: [], cat: 'all', q: '',
+  products: [], cat: 'all', brand: 'all', q: '',
   cart: [], me: null, cfg: {}, cur: 'UZS',
   orders: [], adminTab: 'stats', orderFilter: 'all', newImgs: []
 };
@@ -96,13 +96,21 @@ function router() {
 // ═══ CATALOG ═══
 const CATS = ['all', 'Моторное масло', 'Трансмиссионное масло', 'Гидравлическое масло', 'Другое'];
 const CATL = { all: 'Все', 'Моторное масло': 'Моторные', 'Трансмиссионное масло': 'Трансмиссионные', 'Гидравлическое масло': 'Гидравлические', 'Другое': 'Другое' };
+const BRANDS = [
+  { id: 'all',          label: 'Все',          logo: null },
+  { id: 'Hyundai XTeer', label: 'Hyundai XTeer', logo: '/assets/hyundailogo1.png' },
+  { id: 'SK ZIC',        label: 'SK ZIC',        logo: '/assets/SK-ZIC-LOGO.png' },
+  { id: 'Nexus',         label: 'Nexus',         logo: '/assets/nexus-logo.png' },
+  { id: 'Apex',          label: 'Apex',          logo: '/assets/apex-logo.png' },
+];
+const BRAND_IDS = BRANDS.slice(1).map(b => b.id);
 
 function catalogPage() {
   $('#main').innerHTML = `
   <section class="hero"><div class="hero-in">
     <div>
-      <h1>Оригинальное масло<br>Hyundai Xteer из Кореи</h1>
-      <p>Прямые поставки из Южной Кореи. Сертифицированное качество для вашего двигателя. Доставка по Узбекистану и странам СНГ.</p>
+      <h1>Оригинальное масло<br>из Кореи — Carmon Oil</h1>
+      <p>Прямые поставки Hyundai XTeer, SK ZIC, Nexus и Apex из Южной Кореи. Доставка по Узбекистану и странам СНГ.</p>
       <div class="hero-badges">
         <span class="hero-badge">🇰🇷 Импорт из Кореи</span>
         <span class="hero-badge">✅ Сертификаты качества</span>
@@ -117,13 +125,26 @@ function catalogPage() {
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input id="q" type="search" placeholder="Поиск по названию или вязкости…" value="${esc(S.q)}">
       </div>
+      <div class="brand-pills" id="brand-pills"></div>
       <div class="pills" id="pills"></div>
     </div>
     <div id="grid" class="grid"></div>
   </div>`;
 
   $('#q').addEventListener('input', e => { S.q = e.target.value; paintGrid(); });
-  paintPills(); paintGrid();
+  paintBrandPills(); paintPills(); paintGrid();
+}
+
+function paintBrandPills() {
+  const el = $('#brand-pills'); if (!el) return;
+  el.innerHTML = BRANDS.map(b =>
+    `<button class="brand-pill${S.brand === b.id ? ' on' : ''}" data-b="${esc(b.id)}">` +
+    (b.logo ? `<img src="${esc(b.logo)}" alt="${esc(b.label)}">` : `<span>${esc(b.label)}</span>`) +
+    `</button>`
+  ).join('');
+  $$('#brand-pills .brand-pill').forEach(btn => btn.onclick = () => {
+    S.brand = btn.dataset.b; paintBrandPills(); paintGrid();
+  });
 }
 
 function paintPills() {
@@ -134,6 +155,7 @@ function paintPills() {
 function paintGrid() {
   const g = $('#grid'); if (!g) return;
   let list = S.products;
+  if (S.brand !== 'all') list = list.filter(p => p.brand === S.brand);
   if (S.cat !== 'all') list = list.filter(p => p.category === S.cat);
   if (S.q) {
     const q = S.q.toLowerCase();
@@ -534,9 +556,9 @@ function productForm(p) {
     <div style="padding:30px">
       <h2 style="font-size:21px;font-weight:700;margin-bottom:20px">${ed ? 'Редактировать товар' : 'Новый товар'}</h2>
       <form id="pf">
-        <div class="f"><label>Название *</label><input name="name" required value="${esc(p.name || '')}" placeholder="Hyundai Xteer Gasoline G700"></div>
+        <div class="f"><label>Название *</label><input name="name" required value="${esc(p.name || '')}" placeholder="Hyundai XTeer Gasoline G700"></div>
         <div class="f-row">
-          <div class="f"><label>Бренд</label><input name="brand" value="${esc(p.brand || 'Hyundai Xteer')}"></div>
+          <div class="f"><label>Бренд</label><select name="brand">${BRAND_IDS.map(b => `<option${(p.brand || 'Hyundai XTeer') === b ? ' selected' : ''}>${b}</option>`).join('')}</select></div>
           <div class="f"><label>Категория</label><select name="category">${cats.map(c => `<option${(p.category || cats[0]) === c ? ' selected' : ''}>${c}</option>`).join('')}</select></div>
         </div>
         <div class="f-row">
