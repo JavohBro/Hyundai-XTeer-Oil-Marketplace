@@ -133,14 +133,14 @@ function catalogPage() {
     <div class="wrap">
       <p class="brands-strip-label">Мы работаем с ведущими корейскими брендами</p>
       <div class="brands-strip-logos">
-        ${BRANDS.slice(1).map(b => `<div class="brands-strip-logo"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></div>`).join('')}
+        ${BRANDS.slice(1).map(b => `<div class="brands-strip-logo anim"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></div>`).join('')}
       </div>
     </div>
   </section>
 
   <section class="about-strip wrap">
     <div class="about-strip-grid">
-      <div class="about-strip-text">
+      <div class="about-strip-text anim-left">
         <div class="about-strip-tag">О компании</div>
         <h2>Carmon Lubricants — прямые поставки из Кореи</h2>
         <p>Мы — официальный импортёр корейских масел в страны СНГ. Поставляем оригинальную продукцию ведущих корейских производителей напрямую со склада в Кояне, Южная Корея.</p>
@@ -150,7 +150,7 @@ function catalogPage() {
           <div class="about-fact"><span class="about-fact-n">СНГ</span><span>доставка</span></div>
         </div>
       </div>
-      <div class="about-strip-contact">
+      <div class="about-strip-contact anim-right">
         <div class="about-contact-card">
           <div class="about-contact-title">Связаться с нами</div>
           <a href="mailto:islombeksoyibboyev@gmail.com" class="about-contact-row">
@@ -171,7 +171,7 @@ function catalogPage() {
   </section>
 
   <div class="wrap" id="catalog-section">
-    <div class="catalog-head">
+    <div class="catalog-head anim">
       <h2 class="catalog-title">Каталог масел</h2>
     </div>
     <div class="toolbar">
@@ -187,6 +187,7 @@ function catalogPage() {
 
   $('#q').addEventListener('input', e => { S.q = e.target.value; paintGrid(); });
   paintBrandPills(); paintPills(); paintGrid();
+  requestAnimationFrame(() => initAnimations());
 }
 
 function paintBrandPills() {
@@ -225,6 +226,16 @@ function paintGrid() {
     e.stopPropagation();
     const p = S.products.find(x => x.id === +b.dataset.id);
     if (p?.quantity > 0) { Cart.add(p); toast(`«${p.name}» в корзине`); }
+  });
+  initAnimations();
+}
+
+function initAnimations() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.anim,.anim-left,.anim-right').forEach(el => {
+    if (!el.classList.contains('visible')) obs.observe(el);
   });
 }
 

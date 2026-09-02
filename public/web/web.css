@@ -7,14 +7,38 @@
   --err:#d70015; --ok:#1d8a34; --warn:#b25000; --info:#0058c7;
   --r:14px; --rs:10px;
   --sh:0 1px 3px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.06);
+  --sh-md:0 4px 20px rgba(0,0,0,.10),0 1px 4px rgba(0,0,0,.06);
   --hdr:64px;
   --max:1200px;
   --ease:cubic-bezier(.4,0,.2,1);
 }
+
+/* ── Keyframes ── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(32px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+@keyframes pulse-ring{
+  0%{box-shadow:0 0 0 0 rgba(34,158,217,.4)}
+  70%{box-shadow:0 0 0 14px rgba(34,158,217,0)}
+  100%{box-shadow:0 0 0 0 rgba(34,158,217,0)}
+}
+
+/* ── Scroll reveal ── */
+.anim{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.anim.visible{opacity:1;transform:none}
+.anim-left{opacity:0;transform:translateX(-28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.anim-left.visible{opacity:1;transform:none}
+.anim-right{opacity:0;transform:translateX(28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.anim-right.visible{opacity:1;transform:none}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Inter,sans-serif;
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   background:var(--bg);color:var(--tx);-webkit-font-smoothing:antialiased;
   line-height:1.5;display:flex;flex-direction:column;min-height:100vh;
 }
@@ -100,38 +124,69 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 
 /* ── Hero ── */
 .hero{
-  background:linear-gradient(180deg,var(--bg2),var(--bg));
-  border-bottom:1px solid var(--line);
+  background:#0B1F3A;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 80% at 80% 50%,rgba(201,162,39,.18) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 60% at 10% 80%,rgba(34,100,180,.14) 0%,transparent 55%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;
 }
 .hero-in{
-  max-width:var(--max);margin:0 auto;padding:64px 20px;
-  display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;
+  max-width:var(--max);margin:0 auto;padding:80px 20px;
+  display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center;
+  position:relative;z-index:1;
 }
-.hero h1{font-size:46px;line-height:1.08;font-weight:700;letter-spacing:-.03em}
-.hero p{font-size:17px;color:var(--tx2);margin-top:14px;max-width:46ch}
-.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.hero h1{
+  font-size:52px;line-height:1.06;font-weight:800;letter-spacing:-.03em;
+  color:#fff;
+  animation:fadeUp .9s var(--ease) both;
+}
+.hero p{
+  font-size:17px;color:rgba(255,255,255,.7);margin-top:16px;max-width:46ch;line-height:1.65;
+  animation:fadeUp .9s .12s var(--ease) both;
+}
+.hero-badges{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:24px;
+  animation:fadeUp .9s .22s var(--ease) both;
+}
 .hero-badge{
-  padding:6px 13px;background:var(--bg);border:1px solid var(--line);
-  border-radius:100px;font-size:13px;font-weight:500;
+  padding:6px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  border-radius:100px;font-size:13px;font-weight:500;color:rgba(255,255,255,.9);
+  backdrop-filter:blur(8px);
 }
-/* Wordmark logo: size by width and let height follow, so the whole mark reads
-   large. A fixed square box would shrink a wide wordmark to fit. */
-.hero-logo{width:min(460px,36vw);height:auto;object-fit:contain;opacity:.95}
+.hero-logo{
+  width:min(440px,34vw);height:auto;object-fit:contain;
+  filter:drop-shadow(0 8px 32px rgba(0,0,0,.4)) brightness(1.08);
+  animation:fadeIn 1.2s .1s var(--ease) both;
+}
 
 /* ── Hero actions ── */
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;align-items:center}
-.btn-primary{
-  padding:12px 24px;border-radius:var(--rs);font-size:14px;font-weight:600;
-  background:var(--tx);color:var(--bg);transition:opacity .15s;
+.hero-actions{
+  display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;align-items:center;
+  animation:fadeUp .9s .32s var(--ease) both;
 }
-.btn-primary:hover{opacity:.85}
+.btn-primary{
+  padding:13px 26px;border-radius:var(--rs);font-size:14px;font-weight:700;
+  background:var(--ac);color:#0B1F3A;
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease);
+  letter-spacing:.01em;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,162,39,.4)}
 .btn-tg{
   display:flex;align-items:center;gap:8px;
-  padding:11px 20px;border-radius:var(--rs);font-size:14px;font-weight:500;
-  background:#229ED9;color:#fff;transition:opacity .15s;
+  padding:12px 20px;border-radius:var(--rs);font-size:14px;font-weight:600;
+  background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);
+  backdrop-filter:blur(8px);transition:background .18s,transform .18s var(--ease);
 }
 .btn-tg svg{width:18px;height:18px;flex-shrink:0}
-.btn-tg:hover{opacity:.88}
+.btn-tg:hover{background:rgba(255,255,255,.2);transform:translateY(-2px)}
 
 /* ── Brands strip ── */
 .brands-strip{border-bottom:1px solid var(--line);padding:28px 0}
@@ -146,6 +201,12 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .brands-strip-logo:hover{border-color:var(--tx3);box-shadow:var(--sh)}
 .brands-strip-logo img{width:100%;height:100%;object-fit:contain}
 @media(min-width:900px){.brands-strip-logos{grid-template-columns:repeat(3,1fr)}}
+.brands-strip-logo:nth-child(1){transition-delay:.05s}
+.brands-strip-logo:nth-child(2){transition-delay:.12s}
+.brands-strip-logo:nth-child(3){transition-delay:.19s}
+.brands-strip-logo:nth-child(4){transition-delay:.26s}
+.brands-strip-logo:nth-child(5){transition-delay:.33s}
+.brands-strip-logo:nth-child(6){transition-delay:.40s}
 
 /* ── About strip ── */
 .about-strip{padding:48px 0}
@@ -180,14 +241,15 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .tg-float{
   position:fixed;bottom:28px;right:24px;z-index:200;
   display:flex;align-items:center;gap:10px;
-  padding:13px 20px;border-radius:100px;
+  padding:14px 22px;border-radius:100px;
   background:#229ED9;color:#fff;
   box-shadow:0 4px 20px rgba(34,158,217,.4);
-  font-size:14px;font-weight:600;
-  transition:transform .15s,box-shadow .15s;
+  font-size:14px;font-weight:700;
+  animation:fadeUp .6s 1s var(--ease) both,pulse-ring 2.5s 2s ease-out infinite;
+  transition:transform .18s var(--ease),box-shadow .18s;
 }
 .tg-float svg{width:20px;height:20px;flex-shrink:0}
-.tg-float:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(34,158,217,.5)}
+.tg-float:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(34,158,217,.55);animation:none}
 @media(max-width:480px){
   .tg-float span{display:none}
   .tg-float{padding:14px;bottom:20px;right:16px}
@@ -498,8 +560,8 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 
 /* ── Responsive ── */
 @media(max-width:900px){
-  .hero-in{grid-template-columns:1fr;padding:44px 20px}
-  .hero h1{font-size:34px}
+  .hero-in{grid-template-columns:1fr;padding:52px 20px}
+  .hero h1{font-size:36px}
   .hero-logo{display:none}
   .pd{grid-template-columns:1fr}
   .pd-info{padding:24px 20px 26px}
