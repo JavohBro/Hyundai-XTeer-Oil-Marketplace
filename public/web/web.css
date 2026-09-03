@@ -23,9 +23,9 @@
   to{opacity:1}
 }
 @keyframes pulse-ring{
-  0%{box-shadow:0 0 0 0 rgba(34,158,217,.4)}
-  70%{box-shadow:0 0 0 14px rgba(34,158,217,0)}
-  100%{box-shadow:0 0 0 0 rgba(34,158,217,0)}
+  0%{box-shadow:0 0 0 0 rgba(201,162,39,.5)}
+  70%{box-shadow:0 0 0 14px rgba(201,162,39,0)}
+  100%{box-shadow:0 0 0 0 rgba(201,162,39,0)}
 }
 
 /* ── Scroll reveal ── */
@@ -124,13 +124,13 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 
 /* ── Hero ── */
 .hero{
-  background:#0B1F3A;
+  background:#111111;
   position:relative;overflow:hidden;
 }
 .hero::before{
   content:'';position:absolute;inset:0;
   background:radial-gradient(ellipse 70% 80% at 80% 50%,rgba(201,162,39,.18) 0%,transparent 60%),
-             radial-gradient(ellipse 50% 60% at 10% 80%,rgba(34,100,180,.14) 0%,transparent 55%);
+             radial-gradient(ellipse 50% 60% at 10% 80%,rgba(201,162,39,.08) 0%,transparent 55%);
   pointer-events:none;
 }
 .hero::after{
@@ -174,7 +174,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 }
 .btn-primary{
   padding:13px 26px;border-radius:var(--rs);font-size:14px;font-weight:700;
-  background:var(--ac);color:#0B1F3A;
+  background:var(--ac);color:#111;
   transition:transform .18s var(--ease),box-shadow .18s var(--ease);
   letter-spacing:.01em;
 }
@@ -242,14 +242,14 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   position:fixed;bottom:28px;right:24px;z-index:200;
   display:flex;align-items:center;gap:10px;
   padding:14px 22px;border-radius:100px;
-  background:#229ED9;color:#fff;
-  box-shadow:0 4px 20px rgba(34,158,217,.4);
+  background:var(--ac);color:#111;
+  box-shadow:0 4px 20px rgba(201,162,39,.4);
   font-size:14px;font-weight:700;
   animation:fadeUp .6s 1s var(--ease) both,pulse-ring 2.5s 2s ease-out infinite;
   transition:transform .18s var(--ease),box-shadow .18s;
 }
 .tg-float svg{width:20px;height:20px;flex-shrink:0}
-.tg-float:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(34,158,217,.55);animation:none}
+.tg-float:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(201,162,39,.55);animation:none}
 @media(max-width:480px){
   .tg-float span{display:none}
   .tg-float{padding:14px;bottom:20px;right:16px}
