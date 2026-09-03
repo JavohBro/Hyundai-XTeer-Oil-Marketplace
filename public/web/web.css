@@ -85,6 +85,32 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 }
 .mobile-only{display:none}
 
+/* language button in the header */
+.lang-btn{
+  display:flex;align-items:center;gap:6px;height:38px;padding:0 12px;
+  border-radius:var(--rs);background:var(--bg2);font-size:13px;font-weight:600;
+  transition:background .15s;
+}
+.lang-btn:hover{background:var(--bg3)}
+.lang-btn span:first-child{font-size:16px;line-height:1}
+
+/* language picker (modal) */
+.lang-pick{padding:40px 32px 32px;text-align:center}
+.lang-pick-logo{height:44px;width:auto;margin:0 auto 18px;object-fit:contain}
+.lang-pick h2{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.lang-pick p{color:var(--tx2);font-size:14px;margin-bottom:24px}
+.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lang-card{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:20px 12px;border-radius:14px;border:1.5px solid var(--line);
+  background:var(--bg);font-size:15px;font-weight:600;
+  transition:border-color .15s,transform .15s var(--ease),box-shadow .15s;
+}
+.lang-card span:first-child{font-size:32px;line-height:1}
+.lang-card:hover{border-color:var(--tx);transform:translateY(-2px);box-shadow:var(--sh)}
+.lang-card.on{border-color:var(--tx);box-shadow:0 0 0 2px var(--tx)}
+.modal-card.lang-modal{max-width:440px}
+
 /* auth slot */
 .avatar-btn{
   display:flex;align-items:center;gap:8px;padding:5px 10px 5px 5px;

@@ -82,6 +82,13 @@ if (!orderCols.includes('source')) {
   db.exec(`ALTER TABLE orders ADD COLUMN source TEXT DEFAULT 'miniapp'`);
 }
 
+// Preferred UI language (ru / uz / en / ko). Empty until the user picks one,
+// which is what makes the bot ask on first contact.
+const userCols = db.prepare('PRAGMA table_info(users)').all().map(c => c.name);
+if (!userCols.includes('lang')) {
+  db.exec(`ALTER TABLE users ADD COLUMN lang TEXT DEFAULT ''`);
+}
+
 const insertSetting = db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)');
 insertSetting.run('currency', 'UZS');
 

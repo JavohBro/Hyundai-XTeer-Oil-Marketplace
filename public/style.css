@@ -53,6 +53,44 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   transition: opacity var(--transition);
 }
 #loading.hide { opacity: 0; pointer-events: none; }
+
+/* ─── Language picker (first launch) ─── */
+.lang-overlay {
+  position: fixed; inset: 0; z-index: 9000;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  animation: langIn 0.3s var(--transition);
+}
+.lang-overlay.hidden { display: none; }
+@keyframes langIn { from { opacity: 0; } to { opacity: 1; } }
+.lang-box { width: 100%; max-width: 360px; text-align: center; }
+.lang-logo { height: 56px; width: auto; margin: 0 auto 16px; object-fit: contain; border-radius: 12px; }
+.lang-box h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.lang-box p { font-size: 13px; color: var(--text2); margin-bottom: 22px; }
+.lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.lang-card {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 18px 10px; border-radius: var(--r-card);
+  border: 1.5px solid var(--border); background: var(--bg);
+  font: inherit; font-size: 15px; font-weight: 600; color: var(--text);
+  cursor: pointer; transition: border-color 0.15s, transform 0.15s;
+}
+.lang-card span:first-child { font-size: 32px; line-height: 1; }
+.lang-card:active { transform: scale(0.97); }
+.lang-card.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+
+/* language row in the profile page */
+.lang-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+.lang-pill {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 4px; border-radius: var(--r-btn);
+  border: 1.5px solid var(--border); background: var(--bg);
+  font: inherit; font-size: 11px; font-weight: 600; color: var(--text2);
+  cursor: pointer; transition: border-color 0.15s, color 0.15s;
+}
+.lang-pill span:first-child { font-size: 22px; line-height: 1; }
+.lang-pill.active { border-color: var(--accent); color: var(--text); }
 .loading-inner { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .loading-logo { width: 80px; height: 80px; object-fit: contain; border-radius: 20px; }
 .loading-title { font-size: 22px; font-weight: 700; }

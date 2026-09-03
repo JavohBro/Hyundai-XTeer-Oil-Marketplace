@@ -14,8 +14,18 @@
     <div class="loading-inner">
       <img src="/assets/shortlogo.png" alt="Carmon Oil" class="loading-logo" onerror="this.style.display='none'">
       <h2 class="loading-title">Carmon Oil</h2>
-      <p class="loading-sub">Корейское качество для вашего авто</p>
+      <p class="loading-sub" id="loading-sub"></p>
       <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Language picker (first launch) -->
+  <div id="lang-overlay" class="lang-overlay hidden">
+    <div class="lang-box">
+      <img src="/assets/shortlogo.png" alt="Carmon Oil" class="lang-logo" onerror="this.style.display='none'">
+      <h2 id="lang-title">Выберите язык</h2>
+      <p id="lang-sub"></p>
+      <div class="lang-grid" id="lang-grid"></div>
     </div>
   </div>
 
@@ -34,26 +44,26 @@
     <nav id="bottom-nav">
       <button class="nav-btn active" data-page="catalog">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
-        <span>Каталог</span>
+        <span data-i18n="nav.catalog">Каталог</span>
       </button>
       <button class="nav-btn" data-page="cart">
         <span class="nav-icon-wrap">
           <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
           <span id="cart-badge" class="badge hidden">0</span>
         </span>
-        <span>Корзина</span>
+        <span data-i18n="nav.cart">Корзина</span>
       </button>
       <button class="nav-btn" data-page="orders">
         <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-        <span>Заказы</span>
+        <span data-i18n="nav.orders">Заказы</span>
       </button>
       <button class="nav-btn" data-page="profile">
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span>Профиль</span>
+        <span data-i18n="nav.profile">Профиль</span>
       </button>
       <button class="nav-btn" data-page="help">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        <span>Помощь</span>
+        <span data-i18n="nav.help">Помощь</span>
       </button>
     </nav>
   </div>
@@ -65,6 +75,7 @@
   <!-- Toast -->
   <div id="toast" class="toast"></div>
 
+  <script src="/assets/i18n.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

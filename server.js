@@ -7,6 +7,7 @@ const fs       = require('fs');
 const sharp    = require('sharp');
 const TelegramBot = require('node-telegram-bot-api');
 const db       = require('./db');
+const I18N     = require('./assets/i18n');
 
 const app      = express();
 const PORT     = process.env.PORT || 3000;
@@ -101,6 +102,30 @@ function validateLoginWidget(query) {
 
 // ─── Bot setup ───────────────────────────────────────────────────────────────
 const bot = new TelegramBot(BOT_TOKEN, { polling: true });
+
+// ─── Language ────────────────────────────────────────────────────────────────
+// The user's stored language, or '' when they have never chosen one.
+function storedLang(id) {
+  return db.prepare('SELECT lang FROM users WHERE telegram_id = ?').get(id)?.lang || '';
+}
+// Language to speak to a user in — falls back to the default when unset.
+const userLang = id => I18N.normalize(storedLang(id));
+const setLang  = (id, lang) => db.prepare('UPDATE users SET lang = ?, updated_at = CURRENT_TIMESTAMP WHERE telegram_id = ?').run(lang, id);
+const tt = (lang, key, vars) => I18N.t(lang, key, vars);
+
+const LANG_KEYBOARD = {
+  inline_keyboard: [
+    [{ text: '🇷🇺 Русский',   callback_data: 'lang_ru' }, { text: '🇺🇿 Oʻzbekcha', callback_data: 'lang_uz' }],
+    [{ text: '🇬🇧 English',   callback_data: 'lang_en' }, { text: '🇰🇷 한국어',     callback_data: 'lang_ko' }],
+  ]
+};
+const shopKeyboard = lang => ({ inline_keyboard: [[{ text: tt(lang, 'bot.open'), web_app: { url: MINIAPP_URL } }]] });
+
+async function sendWelcome(chatId, firstName, lang) {
+  await bot.sendMessage(chatId, tt(lang, 'bot.welcome', { name: esc(firstName) }), {
+    parse_mode: 'HTML', reply_markup: shopKeyboard(lang)
+  });
+}
 
 // ─── Uploads directory ───────────────────────────────────────────────────────
 // Product photos follow the database: on a volume when DATA_DIR is set,
@@ -286,8 +311,22 @@ app.get('/api/me', optionalAuth, (req, res) => {
     last_name:   u.last_name  || '',
     username:    u.username   || '',
     is_admin:    req.isAdmin,
+    lang:        profile?.lang || '',
     profile:     profile || null
   });
+});
+
+// Persists the language chosen in the website / Mini App so the bot speaks it too.
+app.post('/api/lang', authMiddleware, (req, res) => {
+  const lang = String(req.body.lang || '');
+  if (!I18N.T[lang]) return res.status(400).json({ error: 'Unknown language' });
+  const u = req.tgUser;
+  db.prepare(`
+    INSERT INTO users (telegram_id, first_name, last_name, username, lang)
+    VALUES (?, ?, ?, ?, ?)
+    ON CONFLICT(telegram_id) DO UPDATE SET lang = excluded.lang, updated_at = CURRENT_TIMESTAMP
+  `).run(u.id, u.first_name || '', u.last_name || '', u.username || '', lang);
+  res.json({ lang });
 });
 
 app.post('/api/profile', authMiddleware, (req, res) => {
@@ -411,9 +450,10 @@ function normalizeGuest(g) {
   return { full_name, phone, city, address };
 }
 
-function formatOrderText(order, profile, items, currency, orderId) {
+function formatOrderText(order, profile, items, currency, orderId, lang = 'ru') {
+  const pcs = tt(lang, 'pcs');
   const lines = items.map(i =>
-    `• ${esc(i.name)}${i.litres ? ` (${esc(i.litres)})` : ''}${i.viscosity ? ` ${esc(i.viscosity)}` : ''} × ${i.quantity} шт. = ${i.subtotal.toLocaleString('ru')} ${esc(currency)}`
+    `• ${esc(i.name)}${i.litres ? ` (${esc(i.litres)})` : ''}${i.viscosity ? ` ${esc(i.viscosity)}` : ''} × ${i.quantity} ${pcs} = ${i.subtotal.toLocaleString('ru')} ${esc(currency)}`
   ).join('\n');
   return { lines, total: `${order.total_price.toLocaleString('ru')} ${esc(currency)}` };
 }
@@ -480,16 +520,20 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
   for (const item of orderItems)
     db.prepare('UPDATE products SET quantity=quantity-? WHERE id=?').run(item.quantity, item.product_id);
 
-  const { lines, total } = formatOrderText({ total_price: totalPrice }, profile, orderItems, currency, orderId);
   const dateStr = new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Tashkent', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
+  // Customer confirmation in their language; admin notification stays in Russian.
+  const lang = isGuest ? 'ru' : userLang(u.id);
+  const { lines: userLines, total } = formatOrderText({ total_price: totalPrice }, profile, orderItems, currency, orderId, lang);
+  const { lines } = formatOrderText({ total_price: totalPrice }, profile, orderItems, currency, orderId, 'ru');
+
   const userMsg =
-    `✅ <b>Ваш заказ принят!</b>\n\n` +
-    `📋 Заказ <b>#${orderId}</b>\n📅 ${esc(dateStr)}\n\n` +
-    `📦 <b>Состав:</b>\n${lines}\n\n` +
-    `💰 <b>Итого: ${total}</b>\n\n` +
-    `📍 <b>Доставка:</b>\n🏙 ${esc(profile.city)}\n🏠 ${esc(profile.address)}\n📞 ${esc(profile.phone)}\n\n` +
-    `⏳ Мы свяжемся с вами для подтверждения.`;
+    `${tt(lang, 'bot.order_ok')}\n\n` +
+    `📋 ${tt(lang, 'bot.order')} <b>#${orderId}</b>\n📅 ${esc(dateStr)}\n\n` +
+    `📦 <b>${tt(lang, 'bot.items')}:</b>\n${userLines}\n\n` +
+    `💰 <b>${tt(lang, 'bot.total')}: ${total}</b>\n\n` +
+    `📍 <b>${tt(lang, 'bot.delivery')}:</b>\n🏙 ${esc(profile.city)}\n🏠 ${esc(profile.address)}\n📞 ${esc(profile.phone)}\n\n` +
+    tt(lang, 'bot.wait');
 
   const SOURCE_LABEL = { 'miniapp': '📱 Telegram', 'web': '🌐 Сайт', 'web-guest': '🌐 Сайт (гость)' };
   const adminMsg =
@@ -575,15 +619,11 @@ app.put('/api/orders/:id/status', authMiddleware, adminOnly, async (req, res) =>
       db.prepare('UPDATE products SET quantity=quantity+? WHERE id=?').run(item.quantity, item.product_id);
   }
 
-  const msgs = {
-    confirmed: '✅ Ваш заказ подтверждён! Готовим к отправке.',
-    shipped:   '🚚 Ваш заказ отправлен и в пути!',
-    delivered: '🎉 Заказ доставлен. Спасибо за покупку!',
-    cancelled: '❌ Заказ отменён. Свяжитесь с нами для уточнения.'
-  };
   // Guest orders have no Telegram chat to notify
-  if (msgs[status] && !o.is_guest && o.user_id) {
-    try { await bot.sendMessage(o.user_id, `📋 <b>Заказ #${o.id}</b>\n\n${msgs[status]}`, { parse_mode: 'HTML' }); }
+  if (status !== 'pending' && !o.is_guest && o.user_id) {
+    const lang = userLang(o.user_id);
+    const body = `📋 <b>${tt(lang, 'bot.order')} #${o.id}</b>\n\n${tt(lang, 'bot.st_' + status)}`;
+    try { await bot.sendMessage(o.user_id, body, { parse_mode: 'HTML' }); }
     catch (e) { console.error('Status notify failed:', e.message); }
   }
   res.json({ success: true, status });
@@ -613,32 +653,51 @@ bot.onText(/\/start/, async (msg) => {
     VALUES (?, ?, ?, ?)
   `).run(chat.id, from.first_name, from.last_name || '', from.username || '');
 
-  await bot.sendMessage(chat.id,
-    `Добро пожаловать в <b>Carmon Oil</b>, ${esc(from.first_name)}! 🛢\n\n` +
-    `Мы предлагаем оригинальные масла Hyundai Xteer из Кореи.\n\n` +
-    `Нажмите кнопку ниже, чтобы открыть магазин 👇`,
-    {
-      parse_mode: 'HTML',
-      reply_markup: {
-        inline_keyboard: [[{ text: '🛍 Открыть магазин', web_app: { url: MINIAPP_URL } }]]
-      }
-    }
-  );
+  // First contact: ask for a language before anything else.
+  const lang = storedLang(chat.id);
+  if (!lang) {
+    return bot.sendMessage(chat.id, I18N.CHOOSE, { reply_markup: LANG_KEYBOARD });
+  }
+  await sendWelcome(chat.id, from.first_name, lang);
+});
+
+// Lets the user switch language later on
+bot.onText(/\/lang/, async (msg) => {
+  const lang = storedLang(msg.chat.id);
+  const text = lang ? tt(lang, 'bot.lang_cmd') : I18N.CHOOSE;
+  await bot.sendMessage(msg.chat.id, text, { reply_markup: LANG_KEYBOARD });
 });
 
 // Lets a prospective admin look up their own Telegram ID for ADMIN_IDS
 bot.onText(/\/id/, async (msg) => {
+  const lang = userLang(msg.from.id);
   await bot.sendMessage(msg.chat.id,
-    `🆔 Ваш Telegram ID: <code>${msg.from.id}</code>\n\n` +
-    (isAdminId(msg.from.id)
-      ? '✅ У вас есть права администратора.'
-      : 'Передайте этот ID владельцу магазина, чтобы получить доступ администратора.'),
+    tt(lang, 'bot.id', { id: msg.from.id }) + '\n\n' +
+    tt(lang, isAdminId(msg.from.id) ? 'bot.id_admin' : 'bot.id_user'),
     { parse_mode: 'HTML' }
   );
 });
 
 bot.on('callback_query', async (query) => {
   const { data, message, from } = query;
+
+  // Language choice — available to everyone, not just admins
+  const langMatch = data.match(/^lang_(ru|uz|en|ko)$/);
+  if (langMatch) {
+    const lang = langMatch[1];
+    db.prepare(`
+      INSERT INTO users (telegram_id, first_name, last_name, username, lang)
+      VALUES (?, ?, ?, ?, ?)
+      ON CONFLICT(telegram_id) DO UPDATE SET lang = excluded.lang, updated_at = CURRENT_TIMESTAMP
+    `).run(from.id, from.first_name || '', from.last_name || '', from.username || '', lang);
+    // Replace the picker with the confirmation so the chat stays tidy
+    try {
+      await bot.editMessageText(tt(lang, 'bot.lang_set'), { chat_id: message.chat.id, message_id: message.message_id });
+    } catch {}
+    await bot.answerCallbackQuery(query.id);
+    return sendWelcome(message.chat.id, from.first_name, lang);
+  }
+
   if (!isAdminId(from.id)) return bot.answerCallbackQuery(query.id);
 
   const match = data.match(/^(accept|cancel)_(\d+)$/);
@@ -665,11 +724,9 @@ bot.on('callback_query', async (query) => {
       db.prepare('UPDATE products SET quantity=quantity+? WHERE id=?').run(item.quantity, item.product_id);
   }
 
-  const notifyMsg = action === 'accept'
-    ? `✅ <b>Заказ #${orderId} подтверждён!</b>\n\nСкоро свяжемся с вами для уточнения доставки.`
-    : `❌ <b>Заказ #${orderId} отменён.</b>\n\nСвяжитесь с нами: @r1m_nightrider или +82 10 3768 2270`;
-
   if (!order.is_guest && order.user_id) {
+    const lang = userLang(order.user_id);
+    const notifyMsg = tt(lang, action === 'accept' ? 'bot.accepted' : 'bot.cancelled', { id: orderId });
     try { await bot.sendMessage(order.user_id, notifyMsg, { parse_mode: 'HTML' }); }
     catch (e) { console.error('Customer notify failed:', e.message); }
   }

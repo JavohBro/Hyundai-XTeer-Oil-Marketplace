@@ -15,24 +15,25 @@
 
 <header id="hdr">
   <div class="hdr-inner">
-    <a class="brand" href="#/" aria-label="Carmon Oil — на главную">
+    <a class="brand" href="#/" aria-label="Carmon Oil">
       <img src="/assets/logo.png" alt="Carmon Oil" onerror="this.style.display='none'">
     </a>
 
     <nav class="hdr-nav" id="hdr-nav">
-      <a href="#/" data-route="catalog">Каталог</a>
-      <a href="#/orders" data-route="orders">Заказы</a>
-      <a href="#/help" data-route="help">Помощь</a>
-      <a href="#/admin" data-route="admin" id="nav-admin" hidden>Админ</a>
+      <a href="#/" data-route="catalog" data-i18n="nav.catalog">Каталог</a>
+      <a href="#/orders" data-route="orders" data-i18n="nav.orders">Заказы</a>
+      <a href="#/help" data-route="help" data-i18n="nav.help">Помощь</a>
+      <a href="#/admin" data-route="admin" id="nav-admin" data-i18n="nav.admin" hidden>Админ</a>
     </nav>
 
     <div class="hdr-actions">
-      <button class="icon-action" id="btn-cart" aria-label="Корзина">
+      <button class="lang-btn" id="lang-btn" aria-label="Language"><span id="lang-btn-flag">🌐</span><span id="lang-btn-code"></span></button>
+      <button class="icon-action" id="btn-cart" aria-label="Cart">
         <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
         <span class="cart-count hidden" id="cart-count">0</span>
       </button>
       <div id="auth-slot"></div>
-      <button class="icon-action mobile-only" id="btn-menu" aria-label="Меню">
+      <button class="icon-action mobile-only" id="btn-menu" aria-label="Menu">
         <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     </div>
@@ -45,19 +46,19 @@
   <div class="ftr-inner">
     <div>
       <div class="ftr-brand">Carmon <b>Lubricants</b></div>
-      <p class="ftr-note">Официальный импортёр корейских масел.<br>Hyundai XTeer, SK ZIC, Nexus, Apex, Autous, Kixx.<br>South Korea, Goyang.</p>
+      <p class="ftr-note"><span data-i18n="footer.about">Официальный импортёр корейских масел.</span><br>Hyundai XTeer, SK ZIC, Nexus, Apex, Autous, Kixx.<br>South Korea, Goyang.</p>
     </div>
     <div>
-      <div class="ftr-h">Контакты</div>
+      <div class="ftr-h" data-i18n="footer.contacts">Контакты</div>
       <a href="https://t.me/r1m_nightrider" target="_blank" rel="noopener">Telegram — @r1m_nightrider</a>
       <a href="tel:+821037682270">+82 10 3768 2270</a>
       <a href="mailto:islombeksoyibboyev@gmail.com">islombeksoyibboyev@gmail.com</a>
     </div>
     <div>
-      <div class="ftr-h">Разделы</div>
-      <a href="#/">Каталог</a>
-      <a href="#/orders">Мои заказы</a>
-      <a href="#/help">Помощь</a>
+      <div class="ftr-h" data-i18n="footer.sections">Разделы</div>
+      <a href="#/" data-i18n="nav.catalog">Каталог</a>
+      <a href="#/orders" data-i18n="footer.my_orders">Мои заказы</a>
+      <a href="#/help" data-i18n="nav.help">Помощь</a>
     </div>
   </div>
   <div class="ftr-base">© <span id="yr"></span> Carmon Lubricants. South Korea, Goyang.</div>
@@ -65,10 +66,10 @@
 
 <!-- Cart drawer -->
 <div class="scrim hidden" id="scrim"></div>
-<aside class="drawer hidden" id="drawer" aria-label="Корзина">
+<aside class="drawer hidden" id="drawer" aria-label="Cart">
   <div class="drawer-head">
     <h2 id="drawer-title">Корзина</h2>
-    <button class="icon-action" id="drawer-close" aria-label="Закрыть">
+    <button class="icon-action" id="drawer-close" aria-label="Close">
       <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
@@ -83,11 +84,12 @@
 
 <div class="toast" id="toast"></div>
 
-<a class="tg-float" href="https://t.me/hyundaixteeroilbot" target="_blank" rel="noopener" aria-label="Написать в Telegram">
+<a class="tg-float" href="https://t.me/hyundaixteeroilbot" target="_blank" rel="noopener" aria-label="Telegram">
   <svg viewBox="0 0 24 24" fill="currentColor" style="stroke:none"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.013 4.52 13.1c-.658-.205-.67-.658.137-.975l10.84-4.179c.548-.2 1.027.12.85.975z"/></svg>
-  <span>Написать в Telegram</span>
+  <span data-i18n="tg.float">Написать в Telegram</span>
 </a>
 
+<script src="/assets/i18n.js"></script>
 <script src="web.js"></script>
 </body>
 </html>

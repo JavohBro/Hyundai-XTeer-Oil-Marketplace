@@ -25,7 +25,47 @@ const S = {
   editingProduct: null,
   newImageFiles: [],
   keepExistingImages: true,
+  lang: null,
 };
+
+// ─── i18n ─────────────────────────────────────────────
+const LS_LANG = 'carmon_lang';
+const t    = (k, v) => I18N.t(S.lang || I18N.DEFAULT, k, v);
+const catL = (k, full) => I18N.catLabel(S.lang || I18N.DEFAULT, k, full);
+const stL  = s => t('st.' + s);
+
+// Static chrome outside the pages: bottom nav labels, loading subtitle, <html lang>
+function paintStatic() {
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.documentElement.lang = S.lang || I18N.DEFAULT;
+  const sub = document.getElementById('loading-sub');
+  if (sub) sub.textContent = t('app.sub');
+}
+
+function applyLang(code, { persist = true, sync = true } = {}) {
+  S.lang = I18N.normalize(code);
+  if (persist) try { localStorage.setItem(LS_LANG, S.lang); } catch {}
+  // Keep the bot in the same language (needs a signed-in Telegram user)
+  if (sync && S.me?.authenticated) api('/api/lang', { method: 'POST', body: JSON.stringify({ lang: S.lang }) }).catch(() => {});
+  paintStatic();
+}
+
+function showLangPicker() {
+  const ov = document.getElementById('lang-overlay');
+  const grid = document.getElementById('lang-grid');
+  document.getElementById('lang-title').textContent = I18N.LANGS.map(l => I18N.t(l.code, 'lang.title')).join(' · ');
+  document.getElementById('lang-sub').textContent = '';
+  grid.innerHTML = I18N.LANGS.map(l =>
+    `<button class="lang-card${S.lang === l.code ? ' active' : ''}" data-lang="${l.code}"><span>${l.flag}</span><span>${l.name}</span></button>`
+  ).join('');
+  grid.querySelectorAll('.lang-card').forEach(b => b.addEventListener('click', () => {
+    applyLang(b.dataset.lang);
+    tg?.HapticFeedback?.selectionChanged();
+    ov.classList.add('hidden');
+    if (S.page === 'product') navigate('catalog'); else renderPage(S.page);
+  }));
+  ov.classList.remove('hidden');
+}
 
 // ─── API helper ──────────────────────────────────────
 async function api(url, opts = {}) {
@@ -36,8 +76,8 @@ async function api(url, opts = {}) {
   Object.assign(headers, opts.headers || {});
   const res = await fetch(url, { ...opts, headers });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Ошибка сети' }));
-    throw new Error(err.error || 'Ошибка запроса');
+    const err = await res.json().catch(() => ({ error: t('app.net_err') }));
+    throw new Error(err.error || t('app.req_err'));
   }
   return res.json();
 }
@@ -89,9 +129,8 @@ function showConfirm(msg) {
 // ─── Format helpers ───────────────────────────────────
 function fmt(price) { return price.toLocaleString('ru'); }
 function fmtDate(str) {
-  return new Date(str).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return new Date(str).toLocaleString(I18N.locale(S.lang), { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
-const STATUS_LABELS = { pending: 'Ожидает', confirmed: 'Подтверждён', shipped: 'Отправлен', delivered: 'Доставлен', cancelled: 'Отменён' };
 
 // ─── Cart badge ───────────────────────────────────────
 function updateCartBadge() {
@@ -149,14 +188,14 @@ async function renderCatalog() {
       <div class="header-row">
         <div>
           <h1>Carmon Oil</h1>
-          <p>Корейское качество для вашего авто</p>
+          <p>${t('app.sub')}</p>
         </div>
         <img src="/assets/shortlogo.png" style="height:36px;border-radius:8px;object-fit:contain;" onerror="this.style.display='none'">
       </div>
     </div>
     <div class="search-bar">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="search-input" type="search" placeholder="Поиск масла..." value="${S.searchQuery}">
+      <input id="search-input" type="search" placeholder="${t('app.search')}" value="${S.searchQuery}">
     </div>
     <div class="brand-scroll" id="brand-scroll"></div>
     <div class="cat-scroll" id="cat-scroll"></div>
@@ -180,8 +219,7 @@ async function renderCatalog() {
   filterAndRenderProducts();
 }
 
-const CATEGORIES = ['all', 'Моторное масло', 'Трансмиссионное масло', 'Гидравлическое масло', 'Другое'];
-const CAT_LABELS = { all: 'Все', 'Моторное масло': 'Моторное', 'Трансмиссионное масло': 'Трансмиссионное', 'Гидравлическое масло': 'Гидравлическое', 'Другое': 'Другое' };
+const CATEGORIES = ['all', ...I18N.CATS.map(c => c.key)];
 const APP_BRANDS = [
   { id: 'all',           logo: null,                         label: 'Все' },
   { id: 'Hyundai XTeer', logo: '/assets/hyundailogo1.png',   label: 'Hyundai XTeer' },
@@ -197,7 +235,7 @@ function renderBrandPills() {
   if (!el) return;
   el.innerHTML = APP_BRANDS.map(b =>
     `<button class="brand-pill ${S.activeBrand === b.id ? 'active' : ''}" data-brand="${b.id}">` +
-    (b.logo ? `<img src="${b.logo}" alt="${b.label}">` : `<span>${b.label}</span>`) +
+    (b.logo ? `<img src="${b.logo}" alt="${b.label}">` : `<span>${t('cat.all')}</span>`) +
     `</button>`
   ).join('');
   el.querySelectorAll('.brand-pill').forEach(btn => btn.addEventListener('click', () => {
@@ -211,7 +249,7 @@ function renderCatPills() {
   const scroll = document.getElementById('cat-scroll');
   if (!scroll) return;
   scroll.innerHTML = CATEGORIES.map(c => `
-    <button class="cat-pill ${S.activeCategory === c ? 'active' : ''}" data-cat="${c}">${CAT_LABELS[c]}</button>
+    <button class="cat-pill ${S.activeCategory === c ? 'active' : ''}" data-cat="${c}">${c === 'all' ? t('cat.all') : catL(c)}</button>
   `).join('');
   scroll.querySelectorAll('.cat-pill').forEach(b => b.addEventListener('click', () => {
     S.activeCategory = b.dataset.cat;
@@ -232,7 +270,7 @@ function filterAndRenderProducts() {
   }
   S.filteredProducts = list;
   if (list.length === 0) {
-    grid.innerHTML = `<div class="empty" style="grid-column:span 2"><div class="empty-icon">🔍</div><div class="empty-title">Ничего не найдено</div><div class="empty-sub">Попробуйте изменить запрос</div></div>`;
+    grid.innerHTML = `<div class="empty" style="grid-column:span 2"><div class="empty-icon">🔍</div><div class="empty-title">${t('empty.title')}</div><div class="empty-sub">${t('empty.sub')}</div></div>`;
     return;
   }
   grid.innerHTML = list.map(productCard).join('');
@@ -244,7 +282,7 @@ function filterAndRenderProducts() {
     Cart.add(p);
     b.classList.add('pop');
     setTimeout(() => b.classList.remove('pop'), 250);
-    toast(`${p.name} добавлен в корзину`);
+    toast(t('toast.added', { name: p.name }));
   }));
 }
 
@@ -255,7 +293,7 @@ function productCard(p) {
   <div class="product-card ${!inStock ? 'out-of-stock' : ''}" data-id="${p.id}">
     <div class="product-card-img">
       ${img}
-      ${!inStock ? '<span class="out-of-stock-tag">Нет в наличии</span>' : ''}
+      ${!inStock ? `<span class="out-of-stock-tag">${t('stock.out')}</span>` : ''}
     </div>
     <div class="product-card-body">
       <div class="product-card-name">${p.name}</div>
@@ -289,11 +327,11 @@ function renderProductDetail(p) {
     ? imgs.map(img => `<div class="carousel-slide"><img src="${img}" alt=""></div>`).join('')
     : `<div class="carousel-slide"><div class="no-img-lg">🛢</div></div>`;
   const dots = imgs.length > 1 ? `<div class="carousel-dots">${imgs.map((_, i) => `<div class="dot ${i === 0 ? 'active' : ''}"></div>`).join('')}</div>` : '';
-  const tags = [p.category, p.viscosity, p.litres ? `${p.litres}` : ''].filter(Boolean).map(t => `<span class="tag">${t}</span>`).join('');
+  const tags = [catL(p.category, true), p.viscosity, p.litres ? `${p.litres}` : ''].filter(Boolean).map(x => `<span class="tag">${x}</span>`).join('');
   const inStock = p.quantity > 0;
   return `
   <div class="product-detail-back">
-    <button class="back-btn" id="pd-back"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Назад</button>
+    <button class="back-btn" id="pd-back"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>${t('back')}</button>
   </div>
   <div class="carousel" id="carousel">
     <div class="carousel-track-wrap"><div class="carousel-track" id="carousel-track">${slideHTML}</div></div>
@@ -310,16 +348,16 @@ function renderProductDetail(p) {
     ${p.description ? `<div class="product-desc">${p.description}</div>` : ''}
     ${inStock ? `
     <div class="qty-row">
-      <div class="qty-label">Количество</div>
+      <div class="qty-label">${t('qty')}</div>
       <div class="qty-ctrl">
         <button class="qty-btn" id="qty-minus">−</button>
         <input class="qty-val" id="qty-val" type="text" inputmode="numeric" value="1">
         <button class="qty-btn" id="qty-plus">+</button>
       </div>
     </div>
-    <div class="stock-note">В наличии: ${p.quantity} шт.</div>
-    <button class="btn btn-primary btn-full" id="pd-add-cart">Добавить в корзину</button>
-    ` : `<div class="empty-icon" style="text-align:center;font-size:40px;margin:20px 0">😔</div><div style="text-align:center;color:var(--text2);font-size:15px;margin-bottom:20px">Нет в наличии</div>`}
+    <div class="stock-note">${t('stock.in_plain', { n: p.quantity })}</div>
+    <button class="btn btn-primary btn-full" id="pd-add-cart">${t('add.long')}</button>
+    ` : `<div class="empty-icon" style="text-align:center;font-size:40px;margin:20px 0">😔</div><div style="text-align:center;color:var(--text2);font-size:15px;margin-bottom:20px">${t('stock.out')}</div>`}
   </div>
   <div class="scroll-pad"></div>
   `;
@@ -362,7 +400,7 @@ function initQtyControls(p) {
   // Free typing while entering, clamped once the field is left
   val.addEventListener('input', () => { val.value = val.value.replace(/\D/g, ''); });
   val.addEventListener('blur', () => {
-    if (parseInt(val.value, 10) > p.quantity) toast(`Доступно только ${p.quantity} шт.`);
+    if (parseInt(val.value, 10) > p.quantity) toast(t('toast.max', { n: p.quantity }));
     val.value = clamp(val.value);
   });
   val.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); val.blur(); } });
@@ -370,12 +408,12 @@ function initQtyControls(p) {
   minus.addEventListener('click', () => { val.value = clamp(clamp(val.value) - 1); });
   plus.addEventListener('click', () => {
     const cur = clamp(val.value);
-    if (cur >= p.quantity) return toast(`Доступно только ${p.quantity} шт.`);
+    if (cur >= p.quantity) return toast(t('toast.max', { n: p.quantity }));
     val.value = cur + 1;
   });
   addBtn.addEventListener('click', () => {
     Cart.add(p, clamp(val.value));
-    toast(`${p.name} добавлен в корзину`);
+    toast(t('toast.added', { name: p.name }));
     val.value = 1;
     tg?.HapticFeedback?.notificationOccurred('success');
   });
@@ -386,29 +424,29 @@ function renderCart() {
   const el = document.getElementById('pg-cart');
   if (S.cart.length === 0) {
     el.innerHTML = `
-      <div class="page-header"><h1>Корзина</h1></div>
+      <div class="page-header"><h1>${t('cart.title')}</h1></div>
       <div class="empty">
         <div class="empty-icon">🛒</div>
-        <div class="empty-title">Корзина пуста</div>
-        <div class="empty-sub">Добавьте товары из каталога</div>
-        <button class="btn btn-primary" style="margin-top:8px" onclick="navigate('catalog')">Перейти в каталог</button>
+        <div class="empty-title">${t('cart.empty')}</div>
+        <div class="empty-sub">${t('cart.empty_sub')}</div>
+        <button class="btn btn-primary" style="margin-top:8px" onclick="navigate('catalog')">${t('cart.go')}</button>
       </div>`;
     return;
   }
   const total = Cart.total();
   el.innerHTML = `
-    <div class="page-header"><h1>Корзина</h1><p>${Cart.count()} товар(а/ов)</p></div>
+    <div class="page-header"><h1>${t('cart.title')}</h1><p>${t('cart.count', { n: Cart.count() })}</p></div>
     <div class="cart-list" id="cart-list"></div>
     <div class="notes-section">
-      <label>Комментарий к заказу (необязательно)</label>
-      <textarea class="form-textarea" id="cart-notes" rows="2" placeholder="Например: позвоните за час до доставки"></textarea>
+      <label>${t('cart.notes_label')}</label>
+      <textarea class="form-textarea" id="cart-notes" rows="2" placeholder="${t('cart.notes_ph')}"></textarea>
     </div>
     <div class="cart-summary">
-      <div class="cart-summary-row"><span>Товаров</span><span>${Cart.count()} шт.</span></div>
-      <div class="cart-summary-total"><span>Итого</span><span>${fmt(total)} ${S.settings.currency}</span></div>
+      <div class="cart-summary-row"><span>${t('cart.items')}</span><span>${Cart.count()} ${t('pcs')}</span></div>
+      <div class="cart-summary-total"><span>${t('cart.total')}</span><span>${fmt(total)} ${S.settings.currency}</span></div>
     </div>
     <div class="cart-actions">
-      <button class="btn btn-primary btn-full" id="checkout-btn">Оформить заказ</button>
+      <button class="btn btn-primary btn-full" id="checkout-btn">${t('cart.checkout')}</button>
     </div>
     <div class="scroll-pad"></div>`;
 
@@ -453,7 +491,7 @@ function bindCartEvents() {
     const id = parseInt(b.dataset.id);
     const item = S.cart.find(i => i.product_id === id);
     if (!item) return;
-    if (item.quantity >= (item.max || 9999)) { toast(`Доступно только ${item.max} шт.`); return; }
+    if (item.quantity >= (item.max || 9999)) { toast(t('toast.max', { n: item.max })); return; }
     Cart.setQty(id, item.quantity + 1);
     renderCart();
   }));
@@ -471,7 +509,7 @@ function bindCartEvents() {
       if (!item) return;
       let v = parseInt(inp.value, 10);
       if (!v || v < 1) v = 1;
-      if (v > (item.max || 9999)) { v = item.max; toast(`Доступно только ${item.max} шт.`); }
+      if (v > (item.max || 9999)) { v = item.max; toast(t('toast.max', { n: item.max })); }
       Cart.setQty(id, v);
       renderCart();
     });
@@ -480,21 +518,20 @@ function bindCartEvents() {
 
 async function doCheckout() {
   if (!S.profile || !S.profile.full_name || !S.profile.phone) {
-    await showAlert('Для оформления заказа заполните профиль (ФИО, телефон, адрес).');
+    await showAlert(t('ck.profile_req'));
     navigate('profile');
     return;
   }
   const notes = document.getElementById('cart-notes')?.value || '';
-  const ok = await showConfirm(
-    `Подтвердить заказ?\n\n` +
-    `Сумма: ${fmt(Cart.total())} ${S.settings.currency}\n` +
-    `Доставка: ${S.profile.city}, ${S.profile.address}\n` +
-    `Телефон: ${S.profile.phone}`
-  );
+  const ok = await showConfirm(t('ck.confirm_q', {
+    sum: `${fmt(Cart.total())} ${S.settings.currency}`,
+    addr: `${S.profile.city}, ${S.profile.address}`,
+    phone: S.profile.phone
+  }));
   if (!ok) return;
 
   const btn = document.getElementById('checkout-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Оформляем...'; }
+  if (btn) { btn.disabled = true; btn.textContent = t('ck.placing'); }
 
   try {
     const result = await api('/api/orders', {
@@ -504,40 +541,40 @@ async function doCheckout() {
     Cart.clear();
     // Reload products to update stock
     S.products = await api('/api/products').catch(() => S.products);
-    await showAlert(`✅ Заказ #${result.order_id} оформлен!\n\nМы отправили подтверждение в Telegram. Ожидайте звонка для уточнения доставки.`);
+    await showAlert(t('ck.done_alert', { id: result.order_id }));
     navigate('orders');
   } catch (e) {
-    await showAlert(e.message || 'Ошибка при оформлении заказа');
-    if (btn) { btn.disabled = false; btn.textContent = 'Оформить заказ'; }
+    await showAlert(e.message || t('ck.err'));
+    if (btn) { btn.disabled = false; btn.textContent = t('cart.checkout'); }
   }
 }
 
 // ─── ORDERS ───────────────────────────────────────────
 async function renderOrders() {
   const el = document.getElementById('pg-orders');
-  el.innerHTML = `<div class="page-header"><h1>Мои заказы</h1></div><div style="text-align:center;padding:40px"><div class="spinner" style="margin:auto"></div></div>`;
+  el.innerHTML = `<div class="page-header"><h1>${t('orders.title')}</h1></div><div style="text-align:center;padding:40px"><div class="spinner" style="margin:auto"></div></div>`;
   try {
     S.orders = await api('/api/orders');
     renderOrdersList(el);
   } catch {
-    el.innerHTML = `<div class="page-header"><h1>Мои заказы</h1></div><div class="empty"><div class="empty-icon">❌</div><div class="empty-title">Ошибка загрузки</div></div>`;
+    el.innerHTML = `<div class="page-header"><h1>${t('orders.title')}</h1></div><div class="empty"><div class="empty-icon">❌</div><div class="empty-title">${t('orders.err')}</div></div>`;
   }
 }
 
 function renderOrdersList(el) {
   if (S.orders.length === 0) {
     el.innerHTML = `
-      <div class="page-header"><h1>Мои заказы</h1></div>
+      <div class="page-header"><h1>${t('orders.title')}</h1></div>
       <div class="empty">
         <div class="empty-icon">📋</div>
-        <div class="empty-title">Заказов пока нет</div>
-        <div class="empty-sub">Оформите первый заказ в каталоге</div>
-        <button class="btn btn-primary" style="margin-top:8px" onclick="navigate('catalog')">В каталог</button>
+        <div class="empty-title">${t('orders.none')}</div>
+        <div class="empty-sub">${t('orders.none_sub')}</div>
+        <button class="btn btn-primary" style="margin-top:8px" onclick="navigate('catalog')">${t('orders.to_catalog')}</button>
       </div>`;
     return;
   }
   el.innerHTML = `
-    <div class="page-header"><h1>Мои заказы</h1><p>${S.orders.length} заказ(ов)</p></div>
+    <div class="page-header"><h1>${t('orders.title')}</h1><p>${t('orders.count', { n: S.orders.length })}</p></div>
     <div class="order-list">${S.orders.map(orderCard).join('')}</div>
     <div class="scroll-pad"></div>`;
   el.querySelectorAll('.order-card').forEach(c => c.addEventListener('click', () => openOrderDetail(parseInt(c.dataset.id))));
@@ -548,8 +585,8 @@ function orderCard(o) {
   return `
   <div class="order-card" data-id="${o.id}">
     <div class="order-card-header">
-      <div><div class="order-id">Заказ #${o.id}</div><div class="order-date">${fmtDate(o.created_at)}</div></div>
-      <div class="status-badge status-${o.status}">${STATUS_LABELS[o.status]}</div>
+      <div><div class="order-id">${t('orders.one', { id: o.id })}</div><div class="order-date">${fmtDate(o.created_at)}</div></div>
+      <div class="status-badge status-${o.status}">${stL(o.status)}</div>
     </div>
     <div class="order-items-preview">${preview}</div>
     <div class="order-footer">
@@ -565,14 +602,14 @@ function openOrderDetail(id) {
   const el = document.getElementById('pg-orders');
   el.innerHTML = `
     <div class="product-detail-back">
-      <button class="back-btn" id="order-back"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Заказы</button>
+      <button class="back-btn" id="order-back"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>${t('orders.back')}</button>
     </div>
     <div class="order-detail">
       <div class="header-row" style="margin-bottom:16px">
-        <div><div class="order-id">Заказ #${o.id}</div><div class="order-date">${fmtDate(o.created_at)}</div></div>
-        <div class="status-badge status-${o.status}">${STATUS_LABELS[o.status]}</div>
+        <div><div class="order-id">${t('orders.one', { id: o.id })}</div><div class="order-date">${fmtDate(o.created_at)}</div></div>
+        <div class="status-badge status-${o.status}">${stL(o.status)}</div>
       </div>
-      <div class="section-title">Состав заказа</div>
+      <div class="section-title">${t('orders.items')}</div>
       <div class="order-detail-items">
         ${o.items.map(i => `
           <div class="order-detail-item">
@@ -581,15 +618,15 @@ function openOrderDetail(id) {
           </div>`).join('')}
         <div class="divider" style="margin:10px 0"></div>
         <div class="order-detail-item">
-          <div style="font-weight:700">Итого</div>
+          <div style="font-weight:700">${t('cart.total')}</div>
           <div style="font-weight:700">${fmt(o.total_price)} ${o.currency}</div>
         </div>
       </div>
-      <div class="section-title">Доставка</div>
-      <div class="order-info-row"><span class="order-info-label">Город</span><span>${o.city || '—'}</span></div>
-      <div class="order-info-row"><span class="order-info-label">Адрес</span><span>${o.address || '—'}</span></div>
-      <div class="order-info-row"><span class="order-info-label">Телефон</span><span>${o.phone || '—'}</span></div>
-      ${o.notes ? `<div class="order-info-row"><span class="order-info-label">Примечание</span><span>${o.notes}</span></div>` : ''}
+      <div class="section-title">${t('orders.delivery')}</div>
+      <div class="order-info-row"><span class="order-info-label">${t('orders.city')}</span><span>${o.city || '—'}</span></div>
+      <div class="order-info-row"><span class="order-info-label">${t('orders.address')}</span><span>${o.address || '—'}</span></div>
+      <div class="order-info-row"><span class="order-info-label">${t('orders.phone')}</span><span>${o.phone || '—'}</span></div>
+      ${o.notes ? `<div class="order-info-row"><span class="order-info-label">${t('orders.notes')}</span><span>${o.notes}</span></div>` : ''}
     </div>
     <div class="scroll-pad"></div>`;
   document.getElementById('order-back').addEventListener('click', () => renderOrders());
@@ -600,39 +637,50 @@ function renderProfile() {
   const el = document.getElementById('pg-profile');
   const u = S.me;
   const p = S.profile;
-  const initials = u ? (u.first_name[0] + (u.last_name?.[0] || '')).toUpperCase() : '?';
+  const initials = u?.first_name ? (u.first_name[0] + (u.last_name?.[0] || '')).toUpperCase() : '?';
   const fullName = p?.full_name || [u?.first_name, u?.last_name].filter(Boolean).join(' ');
 
   el.innerHTML = `
-    <div class="page-header"><h1>Профиль</h1></div>
+    <div class="page-header"><h1>${t('profile.title')}</h1></div>
     <div class="profile-header">
       <div class="avatar">${initials}</div>
-      <div class="profile-name">${fullName || 'Пользователь'}</div>
+      <div class="profile-name">${fullName || t('profile.user')}</div>
       ${u?.username ? `<div class="profile-username">@${u.username}</div>` : ''}
     </div>
     <div class="form-section">
       <div class="form-group">
-        <label class="form-label">ФИО *</label>
-        <input id="pf-name" class="form-input" type="text" placeholder="Иванов Иван Иванович" value="${p?.full_name || fullName || ''}">
+        <label class="form-label">${t('profile.lang')}</label>
+        <div class="lang-row">
+          ${I18N.LANGS.map(l => `<button type="button" class="lang-pill${S.lang === l.code ? ' active' : ''}" data-lang="${l.code}"><span>${l.flag}</span><span>${l.name}</span></button>`).join('')}
+        </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Номер телефона *</label>
-        <input id="pf-phone" class="form-input" type="tel" placeholder="+998 90 123 45 67" value="${p?.phone || ''}">
+        <label class="form-label">${t('profile.name')}</label>
+        <input id="pf-name" class="form-input" type="text" placeholder="${t('profile.name_ph')}" value="${p?.full_name || fullName || ''}">
       </div>
       <div class="form-group">
-        <label class="form-label">Город / Регион *</label>
-        <input id="pf-city" class="form-input" type="text" placeholder="Ташкент" value="${p?.city || ''}">
+        <label class="form-label">${t('profile.phone')}</label>
+        <input id="pf-phone" class="form-input" type="tel" placeholder="${t('profile.phone_ph')}" value="${p?.phone || ''}">
       </div>
       <div class="form-group">
-        <label class="form-label">Адрес доставки *</label>
-        <input id="pf-address" class="form-input" type="text" placeholder="ул. Амира Темура, д. 1, кв. 5" value="${p?.address || ''}">
+        <label class="form-label">${t('profile.city')}</label>
+        <input id="pf-city" class="form-input" type="text" placeholder="${t('profile.city_ph')}" value="${p?.city || ''}">
       </div>
-      <button class="btn btn-primary btn-full" id="pf-save" style="margin-top:8px">Сохранить профиль</button>
-      ${p ? `<div style="text-align:center;padding:12px 0;font-size:12px;color:var(--text2)">✅ Профиль сохранён — заказы оформляются быстро</div>` : ''}
+      <div class="form-group">
+        <label class="form-label">${t('profile.address')}</label>
+        <input id="pf-address" class="form-input" type="text" placeholder="${t('profile.addr_ph')}" value="${p?.address || ''}">
+      </div>
+      <button class="btn btn-primary btn-full" id="pf-save" style="margin-top:8px">${t('profile.save')}</button>
+      ${p ? `<div style="text-align:center;padding:12px 0;font-size:12px;color:var(--text2)">${t('profile.saved')}</div>` : ''}
     </div>
     <div class="scroll-pad"></div>`;
 
   document.getElementById('pf-save').addEventListener('click', saveProfile);
+  el.querySelectorAll('.lang-pill').forEach(b => b.addEventListener('click', () => {
+    applyLang(b.dataset.lang);
+    tg?.HapticFeedback?.selectionChanged();
+    renderProfile();
+  }));
 }
 
 async function saveProfile() {
@@ -640,25 +688,30 @@ async function saveProfile() {
   const phone   = document.getElementById('pf-phone')?.value.trim();
   const city    = document.getElementById('pf-city')?.value.trim();
   const address = document.getElementById('pf-address')?.value.trim();
-  if (!name || !phone || !city || !address) { await showAlert('Заполните все обязательные поля'); return; }
+  if (!name || !phone || !city || !address) { await showAlert(t('profile.err_fields')); return; }
   const btn = document.getElementById('pf-save');
-  btn.disabled = true; btn.textContent = 'Сохраняем...';
+  btn.disabled = true; btn.textContent = t('profile.saving');
   try {
     S.profile = await api('/api/profile', { method: 'POST', body: JSON.stringify({ full_name: name, phone, city, address }) });
     localStorage.setItem('xteer_profile', JSON.stringify(S.profile));
-    toast('Профиль сохранён ✓');
+    toast(t('profile.saved_toast'));
     renderProfile();
   } catch (e) {
     await showAlert(e.message);
-    btn.disabled = false; btn.textContent = 'Сохранить профиль';
+    btn.disabled = false; btn.textContent = t('profile.save');
   }
 }
 
 // ─── HELP ─────────────────────────────────────────────
 function renderHelp() {
   const el = document.getElementById('pg-help');
+  const faqs = [1, 2, 3, 4, 5].map(n => `
+        <div class="faq-item">
+          <div class="faq-q">${t(`faq.q${n}`)}</div>
+          <div class="faq-a">${t(`faq.a${n}`)}</div>
+        </div>`).join('');
   el.innerHTML = `
-    <div class="page-header"><h1>Помощь</h1></div>
+    <div class="page-header"><h1>${t('help.title')}</h1></div>
     <div class="help-section">
       <div class="help-card">
         <a href="https://t.me/r1m_nightrider" target="_blank">
@@ -675,7 +728,7 @@ function renderHelp() {
           <div class="help-item">
             <div class="help-icon">📞</div>
             <div>
-              <div class="help-label">Телефон</div>
+              <div class="help-label">${t('help.phone')}</div>
               <div class="help-value">+82 10 3768 2270</div>
             </div>
             <svg viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--text2);margin-left:auto"><polyline points="9 18 15 12 9 6"/></svg>
@@ -683,29 +736,8 @@ function renderHelp() {
         </a>
       </div>
 
-      <div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;padding:16px 0 10px">Часто задаваемые вопросы</div>
-      <div class="help-card">
-        <div class="faq-item">
-          <div class="faq-q">Откуда привозите масло?</div>
-          <div class="faq-a">Carmon Oil — официальный импортёр масел Hyundai XTeer, SK ZIC, Nexus и Apex из Южной Кореи. Полная сертификация качества.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Как быстро доставят заказ?</div>
-          <div class="faq-a">Доставка по Ташкенту: 1–2 рабочих дня. По регионам Узбекистана: 3–5 дней. Другие страны СНГ — уточняйте.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Как оплатить заказ?</div>
-          <div class="faq-a">Оплата при получении. Также возможна предоплата — уточните при подтверждении заказа.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Можно ли вернуть товар?</div>
-          <div class="faq-a">Возврат возможен в течение 7 дней при условии сохранения оригинальной упаковки. Свяжитесь с нами через Telegram.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">В какие страны доставляете?</div>
-          <div class="faq-a">Узбекистан, Кыргызстан, Казахстан и другие страны СНГ. Уточните наличие доставки в вашу страну через @r1m_nightrider.</div>
-        </div>
-      </div>
+      <div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;padding:16px 0 10px">${t('help.faq')}</div>
+      <div class="help-card">${faqs}</div>
     </div>
     <div class="scroll-pad"></div>`;
 }
@@ -714,16 +746,16 @@ function renderHelp() {
 function renderAdmin() {
   const el = document.getElementById('pg-admin');
   el.innerHTML = `
-    <div class="page-header"><h1>Администратор</h1></div>
+    <div class="page-header"><h1>${t('admin.title')}</h1></div>
     <div class="admin-tabs">
-      <button class="admin-tab ${S.adminSection === 'stats' ? 'active' : ''}" data-sec="stats">Статистика</button>
-      <button class="admin-tab ${S.adminSection === 'products' ? 'active' : ''}" data-sec="products">Товары</button>
-      <button class="admin-tab ${S.adminSection === 'orders' ? 'active' : ''}" data-sec="orders">Заказы</button>
-      <button class="admin-tab ${S.adminSection === 'settings' ? 'active' : ''}" data-sec="settings">Настройки</button>
+      <button class="admin-tab ${S.adminSection === 'stats' ? 'active' : ''}" data-sec="stats">${t('admin.stats')}</button>
+      <button class="admin-tab ${S.adminSection === 'products' ? 'active' : ''}" data-sec="products">${t('admin.products')}</button>
+      <button class="admin-tab ${S.adminSection === 'orders' ? 'active' : ''}" data-sec="orders">${t('admin.orders')}</button>
+      <button class="admin-tab ${S.adminSection === 'settings' ? 'active' : ''}" data-sec="settings">${t('admin.settings')}</button>
     </div>
     <div id="admin-content"></div>`;
-  el.querySelectorAll('.admin-tab').forEach(t => t.addEventListener('click', () => {
-    S.adminSection = t.dataset.sec;
+  el.querySelectorAll('.admin-tab').forEach(tb => tb.addEventListener('click', () => {
+    S.adminSection = tb.dataset.sec;
     el.querySelectorAll('.admin-tab').forEach(x => x.classList.toggle('active', x.dataset.sec === S.adminSection));
     loadAdminSection();
   }));
@@ -747,19 +779,19 @@ async function renderAdminStats(ac) {
     const stats = await api('/api/admin/stats');
     ac.innerHTML = `
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-val">${stats.totalOrders}</div><div class="stat-label">Всего заказов</div></div>
-        <div class="stat-card"><div class="stat-val" style="color:var(--warning)">${stats.pendingOrders}</div><div class="stat-label">Ожидают</div></div>
-        <div class="stat-card"><div class="stat-val" style="color:var(--blue)">${stats.confirmedOrders}</div><div class="stat-label">Подтверждены</div></div>
-        <div class="stat-card"><div class="stat-val" style="color:var(--success)">${stats.deliveredOrders}</div><div class="stat-label">Доставлены</div></div>
+        <div class="stat-card"><div class="stat-val">${stats.totalOrders}</div><div class="stat-label">${t('admin.total_orders')}</div></div>
+        <div class="stat-card"><div class="stat-val" style="color:var(--warning)">${stats.pendingOrders}</div><div class="stat-label">${t('admin.pending')}</div></div>
+        <div class="stat-card"><div class="stat-val" style="color:var(--blue)">${stats.confirmedOrders}</div><div class="stat-label">${t('admin.inwork')}</div></div>
+        <div class="stat-card"><div class="stat-val" style="color:var(--success)">${stats.deliveredOrders}</div><div class="stat-label">${t('admin.delivered')}</div></div>
         <div class="stat-card" style="grid-column:span 2">
           <div class="stat-val">${fmt(stats.totalRevenue)} ${stats.currency}</div>
-          <div class="stat-label">Общая выручка</div>
+          <div class="stat-label">${t('admin.revenue')}</div>
         </div>
-        <div class="stat-card"><div class="stat-val">${stats.totalProducts}</div><div class="stat-label">Активных товаров</div></div>
-        <div class="stat-card"><div class="stat-val">${stats.totalCustomers}</div><div class="stat-label">Покупателей</div></div>
+        <div class="stat-card"><div class="stat-val">${stats.totalProducts}</div><div class="stat-label">${t('admin.products_n')}</div></div>
+        <div class="stat-card"><div class="stat-val">${stats.totalCustomers}</div><div class="stat-label">${t('admin.customers')}</div></div>
       </div>
       <div class="scroll-pad"></div>`;
-  } catch { ac.innerHTML = `<div class="empty"><div class="empty-icon">❌</div><div class="empty-title">Ошибка</div></div>`; }
+  } catch { ac.innerHTML = `<div class="empty"><div class="empty-icon">❌</div><div class="empty-title">${t('admin.err')}</div></div>`; }
 }
 
 async function renderAdminProducts(ac) {
@@ -767,7 +799,7 @@ async function renderAdminProducts(ac) {
     const products = await api('/api/admin/products');
     ac.innerHTML = `
       <div style="padding:12px 16px 0">
-        <button class="btn btn-primary btn-full" id="add-product-btn">+ Добавить товар</button>
+        <button class="btn btn-primary btn-full" id="add-product-btn">${t('admin.add')}</button>
       </div>
       <div class="admin-product-list">${products.map(adminProductItem).join('')}</div>
       <div class="scroll-pad"></div>`;
@@ -777,10 +809,10 @@ async function renderAdminProducts(ac) {
       if (p) openProductForm(p);
     }));
     ac.querySelectorAll('.admin-del-btn').forEach(b => b.addEventListener('click', async () => {
-      const ok = await showConfirm('Удалить товар?');
+      const ok = await showConfirm(t('admin.del_q'));
       if (!ok) return;
       await api(`/api/products/${b.dataset.id}`, { method: 'DELETE' });
-      toast('Товар удалён');
+      toast(t('admin.deleted'));
       await renderAdminProducts(ac);
     }));
     ac.querySelectorAll('.admin-toggle-btn').forEach(b => b.addEventListener('click', async () => {
@@ -790,7 +822,7 @@ async function renderAdminProducts(ac) {
       fd.append('is_active', p.is_active ? '0' : '1');
       fd.append('keep_images', 'true');
       await api(`/api/products/${p.id}`, { method: 'PUT', body: fd });
-      toast(p.is_active ? 'Товар скрыт' : 'Товар активирован');
+      toast(p.is_active ? t('admin.hid') : t('admin.shown'));
       await renderAdminProducts(ac);
     }));
   } catch (e) { ac.innerHTML = `<div class="empty"><div class="empty-icon">❌</div><div class="empty-title">${e.message}</div></div>`; }
@@ -802,12 +834,12 @@ function adminProductItem(p) {
   <div class="admin-product-item">
     <div class="admin-product-img">${img}</div>
     <div class="admin-product-info">
-      <div class="admin-product-name">${p.name}${!p.is_active ? '<span class="inactive-badge">Скрыт</span>' : ''}</div>
+      <div class="admin-product-name">${p.name}${!p.is_active ? `<span class="inactive-badge">${t('admin.hidden')}</span>` : ''}</div>
       <div class="admin-product-sub">${[p.viscosity, p.litres].filter(Boolean).join(' · ')}</div>
-      <div class="admin-product-price">${fmt(p.price)} ${S.settings.currency} · ${p.quantity} шт.</div>
+      <div class="admin-product-price">${fmt(p.price)} ${S.settings.currency} · ${p.quantity} ${t('pcs')}</div>
     </div>
     <div class="admin-product-actions">
-      <button class="icon-btn icon-btn-toggle admin-toggle-btn" data-id="${p.id}" title="${p.is_active ? 'Скрыть' : 'Показать'}">${p.is_active ? '👁' : '🙈'}</button>
+      <button class="icon-btn icon-btn-toggle admin-toggle-btn" data-id="${p.id}" title="${p.is_active ? t('admin.hide') : t('admin.show')}">${p.is_active ? '👁' : '🙈'}</button>
       <button class="icon-btn icon-btn-edit admin-edit-btn" data-id="${p.id}">✏️</button>
       <button class="icon-btn icon-btn-delete admin-del-btn" data-id="${p.id}">🗑</button>
     </div>
@@ -818,14 +850,14 @@ async function renderAdminOrders(ac) {
   try {
     const orders = await api('/api/orders?all=true');
     const filters = ['all', 'pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
-    const filterLabels = { all: 'Все', pending: 'Ожидают', confirmed: 'Принятые', shipped: 'В пути', delivered: 'Доставлены', cancelled: 'Отменены' };
+    const filterLabels = { all: t('admin.fl_all'), pending: t('admin.fl_pending'), confirmed: t('admin.fl_confirmed'), shipped: t('admin.fl_shipped'), delivered: t('admin.fl_delivered'), cancelled: t('admin.fl_cancelled') };
     const filtered = S.adminOrderFilter === 'all' ? orders : orders.filter(o => o.status === S.adminOrderFilter);
 
     ac.innerHTML = `
       <div class="filter-scroll">
         ${filters.map(f => `<button class="filter-pill ${S.adminOrderFilter === f ? 'active' : ''}" data-f="${f}">${filterLabels[f]}</button>`).join('')}
       </div>
-      <div class="order-list">${filtered.map(o => adminOrderCard(o)).join('') || `<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Нет заказов</div></div>`}</div>
+      <div class="order-list">${filtered.map(o => adminOrderCard(o)).join('') || `<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">${t('admin.no_orders')}</div></div>`}</div>
       <div class="scroll-pad"></div>`;
 
     ac.querySelectorAll('.filter-pill').forEach(b => b.addEventListener('click', () => {
@@ -841,11 +873,11 @@ function adminOrderCard(o) {
   <div class="order-card admin-order-card" data-id="${o.id}">
     <div class="order-card-header">
       <div>
-        <div class="order-id">Заказ #${o.id}</div>
+        <div class="order-id">${t('orders.one', { id: o.id })}</div>
         <div class="order-date">${fmtDate(o.created_at)}</div>
-        <div class="admin-order-customer">${o.full_name || 'Неизвестен'}${o.user_username ? ` · @${o.user_username}` : ''}</div>
+        <div class="admin-order-customer">${o.full_name || t('admin.unknown')}${o.user_username ? ` · @${o.user_username}` : ''}</div>
       </div>
-      <div class="status-badge status-${o.status}">${STATUS_LABELS[o.status]}</div>
+      <div class="status-badge status-${o.status}">${stL(o.status)}</div>
     </div>
     <div class="order-footer">
       <div class="order-total">${fmt(o.total_price)} ${o.currency}</div>
@@ -863,22 +895,22 @@ function openAdminOrderDetail(id, orders, ac) {
   ac.innerHTML = `
     <div style="padding:16px 16px 0">
       <button class="back-btn" id="admin-order-back" style="margin-bottom:16px">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>К заказам
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>${t('admin.to_orders')}
       </button>
       <div class="header-row" style="margin-bottom:16px">
-        <div><div class="order-id">Заказ #${o.id}</div><div class="order-date">${fmtDate(o.created_at)}</div></div>
-        <div class="status-badge status-${o.status}">${STATUS_LABELS[o.status]}</div>
+        <div><div class="order-id">${t('orders.one', { id: o.id })}</div><div class="order-date">${fmtDate(o.created_at)}</div></div>
+        <div class="status-badge status-${o.status}">${stL(o.status)}</div>
       </div>
-      <div class="section-title">Покупатель</div>
-      <div class="order-info-row"><span class="order-info-label">Имя</span><span>${o.full_name || '—'}</span></div>
-      <div class="order-info-row"><span class="order-info-label">Телефон</span><span>${o.phone || '—'}</span></div>
-      <div class="order-info-row"><span class="order-info-label">Город</span><span>${o.city || '—'}</span></div>
-      <div class="order-info-row"><span class="order-info-label">Адрес</span><span>${o.address || '—'}</span></div>
-      ${o.notes ? `<div class="order-info-row"><span class="order-info-label">Примечание</span><span>${o.notes}</span></div>` : ''}
+      <div class="section-title">${t('admin.customer')}</div>
+      <div class="order-info-row"><span class="order-info-label">${t('admin.name')}</span><span>${o.full_name || '—'}</span></div>
+      <div class="order-info-row"><span class="order-info-label">${t('orders.phone')}</span><span>${o.phone || '—'}</span></div>
+      <div class="order-info-row"><span class="order-info-label">${t('orders.city')}</span><span>${o.city || '—'}</span></div>
+      <div class="order-info-row"><span class="order-info-label">${t('orders.address')}</span><span>${o.address || '—'}</span></div>
+      ${o.notes ? `<div class="order-info-row"><span class="order-info-label">${t('orders.notes')}</span><span>${o.notes}</span></div>` : ''}
       <a href="${contactUrl}" style="display:block;margin:12px 0">
-        <button class="btn btn-secondary btn-full">💬 Написать покупателю</button>
+        <button class="btn btn-secondary btn-full">${t('admin.msg_customer')}</button>
       </a>
-      <div class="section-title" style="margin-top:16px">Состав</div>
+      <div class="section-title" style="margin-top:16px">${t('admin.th_items')}</div>
       <div class="order-detail-items">
         ${o.items.map(i => `
           <div class="order-detail-item">
@@ -887,14 +919,14 @@ function openAdminOrderDetail(id, orders, ac) {
           </div>`).join('')}
         <div class="divider" style="margin:10px 0"></div>
         <div class="order-detail-item">
-          <div style="font-weight:700">Итого</div>
+          <div style="font-weight:700">${t('cart.total')}</div>
           <div style="font-weight:700">${fmt(o.total_price)} ${o.currency}</div>
         </div>
       </div>
-      <div class="section-title" style="margin-top:16px">Изменить статус</div>
+      <div class="section-title" style="margin-top:16px">${t('admin.change_status')}</div>
       <div class="status-btns">
         ${statusOptions.map(s => `
-          <button class="btn ${o.status === s ? 'btn-primary' : 'btn-secondary'} btn-full admin-status-btn" data-s="${s}" ${o.status === s ? 'disabled' : ''}>${STATUS_LABELS[s]}</button>
+          <button class="btn ${o.status === s ? 'btn-primary' : 'btn-secondary'} btn-full admin-status-btn" data-s="${s}" ${o.status === s ? 'disabled' : ''}>${stL(s)}</button>
         `).join('')}
       </div>
     </div>
@@ -902,11 +934,11 @@ function openAdminOrderDetail(id, orders, ac) {
 
   document.getElementById('admin-order-back').addEventListener('click', () => renderAdminOrders(ac));
   ac.querySelectorAll('.admin-status-btn').forEach(b => b.addEventListener('click', async () => {
-    const ok = await showConfirm(`Изменить статус на "${STATUS_LABELS[b.dataset.s]}"?`);
+    const ok = await showConfirm(t('admin.change_q', { s: stL(b.dataset.s) }));
     if (!ok) return;
     try {
       await api(`/api/orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ status: b.dataset.s }) });
-      toast('Статус обновлён');
+      toast(t('admin.status_updated'));
       await renderAdminOrders(ac);
     } catch (e) { await showAlert(e.message); }
   }));
@@ -915,20 +947,20 @@ function openAdminOrderDetail(id, orders, ac) {
 function renderAdminSettings(ac) {
   ac.innerHTML = `
     <div class="settings-section">
-      <div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">Валюта</div>
+      <div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">${t('admin.cur_title')}</div>
       <div class="settings-card">
         <div class="settings-row">
-          <span class="settings-label">Текущая валюта</span>
+          <span class="settings-label">${t('admin.cur_current')}</span>
           <span class="settings-value" id="cur-display">${S.settings.currency}</span>
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Код валюты (3 буквы)</label>
+        <label class="form-label">${t('admin.cur_label')}</label>
         <input id="cur-input" class="form-input" type="text" maxlength="3" placeholder="UZS" value="${S.settings.currency}"
           style="text-transform:uppercase">
-        <div style="font-size:12px;color:var(--text2);margin-top:6px">Примеры: UZS, USD, RUB, KGS</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px">${t('admin.cur_hint')}</div>
       </div>
-      <button class="btn btn-primary btn-full" id="save-currency-btn">Сохранить</button>
+      <button class="btn btn-primary btn-full" id="save-currency-btn">${t('admin.save')}</button>
     </div>
     <div class="scroll-pad"></div>`;
 
@@ -936,11 +968,11 @@ function renderAdminSettings(ac) {
   input.addEventListener('input', () => { input.value = input.value.toUpperCase(); });
   document.getElementById('save-currency-btn').addEventListener('click', async () => {
     const cur = input.value.trim().toUpperCase();
-    if (!/^[A-Z]{3}$/.test(cur)) { await showAlert('Введите 3 латинские буквы, например: UZS'); return; }
+    if (!/^[A-Z]{3}$/.test(cur)) { await showAlert(t('admin.cur_err')); return; }
     try {
       S.settings = await api('/api/settings', { method: 'PUT', body: JSON.stringify({ currency: cur }) });
       document.getElementById('cur-display').textContent = S.settings.currency;
-      toast(`Валюта изменена на ${S.settings.currency} ✓`);
+      toast(t('admin.cur_saved', { cur: S.settings.currency }));
       // Reload products to update prices display
       S.products = [];
     } catch (e) { await showAlert(e.message); }
@@ -956,9 +988,10 @@ function openProductForm(product) {
 
   const overlay = document.getElementById('modal-overlay');
   const sheet   = document.getElementById('modal-sheet');
+  const cats = I18N.CATS.map(c => c.key);
 
   const existingImgsHTML = isEdit && p.images?.length
-    ? `<div class="section-title" style="margin-top:12px">Текущие изображения</div>
+    ? `<div class="section-title" style="margin-top:12px">${t('admin.f_cur_photos')}</div>
        <div class="img-preview-grid" id="existing-imgs">
          ${p.images.map(img => `
            <div class="img-preview-item" data-img="${img}">
@@ -970,54 +1003,54 @@ function openProductForm(product) {
   sheet.innerHTML = `
     <div class="modal-handle"></div>
     <div class="modal-header">
-      <div class="modal-title">${isEdit ? 'Редактировать' : 'Добавить товар'}</div>
+      <div class="modal-title">${isEdit ? t('admin.f_edit') : t('admin.f_add')}</div>
       <button class="modal-close" id="modal-close-btn">✕</button>
     </div>
     <div class="modal-body">
       <form id="product-form">
-        <div class="form-group"><label class="form-label">Название *</label>
+        <div class="form-group"><label class="form-label">${t('admin.f_name')}</label>
           <input class="form-input" name="name" required placeholder="Hyundai Xteer Gasoline G700" value="${p.name || ''}">
         </div>
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Бренд</label>
+          <div class="form-group"><label class="form-label">${t('admin.f_brand')}</label>
             <select class="form-input" name="brand">${APP_BRANDS.slice(1).map(b => `<option${(p.brand||'Hyundai XTeer')===b.id?' selected':''}>${b.id}</option>`).join('')}</select>
           </div>
-          <div class="form-group"><label class="form-label">Категория</label>
+          <div class="form-group"><label class="form-label">${t('admin.f_cat')}</label>
             <select class="form-select" name="category">
-              ${['Моторное масло','Трансмиссионное масло','Гидравлическое масло','Другое'].map(c => `<option ${(p.category||'Моторное масло')===c?'selected':''}>${c}</option>`).join('')}
+              ${cats.map(c => `<option value="${c}" ${(p.category||cats[0])===c?'selected':''}>${catL(c, true)}</option>`).join('')}
             </select>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Вязкость</label>
+          <div class="form-group"><label class="form-label">${t('admin.f_visc')}</label>
             <input class="form-input" name="viscosity" placeholder="5W-30" value="${p.viscosity || ''}">
           </div>
-          <div class="form-group"><label class="form-label">Объём</label>
-            <input class="form-input" name="litres" placeholder="4 л" value="${p.litres || ''}">
+          <div class="form-group"><label class="form-label">${t('admin.f_vol')}</label>
+            <input class="form-input" name="litres" placeholder="${t('admin.f_vol_ph')}" value="${p.litres || ''}">
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Цена *</label>
+          <div class="form-group"><label class="form-label">${t('admin.f_price')}</label>
             <input class="form-input" name="price" type="number" min="0" step="0.01" required placeholder="150000" value="${p.price || ''}">
           </div>
-          <div class="form-group"><label class="form-label">Остаток (шт.)</label>
+          <div class="form-group"><label class="form-label">${t('admin.f_stock')}</label>
             <input class="form-input" name="quantity" type="number" min="0" placeholder="10" value="${p.quantity ?? 0}">
           </div>
         </div>
-        <div class="form-group"><label class="form-label">Описание</label>
-          <textarea class="form-textarea" name="description" rows="3" placeholder="Высококачественное синтетическое масло...">${p.description || ''}</textarea>
+        <div class="form-group"><label class="form-label">${t('admin.f_desc')}</label>
+          <textarea class="form-textarea" name="description" rows="3" placeholder="${t('admin.f_desc_ph')}">${p.description || ''}</textarea>
         </div>
         ${existingImgsHTML}
-        <div class="section-title" style="margin-top:${isEdit?'12px':'0'}">Добавить изображения</div>
+        <div class="section-title" style="margin-top:${isEdit?'12px':'0'}">${t('admin.f_add_photos')}</div>
         <label class="image-upload-box" for="img-file-input">
           <div style="font-size:28px">📷</div>
-          <div style="font-size:14px;font-weight:600;margin-top:4px">Выбрать фото</div>
-          <div class="upload-hint">До 10 изображений · JPEG, PNG, WEBP</div>
+          <div style="font-size:14px;font-weight:600;margin-top:4px">${t('admin.f_pick')}</div>
+          <div class="upload-hint">${t('admin.f_hint')}</div>
           <input type="file" id="img-file-input" multiple accept="image/*">
         </label>
         <div class="img-preview-grid" id="new-img-previews"></div>
         <button type="submit" class="btn btn-primary btn-full" style="margin-top:16px">
-          ${isEdit ? 'Сохранить изменения' : 'Добавить товар'}
+          ${isEdit ? t('admin.f_save') : t('admin.f_add')}
         </button>
       </form>
     </div>
@@ -1043,13 +1076,13 @@ function openProductForm(product) {
   sheet.querySelectorAll('.img-preview-del').forEach(b => b.addEventListener('click', async (e) => {
     e.preventDefault();
     const imgPath = b.dataset.img;
-    if (!await showConfirm('Удалить это изображение?')) return;
+    if (!await showConfirm(t('admin.img_del_q'))) return;
     try {
       await api(`/api/products/${p.id}/image`, { method: 'DELETE', body: JSON.stringify({ image: imgPath }) });
       b.closest('.img-preview-item').remove();
       // Update local product images
       if (S.editingProduct) S.editingProduct.images = S.editingProduct.images.filter(i => i !== imgPath);
-      toast('Изображение удалено');
+      toast(t('admin.img_deleted'));
     } catch (er) { await showAlert(er.message); }
   }));
 
@@ -1087,18 +1120,18 @@ function openProductForm(product) {
     S.newImageFiles.forEach(f => fd.append('images', f));
 
     const submitBtn = form.querySelector('button[type=submit]');
-    submitBtn.disabled = true; submitBtn.textContent = 'Сохраняем...';
+    submitBtn.disabled = true; submitBtn.textContent = t('admin.f_saving');
 
     try {
       if (isEdit) await api(`/api/products/${p.id}`, { method: 'PUT', body: fd });
       else await api('/api/products', { method: 'POST', body: fd });
-      toast(isEdit ? 'Товар обновлён ✓' : 'Товар добавлен ✓');
+      toast(isEdit ? t('admin.updated') : t('admin.added'));
       close();
       S.products = [];
       setTimeout(() => { S.adminSection = 'products'; loadAdminSection(); }, 310);
     } catch (er) {
       await showAlert(er.message);
-      submitBtn.disabled = false; submitBtn.textContent = isEdit ? 'Сохранить изменения' : 'Добавить товар';
+      submitBtn.disabled = false; submitBtn.textContent = isEdit ? t('admin.f_save') : t('admin.f_add');
     }
   });
 }
@@ -1107,6 +1140,12 @@ function openProductForm(product) {
 async function init() {
   Cart.load();
   updateCartBadge();
+
+  // A language remembered on this device applies before anything renders
+  let saved = null;
+  try { saved = localStorage.getItem(LS_LANG); } catch {}
+  if (saved && I18N.T[saved]) applyLang(saved, { sync: false });
+  else paintStatic();
 
   // Load cached profile instantly
   const cached = localStorage.getItem('xteer_profile');
@@ -1139,13 +1178,17 @@ async function init() {
 
     if (S.profile) localStorage.setItem('xteer_profile', JSON.stringify(S.profile));
 
+    // Nothing chosen on this device yet, but the bot already knows → reuse it
+    if (!saved && meData.lang && I18N.T[meData.lang]) applyLang(meData.lang, { sync: false });
+    else if (saved && meData.authenticated && meData.lang !== saved) applyLang(saved);
+
     // Add admin tab if needed
     if (S.isAdmin) {
       const nav = document.getElementById('bottom-nav');
       const adminBtn = document.createElement('button');
       adminBtn.className = 'nav-btn';
       adminBtn.dataset.page = 'admin';
-      adminBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 1l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg><span>Админ</span>`;
+      adminBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 1l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg><span data-i18n="nav.admin">${t('nav.admin')}</span>`;
       adminBtn.addEventListener('click', () => navigate('admin'));
       nav.appendChild(adminBtn);
     }
@@ -1162,6 +1205,9 @@ async function init() {
   document.getElementById('app').classList.add('visible');
 
   renderCatalog();
+
+  // First launch with no preference anywhere: ask before anything else
+  if (!S.lang) showLangPicker();
 }
 
 window.addEventListener('load', init);
