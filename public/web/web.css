@@ -208,29 +208,20 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .brands-strip-logo:nth-child(6){transition-delay:.40s}
 
 /* ── About strip ── */
-.about-strip{padding:48px 0}
-.about-strip-grid{display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:start}
-.about-strip-tag{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ac);margin-bottom:10px}
-.about-strip-text h2{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:12px}
-.about-strip-text p{font-size:15px;color:var(--tx2);line-height:1.7;max-width:50ch}
-.about-facts{display:flex;gap:28px;margin-top:24px}
-.about-fact{display:flex;flex-direction:column;gap:2px}
-.about-fact-n{font-size:26px;font-weight:700;letter-spacing:-.02em}
-.about-fact span:last-child{font-size:12px;color:var(--tx2)}
-.about-contact-card{
-  background:var(--bg2);border:1px solid var(--line);border-radius:16px;
-  padding:24px;display:flex;flex-direction:column;gap:4px;
+.about-strip{padding:72px 0 64px;border-top:1px solid var(--line)}
+.about-strip-tag{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ac);margin-bottom:20px}
+.about-big-title{font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1.08;margin-bottom:28px;max-width:18ch}
+.about-big-lead{font-size:19px;color:var(--tx2);line-height:1.8;max-width:65ch}
+.about-facts{display:flex;gap:48px;margin-top:40px}
+.about-fact{display:flex;flex-direction:column;gap:4px}
+.about-fact-n{font-size:32px;font-weight:800;letter-spacing:-.02em}
+.about-fact span:last-child{font-size:13px;color:var(--tx2)}
+@media(max-width:900px){
+  .about-big-title{font-size:34px}
+  .about-big-lead{font-size:16px}
+  .about-facts{gap:28px}
+  .about-fact-n{font-size:26px}
 }
-.about-contact-title{font-size:14px;font-weight:600;margin-bottom:12px}
-.about-contact-row{
-  display:flex;align-items:center;gap:10px;padding:10px 0;
-  font-size:13px;color:var(--tx2);border-bottom:1px solid var(--line);
-  transition:color .15s;word-break:break-all;
-}
-.about-contact-row:last-child{border-bottom:none}
-.about-contact-row:hover{color:var(--tx)}
-.about-contact-row svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none}
-.about-contact-row svg[fill="currentColor"]{fill:currentColor;stroke:none}
 
 /* ── Catalog section head ── */
 .catalog-head{padding:32px 0 4px;border-top:1px solid var(--line)}
