@@ -264,16 +264,19 @@ function initDeliveryMap() {
       ]},
     { name: 'Кыргызстан', flag: '🇰🇬',
       pts: [
-        // Western complex area / Batken at bottom-left
-        [55,170],[48,195],[55,215],[75,228],[100,242],[125,255],[138,262],
-        [118,278],[88,285],[62,278],[48,295],[72,305],[108,302],
-        [138,282],[168,270],[205,272],[240,268],[272,255],[262,238],
-        [288,228],[325,234],[365,245],[410,248],[448,242],
-        // Eastern wider part
-        [488,232],[528,222],[552,205],[560,188],[552,172],
-        [538,158],[512,145],[482,137],[448,130],[412,125],
-        [375,128],[340,124],[305,128],[270,134],[240,128],
-        [210,136],[185,148],[158,148],[128,138],[95,136],[68,148]
+        // Main body — upper shape, clockwise from left
+        [85,155],[108,135],[132,118],[148,108],[165,118],[180,132],
+        [215,118],[255,110],[300,108],[345,108],[390,110],
+        [435,115],[478,122],[515,132],[542,145],[555,158],
+        [552,172],[535,182],[510,192],[478,198],[440,202],
+        [400,202],[360,202],[320,205],[280,205],[240,202],
+        [205,200],[175,198],[148,195],[120,190],[95,185],[83,170]
+      ],
+      pts2: [
+        // Batken enclave — lower-left separate shape
+        [58,235],[85,222],[112,220],[140,222],[168,225],
+        [195,230],[215,235],[218,248],[210,262],[195,270],
+        [168,275],[140,272],[115,268],[90,262],[68,252],[58,242]
       ]},
     { name: 'Казахстан', flag: '🇰🇿',
       pts: [
@@ -326,22 +329,26 @@ function initDeliveryMap() {
     }
   }
 
-  function makePath(pts) {
+  function makePath(country) {
     const scale = Math.min(canvas.width / BASE_W, canvas.height / BASE_H) * 0.82;
     const ox = (canvas.width - BASE_W * scale) / 2;
     const oy = (canvas.height - BASE_H * scale) / 2;
     const p = new Path2D();
-    pts.forEach(([px, py], i) => {
-      const x = px * scale + ox, y = py * scale + oy;
-      i === 0 ? p.moveTo(x, y) : p.lineTo(x, y);
-    });
-    p.closePath();
+    const addPoly = pts => {
+      pts.forEach(([px, py], i) => {
+        const x = px * scale + ox, y = py * scale + oy;
+        i === 0 ? p.moveTo(x, y) : p.lineTo(x, y);
+      });
+      p.closePath();
+    };
+    addPoly(country.pts);
+    if (country.pts2) addPoly(country.pts2);
     return p;
   }
 
   function goTo(idx) {
     currentIdx = idx;
-    const path = makePath(DELIVERY_COUNTRIES[idx].pts);
+    const path = makePath(DELIVERY_COUNTRIES[idx]);
     dots.forEach(d => {
       d.active = ctx.isPointInPath(path, d.x, d.y);
       d.targetR = d.active ? 5.5 : 1.5;
