@@ -124,13 +124,13 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 
 /* ── Hero ── */
 .hero{
-  background:#111111;
+  background:#fff;
   position:relative;overflow:hidden;
 }
 .hero::before{
   content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 70% 80% at 80% 50%,rgba(201,162,39,.18) 0%,transparent 60%),
-             radial-gradient(ellipse 50% 60% at 10% 80%,rgba(201,162,39,.08) 0%,transparent 55%);
+  background:radial-gradient(ellipse 70% 80% at 80% 50%,rgba(201,162,39,.10) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 60% at 10% 80%,rgba(201,162,39,.06) 0%,transparent 55%);
   pointer-events:none;
 }
 .hero::after{
@@ -145,11 +145,11 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 }
 .hero h1{
   font-size:52px;line-height:1.06;font-weight:800;letter-spacing:-.03em;
-  color:#fff;
+  color:var(--tx);
   animation:fadeUp .9s var(--ease) both;
 }
 .hero p{
-  font-size:17px;color:rgba(255,255,255,.7);margin-top:16px;max-width:46ch;line-height:1.65;
+  font-size:17px;color:var(--tx2);margin-top:16px;max-width:46ch;line-height:1.65;
   animation:fadeUp .9s .12s var(--ease) both;
 }
 .hero-badges{
@@ -157,9 +157,8 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   animation:fadeUp .9s .22s var(--ease) both;
 }
 .hero-badge{
-  padding:6px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
-  border-radius:100px;font-size:13px;font-weight:500;color:rgba(255,255,255,.9);
-  backdrop-filter:blur(8px);
+  padding:6px 14px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:100px;font-size:13px;font-weight:500;color:var(--tx2);
 }
 .hero-logo{
   width:min(440px,34vw);height:auto;object-fit:contain;
@@ -182,11 +181,11 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .btn-tg{
   display:flex;align-items:center;gap:8px;
   padding:12px 20px;border-radius:var(--rs);font-size:14px;font-weight:600;
-  background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);
-  backdrop-filter:blur(8px);transition:background .18s,transform .18s var(--ease);
+  background:var(--bg2);color:var(--tx);border:1.5px solid var(--line);
+  transition:background .18s,transform .18s var(--ease);
 }
 .btn-tg svg{width:18px;height:18px;flex-shrink:0}
-.btn-tg:hover{background:rgba(255,255,255,.2);transform:translateY(-2px)}
+.btn-tg:hover{background:var(--bg3);transform:translateY(-2px)}
 
 /* ── Brands strip ── */
 .brands-strip{border-bottom:1px solid var(--line);padding:28px 0}
