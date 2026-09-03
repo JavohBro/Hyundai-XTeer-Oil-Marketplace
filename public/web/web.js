@@ -149,6 +149,25 @@ function catalogPage() {
     </div>
   </section>
 
+  <section class="delivery-section">
+    <div class="delivery-inner">
+      <div class="delivery-header anim">
+        <div class="delivery-label">Зона доставки</div>
+        <h2 class="delivery-title">Доставляем в страны СНГ</h2>
+      </div>
+      <div class="delivery-stage">
+        <canvas id="delivery-canvas"></canvas>
+        <div class="delivery-country-overlay">
+          <div id="delivery-flag" class="delivery-flag">🇺🇿</div>
+          <div id="delivery-name" class="delivery-name">Узбекистан</div>
+        </div>
+        <button class="delivery-arrow delivery-arrow-l" id="delivery-prev">‹</button>
+        <button class="delivery-arrow delivery-arrow-r" id="delivery-next">›</button>
+      </div>
+      <div class="delivery-dots" id="delivery-dots"></div>
+    </div>
+  </section>
+
   <div class="wrap" id="catalog-section">
     <div class="catalog-head anim">
       <h2 class="catalog-title">Каталог масел</h2>
@@ -166,7 +185,7 @@ function catalogPage() {
 
   $('#q').addEventListener('input', e => { S.q = e.target.value; paintGrid(); });
   paintBrandPills(); paintPills(); paintGrid();
-  requestAnimationFrame(() => initAnimations());
+  requestAnimationFrame(() => { initAnimations(); initDeliveryMap(); });
 }
 
 function paintBrandPills() {
@@ -216,6 +235,102 @@ function initAnimations() {
   document.querySelectorAll('.anim,.anim-left,.anim-right').forEach(el => {
     if (!el.classList.contains('visible')) obs.observe(el);
   });
+}
+
+function initDeliveryMap() {
+  const canvas = document.getElementById('delivery-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const DELIVERY_COUNTRIES = [
+    { name: 'Узбекистан', flag: '🇺🇿',
+      pts: [[100,105],[175,72],[275,78],[335,105],[375,132],[415,142],[455,168],[448,222],[415,258],[368,272],[298,278],[238,262],[178,272],[128,252],[88,212],[80,158]] },
+    { name: 'Кыргызстан', flag: '🇰🇬',
+      pts: [[58,152],[118,112],[198,97],[310,108],[418,128],[508,152],[542,188],[526,228],[478,248],[388,238],[308,250],[208,238],[128,218],[68,192]] },
+    { name: 'Казахстан', flag: '🇰🇿',
+      pts: [[42,62],[162,42],[322,47],[458,68],[538,98],[558,148],[552,198],[528,248],[488,292],[418,318],[338,328],[258,318],[188,288],[128,252],[68,202],[44,152]] },
+    { name: 'Россия', flag: '🇷🇺',
+      pts: [[28,52],[102,32],[222,27],[382,32],[522,47],[576,82],[580,132],[565,178],[545,218],[528,258],[508,292],[468,318],[418,332],[358,342],[288,337],[228,322],[168,297],[108,272],[62,237],[32,192],[18,142],[24,92]] },
+  ];
+
+  const BASE_W = 600, BASE_H = 380;
+  let currentIdx = 0;
+  let mapTimer;
+  let rafId;
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight || 420;
+  }
+  resize();
+
+  const SPACING = 16;
+  const dots = [];
+  for (let x = SPACING / 2; x < canvas.width; x += SPACING) {
+    for (let y = SPACING / 2; y < canvas.height; y += SPACING) {
+      dots.push({ x, y, r: 1.5, targetR: 1.5, active: false });
+    }
+  }
+
+  function makePath(pts) {
+    const scale = Math.min(canvas.width / BASE_W, canvas.height / BASE_H) * 0.82;
+    const ox = (canvas.width - BASE_W * scale) / 2;
+    const oy = (canvas.height - BASE_H * scale) / 2;
+    const p = new Path2D();
+    pts.forEach(([px, py], i) => {
+      const x = px * scale + ox, y = py * scale + oy;
+      i === 0 ? p.moveTo(x, y) : p.lineTo(x, y);
+    });
+    p.closePath();
+    return p;
+  }
+
+  function goTo(idx) {
+    currentIdx = idx;
+    const path = makePath(DELIVERY_COUNTRIES[idx].pts);
+    dots.forEach(d => {
+      d.active = ctx.isPointInPath(path, d.x, d.y);
+      d.targetR = d.active ? 5.5 : 1.5;
+    });
+    const flagEl = document.getElementById('delivery-flag');
+    const nameEl = document.getElementById('delivery-name');
+    if (flagEl) flagEl.textContent = DELIVERY_COUNTRIES[idx].flag;
+    if (nameEl) nameEl.textContent = DELIVERY_COUNTRIES[idx].name;
+    document.querySelectorAll('.dmap-dot').forEach((el, i) => el.classList.toggle('on', i === idx));
+    clearInterval(mapTimer);
+    mapTimer = setInterval(() => goTo((currentIdx + 1) % DELIVERY_COUNTRIES.length), 4000);
+  }
+
+  function draw() {
+    if (!canvas.isConnected) { cancelAnimationFrame(rafId); clearInterval(mapTimer); return; }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    dots.forEach(d => {
+      d.r += (d.targetR - d.r) * 0.09;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, Math.max(0.4, d.r), 0, Math.PI * 2);
+      ctx.fillStyle = d.active ? 'rgba(201,162,39,' + Math.min(1, d.r / 5.5).toFixed(2) + ')' : 'rgba(255,255,255,0.10)';
+      ctx.fill();
+    });
+    rafId = requestAnimationFrame(draw);
+  }
+
+  const dotsEl = document.getElementById('delivery-dots');
+  if (dotsEl) {
+    DELIVERY_COUNTRIES.forEach((_, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'dmap-dot' + (i === 0 ? ' on' : '');
+      btn.onclick = () => goTo(i);
+      dotsEl.appendChild(btn);
+    });
+  }
+
+  const prevBtn = document.getElementById('delivery-prev');
+  const nextBtn = document.getElementById('delivery-next');
+  if (prevBtn) prevBtn.onclick = () => goTo((currentIdx - 1 + DELIVERY_COUNTRIES.length) % DELIVERY_COUNTRIES.length);
+  if (nextBtn) nextBtn.onclick = () => goTo((currentIdx + 1) % DELIVERY_COUNTRIES.length);
+
+  goTo(0);
+  draw();
 }
 
 function cardHTML(p) {
