@@ -245,22 +245,27 @@ function initDeliveryMap() {
   const DELIVERY_COUNTRIES = [
     { name: 'Узбекистан', flag: '🇺🇿',
       pts: [
-        // Karakalpakstan NW block left side going down
-        [42,80],[42,182],[72,200],[92,215],[108,232],[128,248],[142,258],
-        [162,258],[185,268],[202,278],[215,295],
-        // small south protrusion (Kashkadarya)
-        [225,312],[232,332],[242,320],[252,305],
-        // Surkhandarya south tip
-        [262,290],[278,302],[292,318],[298,335],[308,348],[318,352],
-        [330,345],[340,328],[350,308],[362,288],
-        // NE slope toward Fergana
-        [378,272],[395,258],[412,238],[430,218],[452,200],[475,185],
-        [498,172],[520,165],[538,155],
-        // Fergana valley bump upper right
-        [542,138],[528,122],[505,108],[478,92],[452,78],[420,72],
-        [390,78],[360,88],
-        // Northern border going west back to NW block
-        [330,90],[290,82],[240,80],[195,85],[158,90],[140,70],[88,68]
+        // NW block (Karakalpakstan) — top edge with small bump, clockwise
+        [10,28],[25,18],[55,15],[83,5],[105,3],[120,15],
+        // NE slope of the block down to the waist
+        [140,35],[165,40],[185,60],[195,85],[210,100],
+        // Tashkent shelf — flat top across the middle
+        [225,95],[235,90],[255,90],[285,93],[305,88],[320,85],
+        // east edge stepping down-right
+        [325,100],[345,110],[360,135],[365,160],[375,180],[390,190],[405,200],
+        // neck into Fergana valley
+        [415,215],[435,210],[450,195],[470,175],[490,163],[515,153],[530,155],
+        // Fergana — top, east tip, bottom
+        [525,170],[540,195],[565,200],[590,215],[570,230],[545,245],
+        [520,235],[500,238],[475,225],[450,238],[440,250],
+        // south — Surkhandarya tail going down to the tip
+        [440,280],[425,295],[435,315],[430,345],[410,365],[400,380],
+        // back up the long SW diagonal
+        [370,360],[345,335],[315,300],[280,265],[245,235],[220,205],[210,185],
+        // underside of the waist, west to the block's notch
+        [190,175],[150,165],[140,160],[135,145],[105,138],[90,143],[75,145],
+        // notch + bottom-left corner of the NW block
+        [50,155],[50,193],[10,193]
       ]},
     { name: 'Кыргызстан', flag: '🇰🇬',
       pts: [
