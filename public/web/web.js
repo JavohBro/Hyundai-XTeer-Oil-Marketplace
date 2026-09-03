@@ -308,7 +308,7 @@ function initDeliveryMap() {
       d.r += (d.targetR - d.r) * 0.09;
       ctx.beginPath();
       ctx.arc(d.x, d.y, Math.max(0.4, d.r), 0, Math.PI * 2);
-      ctx.fillStyle = d.active ? 'rgba(201,162,39,' + Math.min(1, d.r / 5.5).toFixed(2) + ')' : 'rgba(255,255,255,0.10)';
+      ctx.fillStyle = d.active ? 'rgba(255,255,255,' + Math.min(1, d.r / 5.5).toFixed(2) + ')' : 'rgba(255,255,255,0.08)';
       ctx.fill();
     });
     rafId = requestAnimationFrame(draw);
