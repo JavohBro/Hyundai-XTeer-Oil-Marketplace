@@ -308,8 +308,8 @@ function initDeliveryMap() {
       d.r += (d.targetR - d.r) * 0.09;
       ctx.beginPath();
       ctx.arc(d.x, d.y, Math.max(0.4, d.r), 0, Math.PI * 2);
-      const alpha = 0.08 + Math.max(0, (d.r - 1.5) / (5.5 - 1.5)) * 0.92;
-      ctx.fillStyle = 'rgba(255,255,255,' + alpha.toFixed(2) + ')';
+      const alpha = 0.08 + Math.max(0, (d.r - 1.5) / (5.5 - 1.5)) * 0.88;
+      ctx.fillStyle = 'rgba(0,0,0,' + alpha.toFixed(2) + ')';
       ctx.fill();
     });
     rafId = requestAnimationFrame(draw);
