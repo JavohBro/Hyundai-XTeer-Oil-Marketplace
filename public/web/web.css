@@ -189,7 +189,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 
 /* ── Brands strip ── */
 .brands-strip{border-bottom:1px solid var(--line);padding:28px 0}
-.brands-strip-label{font-size:18px;font-weight:700;letter-spacing:-.01em;color:var(--tx);margin-bottom:18px}
+.brands-strip-label{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--tx);margin-bottom:20px}
 .brands-strip-logos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .brands-strip-logo{
   display:flex;align-items:center;justify-content:center;
