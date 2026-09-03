@@ -151,7 +151,7 @@ async function renderCatalog() {
           <h1>Carmon Oil</h1>
           <p>Корейское качество для вашего авто</p>
         </div>
-        <img src="/assets/shortlogo.jpg" style="height:36px;border-radius:8px;object-fit:contain;" onerror="this.style.display='none'">
+        <img src="/assets/shortlogo.png" style="height:36px;border-radius:8px;object-fit:contain;" onerror="this.style.display='none'">
       </div>
     </div>
     <div class="search-bar">
