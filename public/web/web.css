@@ -161,8 +161,8 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   border-radius:100px;font-size:13px;font-weight:500;color:var(--tx2);
 }
 .hero-logo{
-  width:min(440px,34vw);height:auto;object-fit:contain;
-  filter:drop-shadow(0 8px 32px rgba(0,0,0,.4)) brightness(1.08);
+  width:min(380px,30vw);height:auto;object-fit:contain;
+  border-radius:16px;
   animation:fadeIn 1.2s .1s var(--ease) both;
 }
 
