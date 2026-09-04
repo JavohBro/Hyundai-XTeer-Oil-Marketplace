@@ -187,7 +187,7 @@ function catalogPage() {
     <div class="wrap">
       <p class="brands-strip-label">${esc(t('brands.label'))}</p>
       <div class="brands-strip-logos">
-        ${BRANDS.slice(1).map(b => `<div class="brands-strip-logo anim"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></div>`).join('')}
+        ${BRANDS.slice(1).map(b => `<button type="button" class="brands-strip-logo anim" data-b="${esc(b.id)}" aria-label="${esc(b.label)}"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></button>`).join('')}
       </div>
     </div>
   </section>
@@ -238,6 +238,11 @@ function catalogPage() {
   </div>`;
 
   $('#q').addEventListener('input', e => { S.q = e.target.value; paintGrid(); });
+  // Brand logos double as filters: pick the brand and jump to the catalog
+  $$('.brands-strip-logo').forEach(b => b.onclick = () => {
+    S.brand = b.dataset.b; paintBrandPills(); paintGrid();
+    $('#catalog-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
   paintBrandPills(); paintPills(); paintGrid();
   requestAnimationFrame(() => { initAnimations(); initDeliveryMap(); });
 }
