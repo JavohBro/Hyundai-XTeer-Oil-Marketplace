@@ -150,12 +150,14 @@ function router() {
 const CATS = ['all', ...I18N.CATS.map(c => c.key)];
 const BRANDS = [
   { id: 'all',           label: 'Все',           logo: null },
+  { id: 'Kixx',          label: 'Kixx',          logo: '/assets/kixx-logo.png' },
   { id: 'Hyundai XTeer', label: 'Hyundai XTeer', logo: '/assets/hyundailogo1.png' },
   { id: 'SK ZIC',        label: 'SK ZIC',        logo: '/assets/SK-ZIC-LOGO.png' },
-  { id: 'Nexus',         label: 'Nexus',         logo: '/assets/nexus-logo.png' },
-  { id: 'Apex',          label: 'Apex',          logo: '/assets/apex-logo.png' },
-  { id: 'Autous',        label: 'Autous',        logo: '/assets/autous-logo.png' },
-  { id: 'Kixx',          label: 'Kixx',          logo: '/assets/kixx-logo.png' },
+  { id: 'Castrol',       label: 'Castrol',       logo: '/assets/Castrol-Logo-2001.png' },
+  { id: 'S-OIL',         label: 'S-OIL',         logo: '/assets/S-OIL_Logo.svg.webp' },
+  { id: 'Shell',         label: 'Shell',         logo: '/assets/Color-Shell-Logo.png' },
+  { id: 'SpeedMate',     label: 'SpeedMate',     logo: '/assets/speedmate-logo.png' },
+  { id: 'Mobil',         label: 'Mobil',         logo: '/assets/mobil-logo.png' },
 ];
 const BRAND_IDS = BRANDS.slice(1).map(b => b.id);
 
@@ -195,7 +197,7 @@ function catalogPage() {
     <h2 class="about-big-title anim">${t('about.title')}</h2>
     <p class="about-big-lead anim">${esc(t('about.lead'))}</p>
     <div class="about-facts anim">
-      <div class="about-fact"><span class="about-fact-n">6</span><span>${esc(t('about.f1'))}</span></div>
+      <div class="about-fact"><span class="about-fact-n">8</span><span>${esc(t('about.f1'))}</span></div>
       <div class="about-fact"><span class="about-fact-n">🇰🇷</span><span>${esc(t('about.f2'))}</span></div>
       <div class="about-fact"><span class="about-fact-n">${esc(t('about.f3n'))}</span><span>${esc(t('about.f3'))}</span></div>
     </div>

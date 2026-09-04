@@ -222,12 +222,14 @@ async function renderCatalog() {
 const CATEGORIES = ['all', ...I18N.CATS.map(c => c.key)];
 const APP_BRANDS = [
   { id: 'all',           logo: null,                         label: 'Все' },
-  { id: 'Hyundai XTeer', logo: '/assets/hyundailogo1.png',   label: 'Hyundai XTeer' },
-  { id: 'SK ZIC',        logo: '/assets/SK-ZIC-LOGO.png',    label: 'SK ZIC' },
-  { id: 'Nexus',         logo: '/assets/nexus-logo.png',     label: 'Nexus' },
-  { id: 'Apex',          logo: '/assets/apex-logo.png',      label: 'Apex' },
-  { id: 'Autous',        logo: '/assets/autous-logo.png',    label: 'Autous' },
-  { id: 'Kixx',          logo: '/assets/kixx-logo.png',      label: 'Kixx' },
+  { id: 'Kixx',          logo: '/assets/kixx-logo.png',        label: 'Kixx' },
+  { id: 'Hyundai XTeer', logo: '/assets/hyundailogo1.png',     label: 'Hyundai XTeer' },
+  { id: 'SK ZIC',        logo: '/assets/SK-ZIC-LOGO.png',      label: 'SK ZIC' },
+  { id: 'Castrol',       logo: '/assets/Castrol-Logo-2001.png', label: 'Castrol' },
+  { id: 'S-OIL',         logo: '/assets/S-OIL_Logo.svg.webp',  label: 'S-OIL' },
+  { id: 'Shell',         logo: '/assets/Color-Shell-Logo.png', label: 'Shell' },
+  { id: 'SpeedMate',     logo: '/assets/speedmate-logo.png',   label: 'SpeedMate' },
+  { id: 'Mobil',         logo: '/assets/mobil-logo.png',       label: 'Mobil' },
 ];
 
 function renderBrandPills() {

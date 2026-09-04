@@ -216,7 +216,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 /* ── Brands strip ── */
 .brands-strip{border-bottom:1px solid var(--line);padding:28px 0}
 .brands-strip-label{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--tx);margin-bottom:20px}
-.brands-strip-logos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.brands-strip-logos{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .brands-strip-logo{
   display:flex;align-items:center;justify-content:center;
   height:150px;padding:16px 24px;border-radius:14px;
@@ -225,13 +225,18 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 }
 .brands-strip-logo:hover{transform:translateY(-3px)}
 .brands-strip-logo img{width:100%;height:100%;object-fit:contain}
-@media(min-width:900px){.brands-strip-logos{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){
+  .brands-strip-logos{grid-template-columns:repeat(2,1fr);gap:12px}
+  .brands-strip-logo{height:110px;padding:14px 18px}
+}
 .brands-strip-logo:nth-child(1){transition-delay:.05s}
 .brands-strip-logo:nth-child(2){transition-delay:.12s}
 .brands-strip-logo:nth-child(3){transition-delay:.19s}
 .brands-strip-logo:nth-child(4){transition-delay:.26s}
 .brands-strip-logo:nth-child(5){transition-delay:.33s}
 .brands-strip-logo:nth-child(6){transition-delay:.40s}
+.brands-strip-logo:nth-child(7){transition-delay:.47s}
+.brands-strip-logo:nth-child(8){transition-delay:.54s}
 
 /* ── About strip ── */
 .about-strip{padding:72px 0 64px;border-top:1px solid var(--line)}
