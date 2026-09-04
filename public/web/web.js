@@ -277,7 +277,7 @@ function paintGrid() {
   $$('#grid .card-add').forEach(b => b.onclick = e => {
     e.stopPropagation();
     const p = S.products.find(x => x.id === +b.dataset.id);
-    if (p?.quantity > 0) { Cart.add(p); toast(t('toast.added', { name: p.name })); }
+    if (p?.quantity > 0 && p.price !== null) { Cart.add(p); toast(t('toast.added', { name: p.name })); }
   });
   initAnimations();
 }
@@ -472,6 +472,7 @@ function initDeliveryMap() {
 function cardHTML(p) {
   const img = p.images?.[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.name)}" loading="lazy">` : `<div class="ph">🛢</div>`;
   const ok = p.quantity > 0;
+  const priced = p.price !== null && p.price !== undefined;
   const sub = [p.viscosity, p.litres].filter(Boolean).join(' · ') || p.brand || '';
   return `<article class="card${ok ? '' : ' dim'}" data-id="${p.id}">
     <div class="card-img">${img}${ok ? '' : `<span class="tag-out">${esc(t('stock.out'))}</span>`}</div>
@@ -479,8 +480,8 @@ function cardHTML(p) {
       <div class="card-n">${esc(p.name)}</div>
       <div class="card-s">${esc(sub)}</div>
       <div class="card-f">
-        <div class="card-p">${fmt(p.price)} <span>${esc(S.cur)}</span></div>
-        ${ok ? `<button class="card-add" data-id="${p.id}" aria-label="${esc(t('add'))}"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>` : ''}
+        <div class="card-p">${priced ? `${fmt(p.price)} <span>${esc(S.cur)}</span>` : `<span class="card-ask">${esc(t('price.ask'))}</span>`}</div>
+        ${ok && priced ? `<button class="card-add" data-id="${p.id}" aria-label="${esc(t('add'))}"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>` : ''}
       </div>
     </div>
   </article>`;
@@ -490,7 +491,8 @@ function cardHTML(p) {
 function openProduct(id) {
   const p = S.products.find(x => x.id === id); if (!p) return;
   const imgs = p.images?.length ? p.images : [];
-  const ok = p.quantity > 0;
+  const priced = p.price !== null && p.price !== undefined;
+  const ok = p.quantity > 0 && priced;
   const chips = [catL(p.category, true), p.viscosity, p.litres].filter(Boolean).map(x => `<span class="chip">${esc(x)}</span>`).join('');
 
   openModal(`
@@ -505,9 +507,10 @@ function openProduct(id) {
         <h2 class="pd-title">${esc(p.name)}</h2>
         <div class="pd-brand">${esc(p.brand || '')}</div>
         <div class="pd-tags">${chips}</div>
-        <div class="pd-price">${fmt(p.price)} <span>${esc(S.cur)}</span></div>
-        <div class="pd-stock">${ok ? esc(t('stock.in', { n: p.quantity })) : '😔 ' + esc(t('stock.out'))}</div>
+        <div class="pd-price">${priced ? `${fmt(p.price)} <span>${esc(S.cur)}</span>` : esc(t('price.ask'))}</div>
+        <div class="pd-stock">${p.quantity > 0 ? esc(t('stock.in', { n: p.quantity })) : '😔 ' + esc(t('stock.out'))}</div>
         ${p.description ? `<div class="pd-desc">${esc(p.description)}</div>` : ''}
+        ${!priced ? `<a class="btn btn-p btn-full" href="https://t.me/r1m_nightrider?text=${encodeURIComponent(p.name)}" target="_blank" rel="noopener">${esc(t('price.ask_btn'))}</a>` : ''}
         ${ok ? `
         <div class="qty">
           <div class="qbox">
@@ -809,7 +812,7 @@ async function aProducts(ac) {
         <td>${p.images?.[0] ? `<img class="pimg" src="${esc(p.images[0])}" alt="">` : `<div class="pimg ph" style="font-size:18px">🛢</div>`}</td>
         <td><b>${esc(p.name)}</b>${p.is_active ? '' : `<span class="badge-off">${esc(t('admin.hidden'))}</span>`}<div class="src">${esc(p.brand || '')}</div></td>
         <td class="src">${esc([catL(p.category, true), p.viscosity, p.litres].filter(Boolean).join(' · '))}</td>
-        <td><b>${fmt(p.price)}</b> ${esc(S.cur)}</td>
+        <td>${p.price !== null ? `<b>${fmt(p.price)}</b> ${esc(S.cur)}` : `<span class="src">${esc(t('price.ask'))}</span>`}</td>
         <td>${p.quantity} ${esc(t('pcs'))}</td>
         <td><div class="row-acts">
           <button class="mini" data-tg="${p.id}" title="${esc(p.is_active ? t('admin.hide') : t('admin.show'))}">${p.is_active ? '👁' : '🙈'}</button>
@@ -852,7 +855,7 @@ function productForm(p) {
           <div class="f"><label>${esc(t('admin.f_vol'))}</label><input name="litres" value="${esc(p.litres || '')}" placeholder="${esc(t('admin.f_vol_ph'))}"></div>
         </div>
         <div class="f-row">
-          <div class="f"><label>${esc(t('admin.f_price'))}</label><input name="price" type="number" min="0" step="0.01" required value="${p.price ?? ''}"></div>
+          <div class="f"><label>${esc(t('admin.f_price'))}</label><input name="price" type="number" min="0" step="0.01" value="${p.price ?? ''}" placeholder="—"></div>
           <div class="f"><label>${esc(t('admin.f_stock'))}</label><input name="quantity" type="number" min="0" value="${p.quantity ?? 0}"></div>
         </div>
         <div class="f"><label>${esc(t('admin.f_desc'))}</label><textarea name="description" placeholder="${esc(t('admin.f_desc_ph'))}">${esc(p.description || '')}</textarea></div>

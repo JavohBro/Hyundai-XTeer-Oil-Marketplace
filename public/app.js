@@ -280,7 +280,7 @@ function filterAndRenderProducts() {
   grid.querySelectorAll('.product-card-add').forEach(b => b.addEventListener('click', e => {
     e.stopPropagation();
     const p = S.products.find(pr => pr.id === parseInt(b.dataset.id));
-    if (!p || p.quantity <= 0) return;
+    if (!p || p.quantity <= 0 || p.price === null) return;
     Cart.add(p);
     b.classList.add('pop');
     setTimeout(() => b.classList.remove('pop'), 250);
@@ -291,6 +291,7 @@ function filterAndRenderProducts() {
 function productCard(p) {
   const img = p.images?.[0] ? `<img src="${p.images[0]}" alt="" loading="lazy">` : `<div class="no-img">🛢</div>`;
   const inStock = p.quantity > 0;
+  const priced = p.price !== null && p.price !== undefined;
   return `
   <div class="product-card ${!inStock ? 'out-of-stock' : ''}" data-id="${p.id}">
     <div class="product-card-img">
@@ -301,8 +302,8 @@ function productCard(p) {
       <div class="product-card-name">${p.name}</div>
       <div class="product-card-sub">${[p.viscosity, p.litres].filter(Boolean).join(' · ') || p.brand || ''}</div>
       <div class="product-card-footer">
-        <div class="product-card-price">${fmt(p.price)} <span style="font-size:11px;font-weight:400;color:var(--text2)">${S.settings.currency}</span></div>
-        ${inStock ? `<button class="product-card-add" data-id="${p.id}">+</button>` : ''}
+        <div class="product-card-price">${priced ? `${fmt(p.price)} <span style="font-size:11px;font-weight:400;color:var(--text2)">${S.settings.currency}</span>` : `<span class="price-ask">${t('price.ask')}</span>`}</div>
+        ${inStock && priced ? `<button class="product-card-add" data-id="${p.id}">+</button>` : ''}
       </div>
     </div>
   </div>`;
@@ -330,7 +331,8 @@ function renderProductDetail(p) {
     : `<div class="carousel-slide"><div class="no-img-lg">🛢</div></div>`;
   const dots = imgs.length > 1 ? `<div class="carousel-dots">${imgs.map((_, i) => `<div class="dot ${i === 0 ? 'active' : ''}"></div>`).join('')}</div>` : '';
   const tags = [catL(p.category, true), p.viscosity, p.litres ? `${p.litres}` : ''].filter(Boolean).map(x => `<span class="tag">${x}</span>`).join('');
-  const inStock = p.quantity > 0;
+  const priced = p.price !== null && p.price !== undefined;
+  const inStock = p.quantity > 0 && priced;
   return `
   <div class="product-detail-back">
     <button class="back-btn" id="pd-back"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>${t('back')}</button>
@@ -344,10 +346,10 @@ function renderProductDetail(p) {
     <div class="product-brand">${p.brand || ''}</div>
     <div class="product-tags">${tags}</div>
     <div class="product-price-row">
-      <div class="product-price">${fmt(p.price)}</div>
-      <div class="product-price-cur">${S.settings.currency}</div>
+      ${priced ? `<div class="product-price">${fmt(p.price)}</div><div class="product-price-cur">${S.settings.currency}</div>` : `<div class="product-price" style="font-size:18px">${t('price.ask')}</div>`}
     </div>
     ${p.description ? `<div class="product-desc">${p.description}</div>` : ''}
+    ${!priced ? `<a class="btn btn-primary btn-full" href="https://t.me/r1m_nightrider?text=${encodeURIComponent(p.name)}" target="_blank" style="margin-bottom:12px">${t('price.ask_btn')}</a>` : ''}
     ${inStock ? `
     <div class="qty-row">
       <div class="qty-label">${t('qty')}</div>
@@ -359,7 +361,7 @@ function renderProductDetail(p) {
     </div>
     <div class="stock-note">${t('stock.in_plain', { n: p.quantity })}</div>
     <button class="btn btn-primary btn-full" id="pd-add-cart">${t('add.long')}</button>
-    ` : `<div class="empty-icon" style="text-align:center;font-size:40px;margin:20px 0">😔</div><div style="text-align:center;color:var(--text2);font-size:15px;margin-bottom:20px">${t('stock.out')}</div>`}
+    ` : (p.quantity > 0 ? '' : `<div class="empty-icon" style="text-align:center;font-size:40px;margin:20px 0">😔</div><div style="text-align:center;color:var(--text2);font-size:15px;margin-bottom:20px">${t('stock.out')}</div>`)}
   </div>
   <div class="scroll-pad"></div>
   `;
@@ -838,7 +840,7 @@ function adminProductItem(p) {
     <div class="admin-product-info">
       <div class="admin-product-name">${p.name}${!p.is_active ? `<span class="inactive-badge">${t('admin.hidden')}</span>` : ''}</div>
       <div class="admin-product-sub">${[p.viscosity, p.litres].filter(Boolean).join(' · ')}</div>
-      <div class="admin-product-price">${fmt(p.price)} ${S.settings.currency} · ${p.quantity} ${t('pcs')}</div>
+      <div class="admin-product-price">${p.price !== null ? `${fmt(p.price)} ${S.settings.currency}` : t('price.ask')} · ${p.quantity} ${t('pcs')}</div>
     </div>
     <div class="admin-product-actions">
       <button class="icon-btn icon-btn-toggle admin-toggle-btn" data-id="${p.id}" title="${p.is_active ? t('admin.hide') : t('admin.show')}">${p.is_active ? '👁' : '🙈'}</button>
@@ -1033,7 +1035,7 @@ function openProductForm(product) {
         </div>
         <div class="form-row">
           <div class="form-group"><label class="form-label">${t('admin.f_price')}</label>
-            <input class="form-input" name="price" type="number" min="0" step="0.01" required placeholder="150000" value="${p.price || ''}">
+            <input class="form-input" name="price" type="number" min="0" step="0.01" placeholder="—" value="${p.price ?? ''}">
           </div>
           <div class="form-group"><label class="form-label">${t('admin.f_stock')}</label>
             <input class="form-input" name="quantity" type="number" min="0" placeholder="10" value="${p.quantity ?? 0}">

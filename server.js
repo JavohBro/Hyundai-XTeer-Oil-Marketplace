@@ -358,6 +358,13 @@ function parseProduct(p) {
   return p;
 }
 
+// Blank or non-numeric price is stored as NULL, shown as "price on request".
+function parsePrice(v) {
+  if (v === undefined || v === null || String(v).trim() === '') return null;
+  const n = parseFloat(v);
+  return Number.isFinite(n) ? n : null;
+}
+
 app.get('/api/products', optionalAuth, (req, res) => {
   const { category, search } = req.query;
   let q = 'SELECT * FROM products WHERE is_active = 1';
@@ -380,12 +387,12 @@ app.get('/api/products/:id', optionalAuth, (req, res) => {
 
 app.post('/api/products', authMiddleware, adminOnly, upload.array('images', 10), async (req, res) => {
   const { name, description, litres, price, quantity, brand, viscosity, category, sort_order } = req.body;
-  if (!name || !price) return res.status(400).json({ error: 'Название и цена обязательны' });
+  if (!name) return res.status(400).json({ error: 'Название обязательно' });
   const images = await processUploads(req.files);
   const r = db.prepare(`
     INSERT INTO products (name, description, litres, price, quantity, images, brand, viscosity, category, sort_order)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(name, description || '', litres || '', parseFloat(price), parseInt(quantity) || 0,
+  `).run(name, description || '', litres || '', parsePrice(price), parseInt(quantity) || 0,
     JSON.stringify(images), brand || 'Hyundai Xteer', viscosity || '',
     category || 'Моторное масло', parseInt(sort_order) || 0);
   res.json(parseProduct(db.prepare('SELECT * FROM products WHERE id = ?').get(r.lastInsertRowid)));
@@ -409,7 +416,7 @@ app.put('/api/products/:id', authMiddleware, adminOnly, upload.array('images', 1
     WHERE id=?
   `).run(
     name ?? p.name, description ?? p.description, litres ?? p.litres,
-    price ? parseFloat(price) : p.price,
+    price !== undefined ? parsePrice(price) : p.price,
     quantity !== undefined ? parseInt(quantity) : p.quantity,
     JSON.stringify(images), brand ?? p.brand, viscosity ?? p.viscosity,
     category ?? p.category,
@@ -500,6 +507,8 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
   for (const item of items) {
     const product = db.prepare('SELECT * FROM products WHERE id=? AND is_active=1').get(item.product_id);
     if (!product) return res.status(400).json({ error: `Товар #${item.product_id} не найден` });
+    if (product.price === null)
+      return res.status(400).json({ error: `Цена по запросу: ${product.name}` });
     if (product.quantity < item.quantity)
       return res.status(400).json({ error: `Недостаточно товара: ${product.name}` });
     const subtotal = product.price * item.quantity;

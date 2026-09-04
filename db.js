@@ -30,7 +30,7 @@ db.exec(`
     name        TEXT NOT NULL,
     description TEXT DEFAULT '',
     litres      TEXT DEFAULT '',
-    price       REAL NOT NULL,
+    price       REAL,
     quantity    INTEGER DEFAULT 0,
     images      TEXT DEFAULT '[]',
     brand       TEXT DEFAULT 'Hyundai XTeer',
@@ -80,6 +80,36 @@ if (!orderCols.includes('is_guest')) {
 }
 if (!orderCols.includes('source')) {
   db.exec(`ALTER TABLE orders ADD COLUMN source TEXT DEFAULT 'miniapp'`);
+}
+
+// Price became optional (NULL = "price on request"). SQLite cannot drop a
+// NOT NULL constraint in place, so older databases get the table rebuilt.
+const priceCol = db.prepare('PRAGMA table_info(products)').all().find(c => c.name === 'price');
+if (priceCol && priceCol.notnull) {
+  db.transaction(() => {
+    db.exec(`
+      CREATE TABLE products_new (
+        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        name        TEXT NOT NULL,
+        description TEXT DEFAULT '',
+        litres      TEXT DEFAULT '',
+        price       REAL,
+        quantity    INTEGER DEFAULT 0,
+        images      TEXT DEFAULT '[]',
+        brand       TEXT DEFAULT 'Hyundai XTeer',
+        viscosity   TEXT DEFAULT '',
+        category    TEXT DEFAULT 'Моторное масло',
+        is_active   INTEGER DEFAULT 1,
+        sort_order  INTEGER DEFAULT 0,
+        created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+      INSERT INTO products_new (id, name, description, litres, price, quantity, images, brand, viscosity, category, is_active, sort_order, created_at, updated_at)
+        SELECT id, name, description, litres, price, quantity, images, brand, viscosity, category, is_active, sort_order, created_at, updated_at FROM products;
+      DROP TABLE products;
+      ALTER TABLE products_new RENAME TO products;
+    `);
+  })();
 }
 
 // Preferred UI language (ru / uz / en / ko). Empty until the user picks one,
