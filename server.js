@@ -8,6 +8,9 @@ const sharp    = require('sharp');
 const TelegramBot = require('node-telegram-bot-api');
 const db       = require('./db');
 const I18N     = require('./assets/i18n');
+const TextFmt  = require('./assets/textfmt');
+// Optional: channel (e.g. @carmonoil or -100…) where admins can post product cards
+const CHANNEL_ID = process.env.CHANNEL_ID || '';
 
 const app      = express();
 const PORT     = process.env.PORT || 3000;
@@ -364,6 +367,30 @@ function parsePrice(v) {
   const n = parseFloat(v);
   return Number.isFinite(n) ? n : null;
 }
+// Fuel arrives as 'diesel,lpg' or as repeated form fields; stored as a comma list.
+function parseFuel(v) {
+  return [].concat(v ?? []).flatMap(s => String(s).split(','))
+    .map(s => s.trim().toLowerCase()).filter(f => I18N.FUELS.includes(f))
+    .filter((f, i, a) => a.indexOf(f) === i).join(',');
+}
+const validCategory = c => I18N.CATS.some(x => x.key === c) ? c : 'passenger';
+const TRANSLATION_COLS = ['name_uz', 'name_en', 'name_ko', 'desc_uz', 'desc_en', 'desc_ko'];
+
+// Telegram post for a product: bold name, specs line, formatted description, price.
+function productPost(p) {
+  const currency = getSettings().currency || 'UZS';
+  const specs = [I18N.catLabel('ru', p.category, true), p.viscosity, p.litres, ...I18N.fuelLabels('ru', p.fuel)].filter(Boolean).join(' · ');
+  const price = p.price === null ? I18N.t('ru', 'price.ask') : `${p.price.toLocaleString('ru')} ${esc(currency)}`;
+  let desc = TextFmt.toTelegram(p.description);
+  // Telegram caps captions at 1024 characters
+  if (desc.length > 700) desc = desc.slice(0, 700).replace(/\s+\S*$/, '') + '…';
+  return `<b>${esc(p.name)}</b>${p.brand ? `\n<i>${esc(p.brand)}</i>` : ''}` +
+    (specs ? `\n${esc(specs)}` : '') +
+    (desc ? `\n\n${desc}` : '') +
+    `\n\n💰 <b>${price}</b>` +
+    (p.quantity > 0 ? '' : `\n${I18N.t('ru', 'stock.out')}`) +
+    `\n\n🛒 ${WEBAPP_URL.replace(/\/$/, '')}${SHOP_PATH}`;
+}
 
 app.get('/api/products', optionalAuth, (req, res) => {
   const { category, search } = req.query;
@@ -371,12 +398,13 @@ app.get('/api/products', optionalAuth, (req, res) => {
   const params = [];
   if (category && category !== 'all') { q += ' AND category = ?'; params.push(category); }
   if (search) { q += ' AND (name LIKE ? OR viscosity LIKE ? OR brand LIKE ?)'; params.push(`%${search}%`, `%${search}%`, `%${search}%`); }
-  q += ' ORDER BY sort_order ASC, id DESC';
+  // Numbered products (1, 2, 3…) first in that order; unnumbered (0) after, newest first
+  q += ' ORDER BY CASE WHEN sort_order > 0 THEN 0 ELSE 1 END, sort_order ASC, id DESC';
   res.json(db.prepare(q).all(...params).map(parseProduct));
 });
 
 app.get('/api/admin/products', authMiddleware, adminOnly, (_req, res) => {
-  res.json(db.prepare('SELECT * FROM products ORDER BY id DESC').all().map(parseProduct));
+  res.json(db.prepare('SELECT * FROM products ORDER BY CASE WHEN sort_order > 0 THEN 0 ELSE 1 END, sort_order ASC, id DESC').all().map(parseProduct));
 });
 
 app.get('/api/products/:id', optionalAuth, (req, res) => {
@@ -386,23 +414,47 @@ app.get('/api/products/:id', optionalAuth, (req, res) => {
 });
 
 app.post('/api/products', authMiddleware, adminOnly, upload.array('images', 10), async (req, res) => {
-  const { name, description, litres, price, quantity, brand, viscosity, category, sort_order } = req.body;
+  const { name, description, litres, price, quantity, brand, viscosity, category, sort_order, fuel } = req.body;
   if (!name) return res.status(400).json({ error: 'Название обязательно' });
   const images = await processUploads(req.files);
+  const tr = TRANSLATION_COLS.map(c => req.body[c] || '');
   const r = db.prepare(`
-    INSERT INTO products (name, description, litres, price, quantity, images, brand, viscosity, category, sort_order)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO products (name, description, litres, price, quantity, images, brand, viscosity, category, sort_order, fuel,
+                          name_uz, name_en, name_ko, desc_uz, desc_en, desc_ko)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(name, description || '', litres || '', parsePrice(price), parseInt(quantity) || 0,
-    JSON.stringify(images), brand || 'Hyundai Xteer', viscosity || '',
-    category || 'Моторное масло', parseInt(sort_order) || 0);
+    JSON.stringify(images), brand || 'Hyundai XTeer', viscosity || '',
+    validCategory(category), parseInt(sort_order) || 0, parseFuel(fuel), ...tr);
   res.json(parseProduct(db.prepare('SELECT * FROM products WHERE id = ?').get(r.lastInsertRowid)));
+});
+
+// Admin: post the product card to the configured Telegram channel
+app.post('/api/products/:id/share', authMiddleware, adminOnly, async (req, res) => {
+  if (!CHANNEL_ID) return res.status(400).json({ error: 'CHANNEL_ID не настроен' });
+  const p = db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id);
+  if (!p) return res.status(404).json({ error: 'Not found' });
+  parseProduct(p);
+  const caption = productPost(p);
+  const openBtn = { inline_keyboard: [[{ text: I18N.t('ru', 'bot.open'), url: `${WEBAPP_URL.replace(/\/$/, '')}${SHOP_PATH}` }]] };
+  try {
+    if (p.images[0]) {
+      const img = path.join(uploadsDir, path.basename(p.images[0]));
+      await bot.sendPhoto(CHANNEL_ID, fs.createReadStream(img), { caption, parse_mode: 'HTML', reply_markup: openBtn });
+    } else {
+      await bot.sendMessage(CHANNEL_ID, caption, { parse_mode: 'HTML', reply_markup: openBtn });
+    }
+    res.json({ success: true });
+  } catch (e) {
+    console.error('Channel post failed:', e.message);
+    res.status(502).json({ error: e.message });
+  }
 });
 
 app.put('/api/products/:id', authMiddleware, adminOnly, upload.array('images', 10), async (req, res) => {
   const p = db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id);
   if (!p) return res.status(404).json({ error: 'Not found' });
 
-  const { name, description, litres, price, quantity, brand, viscosity, category, sort_order, is_active, keep_images } = req.body;
+  const { name, description, litres, price, quantity, brand, viscosity, category, sort_order, is_active, keep_images, fuel } = req.body;
   let images = JSON.parse(p.images || '[]');
 
   if (req.files && req.files.length > 0) {
@@ -410,18 +462,23 @@ app.put('/api/products/:id', authMiddleware, adminOnly, upload.array('images', 1
     images = keep_images === 'true' ? [...images, ...newImgs] : newImgs;
   }
 
+  const tr = TRANSLATION_COLS.map(c => req.body[c] !== undefined ? req.body[c] : p[c]);
   db.prepare(`
     UPDATE products SET name=?, description=?, litres=?, price=?, quantity=?, images=?,
-      brand=?, viscosity=?, category=?, sort_order=?, is_active=?, updated_at=CURRENT_TIMESTAMP
+      brand=?, viscosity=?, category=?, sort_order=?, is_active=?, fuel=?,
+      name_uz=?, name_en=?, name_ko=?, desc_uz=?, desc_en=?, desc_ko=?,
+      updated_at=CURRENT_TIMESTAMP
     WHERE id=?
   `).run(
     name ?? p.name, description ?? p.description, litres ?? p.litres,
     price !== undefined ? parsePrice(price) : p.price,
     quantity !== undefined ? parseInt(quantity) : p.quantity,
     JSON.stringify(images), brand ?? p.brand, viscosity ?? p.viscosity,
-    category ?? p.category,
-    sort_order !== undefined ? parseInt(sort_order) : p.sort_order,
+    category !== undefined ? validCategory(category) : p.category,
+    sort_order !== undefined ? (parseInt(sort_order) || 0) : p.sort_order,
     is_active !== undefined ? parseInt(is_active) : p.is_active,
+    fuel !== undefined ? parseFuel(fuel) : p.fuel,
+    ...tr,
     req.params.id
   );
   res.json(parseProduct(db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id)));
@@ -459,11 +516,11 @@ function normalizeGuest(g) {
 
 // Items without a price are ordered "on request": their line shows the label
 // instead of a sum, and the total covers only the priced items.
-function formatOrderText(order, profile, items, currency, orderId, lang = 'ru') {
+function formatOrderText(order, profile, items, currency, orderId, lang = 'ru', nameOf = i => i.name) {
   const pcs = tt(lang, 'pcs');
   const ask = tt(lang, 'price.ask');
   const lines = items.map(i =>
-    `• ${esc(i.name)}${i.litres ? ` (${esc(i.litres)})` : ''}${i.viscosity ? ` ${esc(i.viscosity)}` : ''} × ${i.quantity} ${pcs} = ${i.subtotal === null ? ask : `${i.subtotal.toLocaleString('ru')} ${esc(currency)}`}`
+    `• ${esc(nameOf(i))}${i.litres ? ` (${esc(i.litres)})` : ''}${i.viscosity ? ` ${esc(i.viscosity)}` : ''} × ${i.quantity} ${pcs} = ${i.subtotal === null ? ask : `${i.subtotal.toLocaleString('ru')} ${esc(currency)}`}`
   ).join('\n');
   const tbd = items.some(i => i.subtotal === null);
   const sum = `${order.total_price.toLocaleString('ru')} ${esc(currency)}`;
@@ -509,10 +566,12 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
 
   let totalPrice = 0;
   const orderItems = [];
+  const productById = {};
 
   for (const item of items) {
     const product = db.prepare('SELECT * FROM products WHERE id=? AND is_active=1').get(item.product_id);
     if (!product) return res.status(400).json({ error: `Товар #${item.product_id} не найден` });
+    productById[product.id] = product;
     if (product.quantity < item.quantity)
       return res.status(400).json({ error: `Недостаточно товара: ${product.name}` });
     const subtotal = product.price === null ? null : product.price * item.quantity;
@@ -537,7 +596,8 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
 
   // Customer confirmation in their language; admin notification stays in Russian.
   const lang = isGuest ? 'ru' : userLang(u.id);
-  const { lines: userLines, total, tbd } = formatOrderText({ total_price: totalPrice }, profile, orderItems, currency, orderId, lang);
+  const localName = i => I18N.pname(productById[i.product_id] || i, lang);
+  const { lines: userLines, total, tbd } = formatOrderText({ total_price: totalPrice }, profile, orderItems, currency, orderId, lang, localName);
   const { lines, total: adminTotal } = formatOrderText({ total_price: totalPrice }, profile, orderItems, currency, orderId, 'ru');
 
   const userMsg =
@@ -768,6 +828,23 @@ bot.on('callback_query', async (query) => {
 });
 
 bot.on('polling_error', err => console.error('Bot polling error:', err.message));
+
+// Command menu in every language, so the language switch is discoverable
+const COMMANDS = {
+  ru: [['start', 'Открыть магазин'], ['lang', 'Сменить язык'], ['id', 'Мой Telegram ID']],
+  uz: [['start', 'Do‘konni ochish'], ['lang', 'Tilni o‘zgartirish'], ['id', 'Mening Telegram ID']],
+  en: [['start', 'Open the shop'], ['lang', 'Change language'], ['id', 'My Telegram ID']],
+  ko: [['start', '쇼핑 시작'], ['lang', '언어 변경'], ['id', '내 Telegram ID']],
+};
+(async () => {
+  for (const [code, list] of Object.entries(COMMANDS)) {
+    const commands = list.map(([command, description]) => ({ command, description }));
+    try {
+      if (code === 'ru') await bot.setMyCommands(commands);           // default for everyone
+      await bot.setMyCommands(commands, { language_code: code });
+    } catch (e) { console.error('setMyCommands failed:', e.message); }
+  }
+})();
 
 // ─── Start ────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {

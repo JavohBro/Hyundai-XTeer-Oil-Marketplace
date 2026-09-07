@@ -3,7 +3,7 @@ const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
 const S = {
-  products: [], cat: 'all', brand: 'all', q: '',
+  products: [], cat: 'all', brand: 'all', fuel: 'all', q: '',
   cart: [], me: null, cfg: {}, cur: 'UZS',
   orders: [], adminTab: 'stats', orderFilter: 'all', newImgs: [],
   lang: null, langLock: false
@@ -14,6 +14,10 @@ const LS_LANG = 'carmon_lang';
 const t    = (k, v) => I18N.t(S.lang || I18N.DEFAULT, k, v);
 const catL = (k, full) => I18N.catLabel(S.lang || I18N.DEFAULT, k, full);
 const stL  = s => t('st.' + s);
+// Product text in the current language (falls back to the Russian base fields)
+const pn    = p => I18N.pname(p, S.lang || I18N.DEFAULT);
+const pd    = p => I18N.pdesc(p, S.lang || I18N.DEFAULT);
+const fuelL = p => I18N.fuelLabels(S.lang || I18N.DEFAULT, p.fuel);
 
 // ── API ──
 async function api(url, opts = {}) {
@@ -45,7 +49,7 @@ const Cart = {
   add(p, q = 1) {
     const e = S.cart.find(i => i.product_id === p.id);
     if (e) e.quantity = Math.min(e.quantity + q, p.quantity);
-    else S.cart.push({ product_id: p.id, name: p.name, price: p.price, litres: p.litres, viscosity: p.viscosity, image: p.images?.[0] || '', quantity: Math.min(q, p.quantity), max: p.quantity });
+    else S.cart.push({ product_id: p.id, name: pn(p), price: p.price, litres: p.litres, viscosity: p.viscosity, image: p.images?.[0] || '', quantity: Math.min(q, p.quantity), max: p.quantity });
     this.save();
   },
   set(id, q) {
@@ -242,6 +246,7 @@ function catalogPage() {
       </div>
       <div class="brand-pills" id="brand-pills"></div>
       <div class="pills" id="pills"></div>
+      <div class="pills pills-fuel" id="fuel-pills"></div>
     </div>
     <div id="grid" class="grid"></div>
   </div>`;
@@ -252,8 +257,15 @@ function catalogPage() {
     S.brand = b.dataset.b; paintBrandPills(); paintGrid();
     $('#catalog-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-  paintBrandPills(); paintPills(); paintGrid();
+  paintBrandPills(); paintPills(); paintFuelPills(); paintGrid();
   requestAnimationFrame(() => { initAnimations(); initDeliveryMap(); });
+}
+
+function paintFuelPills() {
+  const el = $('#fuel-pills'); if (!el) return;
+  el.innerHTML = `<span class="pills-label">${esc(t('fuel.label'))}:</span>` +
+    ['all', ...I18N.FUELS].map(f => `<button class="pill pill-sm${S.fuel === f ? ' on' : ''}" data-f="${f}">${esc(f === 'all' ? t('cat.all') : t('fuel.' + f))}</button>`).join('');
+  $$('#fuel-pills .pill').forEach(b => b.onclick = () => { S.fuel = b.dataset.f; paintFuelPills(); paintGrid(); });
 }
 
 function paintBrandPills() {
@@ -278,9 +290,10 @@ function paintGrid() {
   let list = S.products;
   if (S.brand !== 'all') list = list.filter(p => p.brand === S.brand);
   if (S.cat !== 'all') list = list.filter(p => p.category === S.cat);
+  if (S.fuel !== 'all') list = list.filter(p => (p.fuel || '').split(',').includes(S.fuel));
   if (S.q) {
     const q = S.q.toLowerCase();
-    list = list.filter(p => [p.name, p.viscosity, p.brand, p.litres].some(v => (v || '').toLowerCase().includes(q)));
+    list = list.filter(p => [p.name, pn(p), p.viscosity, p.brand, p.litres].some(v => (v || '').toLowerCase().includes(q)));
   }
   if (!list.length) {
     g.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-i">🔍</div><h3>${esc(t('empty.title'))}</h3><p>${esc(t('empty.sub'))}</p></div>`;
@@ -291,7 +304,7 @@ function paintGrid() {
   $$('#grid .card-add').forEach(b => b.onclick = e => {
     e.stopPropagation();
     const p = S.products.find(x => x.id === +b.dataset.id);
-    if (p?.quantity > 0) { Cart.add(p); toast(t('toast.added', { name: p.name })); }
+    if (p?.quantity > 0) { Cart.add(p); toast(t('toast.added', { name: pn(p) })); }
   });
   initAnimations();
 }
@@ -484,14 +497,14 @@ function initDeliveryMap() {
 }
 
 function cardHTML(p) {
-  const img = p.images?.[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.name)}" loading="lazy">` : `<div class="ph">🛢</div>`;
+  const img = p.images?.[0] ? `<img src="${esc(p.images[0])}" alt="${esc(pn(p))}" loading="lazy">` : `<div class="ph">🛢</div>`;
   const ok = p.quantity > 0;
   const priced = p.price !== null && p.price !== undefined;
-  const sub = [p.viscosity, p.litres].filter(Boolean).join(' · ') || p.brand || '';
+  const sub = [p.viscosity, p.litres, ...fuelL(p)].filter(Boolean).join(' · ') || p.brand || '';
   return `<article class="card${ok ? '' : ' dim'}" data-id="${p.id}">
     <div class="card-img">${img}${ok ? '' : `<span class="tag-out">${esc(t('stock.out'))}</span>`}</div>
     <div class="card-b">
-      <div class="card-n">${esc(p.name)}</div>
+      <div class="card-n">${esc(pn(p))}</div>
       <div class="card-s">${esc(sub)}</div>
       <div class="card-f">
         <div class="card-p">${priced ? `${fmt(p.price)} <span>${esc(S.cur)}</span>` : `<span class="card-ask">${esc(t('price.ask'))}</span>`}</div>
@@ -507,23 +520,25 @@ function openProduct(id) {
   const imgs = p.images?.length ? p.images : [];
   const priced = p.price !== null && p.price !== undefined;
   const ok = p.quantity > 0;
-  const chips = [catL(p.category, true), p.viscosity, p.litres].filter(Boolean).map(x => `<span class="chip">${esc(x)}</span>`).join('');
+  const chips = [catL(p.category, true), p.viscosity, p.litres].filter(Boolean).map(x => `<span class="chip">${esc(x)}</span>`).join('')
+    + fuelL(p).map(x => `<span class="chip chip-fuel">${esc(x)}</span>`).join('');
+  const desc = pd(p);
 
   openModal(`
     <button class="modal-x" id="mx" aria-label="${esc(t('close'))}"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="pd">
       <div class="pd-media">
-        <div class="pd-main" id="pdm">${imgs.length ? `<img src="${esc(imgs[0])}" alt="${esc(p.name)}">` : `<div class="ph">🛢</div>`}</div>
+        <div class="pd-main" id="pdm">${imgs.length ? `<img src="${esc(imgs[0])}" alt="${esc(pn(p))}">` : `<div class="ph">🛢</div>`}</div>
         ${imgs.length > 1 ? `<div class="pd-thumbs">${imgs.map((im, i) => `<div class="pd-thumb${i === 0 ? ' on' : ''}" data-i="${i}"><img src="${esc(im)}" alt=""></div>`).join('')}</div>` : ''}
       </div>
       <div class="pd-info">
         <div class="pd-cat">${esc(catL(p.category, true))}</div>
-        <h2 class="pd-title">${esc(p.name)}</h2>
+        <h2 class="pd-title">${esc(pn(p))}</h2>
         <div class="pd-brand">${esc(p.brand || '')}</div>
         <div class="pd-tags">${chips}</div>
         <div class="pd-price">${priced ? `${fmt(p.price)} <span>${esc(S.cur)}</span>` : esc(t('price.ask'))}</div>
         <div class="pd-stock">${p.quantity > 0 ? esc(t('stock.in', { n: p.quantity })) : '😔 ' + esc(t('stock.out'))}</div>
-        ${p.description ? `<div class="pd-desc">${esc(p.description)}</div>` : ''}
+        ${desc ? `<div class="pd-desc">${TextFmt.toHtml(desc)}</div>` : ''}
         ${!priced ? `<div class="note" style="margin-bottom:14px">${esc(t('price.tbd'))} · <a href="https://t.me/r1m_nightrider?text=${encodeURIComponent(p.name)}" target="_blank" rel="noopener" style="text-decoration:underline">${esc(t('price.ask_btn'))}</a></div>` : ''}
         ${ok ? `
         <div class="qty">
@@ -570,7 +585,7 @@ function openProduct(id) {
     };
     $('#addc').onclick = () => {
       Cart.add(p, clamp(qi.value));
-      toast(t('toast.added', { name: p.name }));
+      toast(t('toast.added', { name: pn(p) }));
       closeModal();
     };
   }
@@ -869,22 +884,36 @@ async function aProducts(ac) {
   ac.innerHTML = `
     <div style="margin-bottom:18px"><button class="btn btn-p" id="addp">${esc(t('admin.add'))}</button></div>
     <div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th></th><th>${esc(t('admin.th_name'))}</th><th>${esc(t('admin.th_specs'))}</th><th>${esc(t('admin.th_price'))}</th><th>${esc(t('admin.th_stock'))}</th><th></th></tr></thead>
+      <thead><tr><th>${esc(t('admin.th_sort'))}</th><th></th><th>${esc(t('admin.th_name'))}</th><th>${esc(t('admin.th_specs'))}</th><th>${esc(t('admin.th_price'))}</th><th>${esc(t('admin.th_stock'))}</th><th></th></tr></thead>
       <tbody>${ps.map(p => `<tr>
+        <td><input class="sort-in" type="number" min="0" value="${p.sort_order ?? 0}" data-so="${p.id}" title="${esc(t('admin.f_sort_hint'))}"></td>
         <td>${p.images?.[0] ? `<img class="pimg" src="${esc(p.images[0])}" alt="">` : `<div class="pimg ph" style="font-size:18px">🛢</div>`}</td>
         <td><b>${esc(p.name)}</b>${p.is_active ? '' : `<span class="badge-off">${esc(t('admin.hidden'))}</span>`}<div class="src">${esc(p.brand || '')}</div></td>
-        <td class="src">${esc([catL(p.category, true), p.viscosity, p.litres].filter(Boolean).join(' · '))}</td>
+        <td class="src">${esc([catL(p.category, true), p.viscosity, p.litres, ...fuelL(p)].filter(Boolean).join(' · '))}</td>
         <td>${p.price !== null ? `<b>${fmt(p.price)}</b> ${esc(S.cur)}` : `<span class="src">${esc(t('price.ask'))}</span>`}</td>
         <td>${p.quantity} ${esc(t('pcs'))}</td>
         <td><div class="row-acts">
           <button class="mini" data-tg="${p.id}" title="${esc(p.is_active ? t('admin.hide') : t('admin.show'))}">${p.is_active ? '👁' : '🙈'}</button>
           <button class="mini" data-ed="${p.id}" title="${esc(t('admin.edit'))}">✏️</button>
+          <button class="mini" data-sh="${p.id}" title="${esc(t('admin.share'))}">📣</button>
           <button class="mini mini-d" data-dl="${p.id}" title="${esc(t('admin.delete'))}">🗑</button>
         </div></td>
       </tr>`).join('')}</tbody>
     </table></div>`;
 
   $('#addp').onclick = () => productForm(null);
+  // Inline position edit: saves on change, list re-sorts on next paint
+  $$('[data-so]').forEach(inp => inp.onchange = async () => {
+    const fd = new FormData(); fd.append('sort_order', String(parseInt(inp.value, 10) || 0)); fd.append('keep_images', 'true');
+    try { await api(`/api/products/${inp.dataset.so}`, { method: 'PUT', body: fd }); toast(t('admin.updated')); S.products = await api('/api/products').catch(() => S.products); }
+    catch (e) { toast(e.message); }
+  });
+  $$('[data-sh]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    try { await api(`/api/products/${b.dataset.sh}/share`, { method: 'POST' }); toast(t('admin.shared')); }
+    catch (e) { toast(`${t('admin.share_err')}: ${e.message}`); }
+    b.disabled = false;
+  });
   $$('[data-ed]').forEach(b => b.onclick = () => productForm(ps.find(x => x.id === +b.dataset.ed)));
   $$('[data-tg]').forEach(b => b.onclick = async () => {
     const p = ps.find(x => x.id === +b.dataset.tg);
@@ -920,7 +949,21 @@ function productForm(p) {
           <div class="f"><label>${esc(t('admin.f_price'))}</label><input name="price" type="number" min="0" step="0.01" value="${p.price ?? ''}" placeholder="—"></div>
           <div class="f"><label>${esc(t('admin.f_stock'))}</label><input name="quantity" type="number" min="0" value="${p.quantity ?? 0}"></div>
         </div>
-        <div class="f"><label>${esc(t('admin.f_desc'))}</label><textarea name="description" placeholder="${esc(t('admin.f_desc_ph'))}">${esc(p.description || '')}</textarea></div>
+        <div class="f-row">
+          <div class="f"><label>${esc(t('admin.f_fuel'))}</label>
+            <div class="checks">${I18N.FUELS.map(f => `<label class="check"><input type="checkbox" name="fuel" value="${f}"${(p.fuel || '').split(',').includes(f) ? ' checked' : ''}> ${esc(t('fuel.' + f))}</label>`).join('')}</div>
+          </div>
+          <div class="f"><label>${esc(t('admin.f_sort'))}</label><input name="sort_order" type="number" min="0" value="${p.sort_order ?? 0}"><div class="src" style="margin-top:6px">${esc(t('admin.f_sort_hint'))}</div></div>
+        </div>
+        <div class="f"><label>${esc(t('admin.f_desc'))}</label><textarea name="description" rows="6" placeholder="${esc(t('admin.f_desc_ph'))}">${esc(p.description || '')}</textarea><div class="src" style="margin-top:6px">${esc(t('admin.f_desc_hint'))}</div></div>
+        <details class="f tr-box"${['uz','en','ko'].some(l => p['name_' + l] || p['desc_' + l]) ? ' open' : ''}>
+          <summary>${esc(t('admin.f_i18n'))} <span class="src">— ${esc(t('admin.f_i18n_hint'))}</span></summary>
+          ${I18N.LANGS.filter(l => l.code !== 'ru').map(l => `
+            <div class="tr-lang"><div class="tr-lang-h">${l.flag} ${esc(l.name)}</div>
+              <div class="f"><label>${esc(t('admin.f_name').replace(' *', ''))}</label><input name="name_${l.code}" value="${esc(p['name_' + l.code] || '')}"></div>
+              <div class="f"><label>${esc(t('admin.f_desc'))}</label><textarea name="desc_${l.code}" rows="4">${esc(p['desc_' + l.code] || '')}</textarea></div>
+            </div>`).join('')}
+        </details>
         ${ed && p.images?.length ? `<div class="f"><label>${esc(t('admin.f_cur_photos'))}</label><div class="ups" id="exi">${p.images.map(i => `<div class="upi" data-img="${esc(i)}"><img src="${esc(i)}"><button type="button" data-rm="${esc(i)}">✕</button></div>`).join('')}</div></div>` : ''}
         <div class="f"><label>${esc(t('admin.f_add_photos'))}</label>
           <label class="up" for="fi"><div style="font-size:26px">📷</div><div style="font-size:14px;font-weight:600;margin-top:4px">${esc(t('admin.f_pick'))}</div><div class="src">${esc(t('admin.f_hint'))}</div><input type="file" id="fi" multiple accept="image/*"></label>
@@ -956,7 +999,9 @@ function productForm(p) {
     e.preventDefault();
     const f = e.target, btn = f.querySelector('button[type=submit]'), err = $('#pfe');
     const fd = new FormData();
-    ['name', 'brand', 'category', 'viscosity', 'litres', 'price', 'quantity', 'description'].forEach(k => fd.append(k, f[k].value));
+    ['name', 'brand', 'category', 'viscosity', 'litres', 'price', 'quantity', 'description', 'sort_order',
+     'name_uz', 'name_en', 'name_ko', 'desc_uz', 'desc_en', 'desc_ko'].forEach(k => fd.append(k, f[k].value));
+    fd.append('fuel', [...f.querySelectorAll('input[name=fuel]:checked')].map(c => c.value).join(','));
     fd.append('keep_images', 'true');
     S.newImgs.forEach(x => fd.append('images', x));
     btn.disabled = true; btn.textContent = t('admin.f_saving');

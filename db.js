@@ -35,7 +35,7 @@ db.exec(`
     images      TEXT DEFAULT '[]',
     brand       TEXT DEFAULT 'Hyundai XTeer',
     viscosity   TEXT DEFAULT '',
-    category    TEXT DEFAULT 'Моторное масло',
+    category    TEXT DEFAULT 'passenger',
     is_active   INTEGER DEFAULT 1,
     sort_order  INTEGER DEFAULT 0,
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -111,6 +111,26 @@ if (priceCol && priceCol.notnull) {
     `);
   })();
 }
+
+// Product attributes added later: fuel type (comma-separated diesel/gasoline/lpg)
+// and per-language name/description. The base `name`/`description` stay Russian.
+const productCols = () => db.prepare('PRAGMA table_info(products)').all().map(c => c.name);
+let pc = productCols();
+for (const col of ['fuel', 'name_uz', 'name_en', 'name_ko', 'desc_uz', 'desc_en', 'desc_ko']) {
+  if (!pc.includes(col)) db.exec(`ALTER TABLE products ADD COLUMN ${col} TEXT DEFAULT ''`);
+}
+
+// Categories moved from free Russian labels to fixed keys.
+const CATEGORY_MAP = {
+  'Моторное масло':        'passenger',
+  'Трансмиссионное масло': 'transmission',
+  'Гидравлическое масло':  'grease',
+  'Другое':                'others',
+};
+const upd = db.prepare('UPDATE products SET category = ? WHERE category = ?');
+for (const [oldKey, newKey] of Object.entries(CATEGORY_MAP)) upd.run(newKey, oldKey);
+db.prepare(`UPDATE products SET category = 'others'
+            WHERE category NOT IN ('passenger','heavy','transmission','brake','grease','others')`).run();
 
 // Preferred UI language (ru / uz / en / ko). Empty until the user picks one,
 // which is what makes the bot ask on first contact.

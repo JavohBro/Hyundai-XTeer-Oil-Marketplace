@@ -13,13 +13,17 @@
   ];
   const DEFAULT = 'ru';
 
-  // Category values are stored in the DB in Russian; these ids map them to labels.
+  // Fixed category keys (stored as-is in products.category), in display order.
   const CATS = [
-    { key: 'Моторное масло',        id: 'motor' },
-    { key: 'Трансмиссионное масло', id: 'trans' },
-    { key: 'Гидравлическое масло',  id: 'hydro' },
-    { key: 'Другое',                id: 'other' },
+    { key: 'passenger',    id: 'passenger' },
+    { key: 'heavy',        id: 'heavy' },
+    { key: 'transmission', id: 'transmission' },
+    { key: 'brake',        id: 'brake' },
+    { key: 'grease',       id: 'grease' },
+    { key: 'others',       id: 'others' },
   ];
+  // Fuel / engine types a product can be marked with (stored comma-separated).
+  const FUELS = ['diesel', 'gasoline', 'lpg'];
 
   const T = {
     // ───────────────────────────── RU ─────────────────────────────
@@ -40,8 +44,13 @@
       'delivery.label': 'Зона доставки', 'delivery.title': 'Доставляем в страны СНГ',
       'country.uz': 'Узбекистан', 'country.kg': 'Кыргызстан', 'country.kz': 'Казахстан', 'country.ru': 'Россия',
       'catalog.title': 'Каталог масел', 'catalog.search': 'Поиск по названию или вязкости…',
-      'cat.all': 'Все', 'cat.motor': 'Моторные', 'cat.trans': 'Трансмиссионные', 'cat.hydro': 'Гидравлические', 'cat.other': 'Другое',
-      'catf.motor': 'Моторное масло', 'catf.trans': 'Трансмиссионное масло', 'catf.hydro': 'Гидравлическое масло', 'catf.other': 'Другое',
+      'cat.all': 'Все', 'cat.passenger': 'Легковые', 'cat.heavy': 'Грузовые', 'cat.transmission': 'Трансмиссия', 'cat.brake': 'Тормозная', 'cat.grease': 'Смазки и гидравлика', 'cat.others': 'Другое',
+      'catf.passenger': 'Масла для легковых авто', 'catf.heavy': 'Масла для грузовых и коммерческих авто', 'catf.transmission': 'Трансмиссионные и мостовые масла', 'catf.brake': 'Тормозная жидкость', 'catf.grease': 'Смазки и гидравлические жидкости', 'catf.others': 'Другое',
+      'fuel.label': 'Тип топлива', 'fuel.diesel': 'Дизель', 'fuel.gasoline': 'Бензин', 'fuel.lpg': 'Газ (LPG)',
+      'admin.f_fuel': 'Двигатель / тип топлива', 'admin.f_sort': 'Порядок в каталоге (1, 2, 3…)', 'admin.f_sort_hint': 'Меньше — выше в списке', 'admin.th_sort': 'Порядок',
+      'admin.f_i18n': 'Переводы названия и описания', 'admin.f_i18n_hint': 'Пусто — покажем русский текст',
+      'admin.f_desc_hint': 'Абзацы — пустой строкой, списки через «- », **жирный**, *курсив*',
+      'admin.share': '📣 В канал', 'admin.shared': 'Опубликовано в канале', 'admin.share_err': 'Не удалось опубликовать',
       'empty.title': 'Ничего не найдено', 'empty.sub': 'Попробуйте изменить запрос или категорию',
       'stock.out': 'Нет в наличии', 'stock.in': '✅ В наличии: {n} шт.', 'stock.in_plain': 'В наличии: {n} шт.', 'pcs': 'шт.',
       'qty': 'Количество', 'add': 'В корзину', 'add.long': 'Добавить в корзину',
@@ -135,8 +144,13 @@
       'delivery.label': 'Yetkazib berish hududi', 'delivery.title': 'MDH davlatlariga yetkazib beramiz',
       'country.uz': 'O‘zbekiston', 'country.kg': 'Qirg‘iziston', 'country.kz': 'Qozog‘iston', 'country.ru': 'Rossiya',
       'catalog.title': 'Moylar katalogi', 'catalog.search': 'Nomi yoki qovushqoqligi bo‘yicha qidirish…',
-      'cat.all': 'Barchasi', 'cat.motor': 'Motor', 'cat.trans': 'Transmissiya', 'cat.hydro': 'Gidravlik', 'cat.other': 'Boshqa',
-      'catf.motor': 'Motor moyi', 'catf.trans': 'Transmissiya moyi', 'catf.hydro': 'Gidravlik moy', 'catf.other': 'Boshqa',
+      'cat.all': 'Barchasi', 'cat.passenger': 'Yengil avto', 'cat.heavy': 'Yuk avto', 'cat.transmission': 'Transmissiya', 'cat.brake': 'Tormoz', 'cat.grease': 'Moy va gidravlika', 'cat.others': 'Boshqa',
+      'catf.passenger': 'Yengil avtomobil moylari', 'catf.heavy': 'Yuk va tijorat avtomobil moylari', 'catf.transmission': 'Transmissiya va ko‘prik moylari', 'catf.brake': 'Tormoz suyuqligi', 'catf.grease': 'Konsistent va gidravlik moylar', 'catf.others': 'Boshqa',
+      'fuel.label': 'Yoqilg‘i turi', 'fuel.diesel': 'Dizel', 'fuel.gasoline': 'Benzin', 'fuel.lpg': 'Gaz (LPG)',
+      'admin.f_fuel': 'Dvigatel / yoqilg‘i turi', 'admin.f_sort': 'Katalogdagi tartib (1, 2, 3…)', 'admin.f_sort_hint': 'Kichik raqam — ro‘yxatda yuqorida', 'admin.th_sort': 'Tartib',
+      'admin.f_i18n': 'Nom va tavsif tarjimalari', 'admin.f_i18n_hint': 'Bo‘sh qoldirilsa — ruscha matn ko‘rsatiladi',
+      'admin.f_desc_hint': 'Abzats — bo‘sh qator, ro‘yxat «- » bilan, **qalin**, *kursiv*',
+      'admin.share': '📣 Kanalga', 'admin.shared': 'Kanalga joylandi', 'admin.share_err': 'Joylab bo‘lmadi',
       'empty.title': 'Hech narsa topilmadi', 'empty.sub': 'So‘rov yoki toifani o‘zgartirib ko‘ring',
       'stock.out': 'Mavjud emas', 'stock.in': '✅ Mavjud: {n} dona', 'stock.in_plain': 'Mavjud: {n} dona', 'pcs': 'dona',
       'qty': 'Miqdor', 'add': 'Savatga', 'add.long': 'Savatga qo‘shish',
@@ -229,8 +243,13 @@
       'delivery.label': 'Delivery area', 'delivery.title': 'We deliver across the CIS',
       'country.uz': 'Uzbekistan', 'country.kg': 'Kyrgyzstan', 'country.kz': 'Kazakhstan', 'country.ru': 'Russia',
       'catalog.title': 'Oil catalog', 'catalog.search': 'Search by name or viscosity…',
-      'cat.all': 'All', 'cat.motor': 'Engine', 'cat.trans': 'Transmission', 'cat.hydro': 'Hydraulic', 'cat.other': 'Other',
-      'catf.motor': 'Engine oil', 'catf.trans': 'Transmission oil', 'catf.hydro': 'Hydraulic oil', 'catf.other': 'Other',
+      'cat.all': 'All', 'cat.passenger': 'Passenger', 'cat.heavy': 'Heavy duty', 'cat.transmission': 'Transmission', 'cat.brake': 'Brake fluid', 'cat.grease': 'Grease & hydraulic', 'cat.others': 'Others',
+      'catf.passenger': 'Passenger vehicle oil', 'catf.heavy': 'Heavy duty / commercial vehicle oil', 'catf.transmission': 'Transmission fluid / axle oil', 'catf.brake': 'Brake fluid', 'catf.grease': 'Grease / hydraulic fluid', 'catf.others': 'Others',
+      'fuel.label': 'Fuel type', 'fuel.diesel': 'Diesel', 'fuel.gasoline': 'Gasoline', 'fuel.lpg': 'LPG',
+      'admin.f_fuel': 'Engine / fuel type', 'admin.f_sort': 'Catalog position (1, 2, 3…)', 'admin.f_sort_hint': 'Lower numbers show first', 'admin.th_sort': 'Order',
+      'admin.f_i18n': 'Name & description translations', 'admin.f_i18n_hint': 'Leave blank to show the Russian text',
+      'admin.f_desc_hint': 'Blank line = paragraph, lists with "- ", **bold**, *italic*',
+      'admin.share': '📣 Post to channel', 'admin.shared': 'Posted to the channel', 'admin.share_err': 'Could not post',
       'empty.title': 'Nothing found', 'empty.sub': 'Try changing your search or category',
       'stock.out': 'Out of stock', 'stock.in': '✅ In stock: {n} pcs', 'stock.in_plain': 'In stock: {n} pcs', 'pcs': 'pcs',
       'qty': 'Quantity', 'add': 'Add to cart', 'add.long': 'Add to cart',
@@ -323,8 +342,13 @@
       'delivery.label': '배송 지역', 'delivery.title': 'CIS 국가로 배송합니다',
       'country.uz': '우즈베키스탄', 'country.kg': '키르기스스탄', 'country.kz': '카자흐스탄', 'country.ru': '러시아',
       'catalog.title': '오일 카탈로그', 'catalog.search': '제품명 또는 점도로 검색…',
-      'cat.all': '전체', 'cat.motor': '엔진오일', 'cat.trans': '변속기오일', 'cat.hydro': '유압유', 'cat.other': '기타',
-      'catf.motor': '엔진오일', 'catf.trans': '변속기오일', 'catf.hydro': '유압유', 'catf.other': '기타',
+      'cat.all': '전체', 'cat.passenger': '승용차', 'cat.heavy': '상용차', 'cat.transmission': '변속기', 'cat.brake': '브레이크액', 'cat.grease': '그리스·유압', 'cat.others': '기타',
+      'catf.passenger': '승용차 오일', 'catf.heavy': '대형·상용차 오일', 'catf.transmission': '변속기·차축 오일', 'catf.brake': '브레이크액', 'catf.grease': '그리스·유압유', 'catf.others': '기타',
+      'fuel.label': '연료 유형', 'fuel.diesel': '디젤', 'fuel.gasoline': '가솔린', 'fuel.lpg': 'LPG',
+      'admin.f_fuel': '엔진 / 연료 유형', 'admin.f_sort': '카탈로그 순서 (1, 2, 3…)', 'admin.f_sort_hint': '숫자가 낮을수록 먼저 표시', 'admin.th_sort': '순서',
+      'admin.f_i18n': '이름·설명 번역', 'admin.f_i18n_hint': '비우면 러시아어 텍스트가 표시됩니다',
+      'admin.f_desc_hint': '빈 줄 = 단락, 목록은 "- ", **굵게**, *기울임*',
+      'admin.share': '📣 채널에 게시', 'admin.shared': '채널에 게시됨', 'admin.share_err': '게시하지 못했습니다',
       'empty.title': '검색 결과가 없습니다', 'empty.sub': '검색어나 카테고리를 변경해 보세요',
       'stock.out': '품절', 'stock.in': '✅ 재고: {n}개', 'stock.in_plain': '재고: {n}개', 'pcs': '개',
       'qty': '수량', 'add': '담기', 'add.long': '장바구니에 담기',
@@ -428,5 +452,20 @@
     return (LANGS.find(l => l.code === normalize(lang)) || LANGS[0]).locale;
   }
 
-  return { LANGS, DEFAULT, CATS, CHOOSE, T, t, catLabel, locale, normalize };
+  // Product text in the viewer's language, falling back to the Russian base field.
+  // `name`/`description` are the base; `name_uz`, `desc_ko`, … are the translations.
+  function pname(p, lang) {
+    lang = normalize(lang);
+    return (lang !== 'ru' && p['name_' + lang]) || p.name || '';
+  }
+  function pdesc(p, lang) {
+    lang = normalize(lang);
+    return (lang !== 'ru' && p['desc_' + lang]) || p.description || '';
+  }
+  // 'diesel,gasoline' → ['Дизель', 'Бензин']
+  function fuelLabels(lang, fuel) {
+    return String(fuel || '').split(',').map(s => s.trim()).filter(f => FUELS.includes(f)).map(f => t(lang, 'fuel.' + f));
+  }
+
+  return { LANGS, DEFAULT, CATS, FUELS, CHOOSE, T, t, catLabel, locale, normalize, pname, pdesc, fuelLabels };
 });

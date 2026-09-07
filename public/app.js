@@ -13,6 +13,7 @@ const S = {
   filteredProducts: [],
   activeCategory: 'all',
   activeBrand: 'all',
+  activeFuel: 'all',
   searchQuery: '',
   cart: [],
   orders: [],
@@ -33,6 +34,11 @@ const LS_LANG = 'carmon_lang';
 const t    = (k, v) => I18N.t(S.lang || I18N.DEFAULT, k, v);
 const catL = (k, full) => I18N.catLabel(S.lang || I18N.DEFAULT, k, full);
 const stL  = s => t('st.' + s);
+// Product text in the current language (falls back to the Russian base fields)
+const pn    = p => I18N.pname(p, S.lang || I18N.DEFAULT);
+const pd    = p => I18N.pdesc(p, S.lang || I18N.DEFAULT);
+const fuelL = p => I18N.fuelLabels(S.lang || I18N.DEFAULT, p.fuel);
+const escH  = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 // Static chrome outside the pages: bottom nav labels, loading subtitle, <html lang>
 function paintStatic() {
@@ -89,7 +95,7 @@ const Cart = {
   add(product, qty = 1) {
     const ex = S.cart.find(i => i.product_id === product.id);
     if (ex) ex.quantity = Math.min(ex.quantity + qty, product.quantity);
-    else S.cart.push({ product_id: product.id, name: product.name, price: product.price, litres: product.litres, viscosity: product.viscosity, image: product.images?.[0] || '', quantity: qty, max: product.quantity });
+    else S.cart.push({ product_id: product.id, name: pn(product), price: product.price, litres: product.litres, viscosity: product.viscosity, image: product.images?.[0] || '', quantity: qty, max: product.quantity });
     this.save();
     updateCartBadge();
   },
@@ -208,6 +214,7 @@ async function renderCatalog() {
     </div>
     <div class="brand-scroll" id="brand-scroll"></div>
     <div class="cat-scroll" id="cat-scroll"></div>
+    <div class="cat-scroll fuel-scroll" id="fuel-scroll"></div>
     <div class="product-grid" id="product-grid"></div>
     <div class="scroll-pad"></div>
   `;
@@ -219,6 +226,7 @@ async function renderCatalog() {
 
   renderBrandPills();
   renderCatPills();
+  renderFuelPills();
 
   if (S.products.length === 0) {
     try {
@@ -270,15 +278,29 @@ function renderCatPills() {
   }));
 }
 
+function renderFuelPills() {
+  const scroll = document.getElementById('fuel-scroll');
+  if (!scroll) return;
+  scroll.innerHTML = `<span class="fuel-label">${t('fuel.label')}</span>` + ['all', ...I18N.FUELS].map(f => `
+    <button class="cat-pill ${S.activeFuel === f ? 'active' : ''}" data-fuel="${f}">${f === 'all' ? t('cat.all') : t('fuel.' + f)}</button>
+  `).join('');
+  scroll.querySelectorAll('.cat-pill').forEach(b => b.addEventListener('click', () => {
+    S.activeFuel = b.dataset.fuel;
+    renderFuelPills();
+    filterAndRenderProducts();
+  }));
+}
+
 function filterAndRenderProducts() {
   const grid = document.getElementById('product-grid');
   if (!grid) return;
   let list = S.products;
   if (S.activeBrand !== 'all') list = list.filter(p => p.brand === S.activeBrand);
   if (S.activeCategory !== 'all') list = list.filter(p => p.category === S.activeCategory);
+  if (S.activeFuel !== 'all') list = list.filter(p => (p.fuel || '').split(',').includes(S.activeFuel));
   if (S.searchQuery) {
     const q = S.searchQuery.toLowerCase();
-    list = list.filter(p => p.name.toLowerCase().includes(q) || (p.viscosity || '').toLowerCase().includes(q) || (p.brand || '').toLowerCase().includes(q));
+    list = list.filter(p => [p.name, pn(p), p.viscosity, p.brand].some(v => (v || '').toLowerCase().includes(q)));
   }
   S.filteredProducts = list;
   if (list.length === 0) {
@@ -294,7 +316,7 @@ function filterAndRenderProducts() {
     Cart.add(p);
     b.classList.add('pop');
     setTimeout(() => b.classList.remove('pop'), 250);
-    toast(t('toast.added', { name: p.name }));
+    toast(t('toast.added', { name: pn(p) }));
   }));
 }
 
@@ -309,8 +331,8 @@ function productCard(p) {
       ${!inStock ? `<span class="out-of-stock-tag">${t('stock.out')}</span>` : ''}
     </div>
     <div class="product-card-body">
-      <div class="product-card-name">${p.name}</div>
-      <div class="product-card-sub">${[p.viscosity, p.litres].filter(Boolean).join(' · ') || p.brand || ''}</div>
+      <div class="product-card-name">${escH(pn(p))}</div>
+      <div class="product-card-sub">${escH([p.viscosity, p.litres, ...fuelL(p)].filter(Boolean).join(' · ') || p.brand || '')}</div>
       <div class="product-card-footer">
         <div class="product-card-price">${priced ? `${fmt(p.price)} <span style="font-size:11px;font-weight:400;color:var(--text2)">${S.settings.currency}</span>` : `<span class="price-ask">${t('price.ask')}</span>`}</div>
         ${inStock ? `<button class="product-card-add" data-id="${p.id}">+</button>` : ''}
@@ -375,9 +397,11 @@ function renderProductDetail(p) {
     ? imgs.map(img => `<div class="carousel-slide"><img src="${img}" alt=""></div>`).join('')
     : `<div class="carousel-slide"><div class="no-img-lg">🛢</div></div>`;
   const dots = imgs.length > 1 ? `<div class="carousel-dots">${imgs.map((_, i) => `<div class="dot ${i === 0 ? 'active' : ''}"></div>`).join('')}</div>` : '';
-  const tags = [catL(p.category, true), p.viscosity, p.litres ? `${p.litres}` : ''].filter(Boolean).map(x => `<span class="tag">${x}</span>`).join('');
+  const tags = [catL(p.category, true), p.viscosity, p.litres ? `${p.litres}` : ''].filter(Boolean).map(x => `<span class="tag">${escH(x)}</span>`).join('')
+    + fuelL(p).map(x => `<span class="tag tag-fuel">${escH(x)}</span>`).join('');
   const priced = p.price !== null && p.price !== undefined;
   const inStock = p.quantity > 0;
+  const desc = pd(p);
   return `
   <div class="product-detail-back">
     <button class="back-btn" id="pd-back"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>${t('back')}</button>
@@ -387,13 +411,13 @@ function renderProductDetail(p) {
     ${dots}
   </div>
   <div class="product-info">
-    <div class="product-title">${p.name}</div>
-    <div class="product-brand">${p.brand || ''}</div>
+    <div class="product-title">${escH(pn(p))}</div>
+    <div class="product-brand">${escH(p.brand || '')}</div>
     <div class="product-tags">${tags}</div>
     <div class="product-price-row">
       ${priced ? `<div class="product-price">${fmt(p.price)}</div><div class="product-price-cur">${S.settings.currency}</div>` : `<div class="product-price" style="font-size:18px">${t('price.ask')}</div>`}
     </div>
-    ${p.description ? `<div class="product-desc">${p.description}</div>` : ''}
+    ${desc ? `<div class="product-desc">${TextFmt.toHtml(desc)}</div>` : ''}
     ${!priced ? `<div class="stock-note" style="margin-bottom:12px">${t('price.tbd')} · <a href="https://t.me/r1m_nightrider?text=${encodeURIComponent(p.name)}" target="_blank" style="text-decoration:underline">${t('price.ask_btn')}</a></div>` : ''}
     ${inStock ? `
     <div class="qty-row">
@@ -462,7 +486,7 @@ function initQtyControls(p) {
   });
   addBtn.addEventListener('click', () => {
     Cart.add(p, clamp(val.value));
-    toast(t('toast.added', { name: p.name }));
+    toast(t('toast.added', { name: pn(p) }));
     val.value = 1;
     tg?.HapticFeedback?.notificationOccurred('success');
   });
@@ -865,6 +889,12 @@ async function renderAdminProducts(ac) {
       toast(t('admin.deleted'));
       await renderAdminProducts(ac);
     }));
+    ac.querySelectorAll('.admin-share-btn').forEach(b => b.addEventListener('click', async () => {
+      b.disabled = true;
+      try { await api(`/api/products/${b.dataset.id}/share`, { method: 'POST' }); toast(t('admin.shared')); }
+      catch (e) { await showAlert(`${t('admin.share_err')}: ${e.message}`); }
+      b.disabled = false;
+    }));
     ac.querySelectorAll('.admin-toggle-btn').forEach(b => b.addEventListener('click', async () => {
       const p = products.find(x => x.id === parseInt(b.dataset.id));
       if (!p) return;
@@ -884,13 +914,14 @@ function adminProductItem(p) {
   <div class="admin-product-item">
     <div class="admin-product-img">${img}</div>
     <div class="admin-product-info">
-      <div class="admin-product-name">${p.name}${!p.is_active ? `<span class="inactive-badge">${t('admin.hidden')}</span>` : ''}</div>
-      <div class="admin-product-sub">${[p.viscosity, p.litres].filter(Boolean).join(' · ')}</div>
+      <div class="admin-product-name">${escH(p.name)}${!p.is_active ? `<span class="inactive-badge">${t('admin.hidden')}</span>` : ''}</div>
+      <div class="admin-product-sub">#${p.sort_order ?? 0} · ${escH([catL(p.category), p.viscosity, p.litres, ...fuelL(p)].filter(Boolean).join(' · '))}</div>
       <div class="admin-product-price">${p.price !== null ? `${fmt(p.price)} ${S.settings.currency}` : t('price.ask')} · ${p.quantity} ${t('pcs')}</div>
     </div>
     <div class="admin-product-actions">
       <button class="icon-btn icon-btn-toggle admin-toggle-btn" data-id="${p.id}" title="${p.is_active ? t('admin.hide') : t('admin.show')}">${p.is_active ? '👁' : '🙈'}</button>
       <button class="icon-btn icon-btn-edit admin-edit-btn" data-id="${p.id}">✏️</button>
+      <button class="icon-btn icon-btn-share admin-share-btn" data-id="${p.id}" title="${t('admin.share')}">📣</button>
       <button class="icon-btn icon-btn-delete admin-del-btn" data-id="${p.id}">🗑</button>
     </div>
   </div>`;
@@ -1087,9 +1118,27 @@ function openProductForm(product) {
             <input class="form-input" name="quantity" type="number" min="0" placeholder="10" value="${p.quantity ?? 0}">
           </div>
         </div>
-        <div class="form-group"><label class="form-label">${t('admin.f_desc')}</label>
-          <textarea class="form-textarea" name="description" rows="3" placeholder="${t('admin.f_desc_ph')}">${p.description || ''}</textarea>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">${t('admin.f_fuel')}</label>
+            <div class="checks">${I18N.FUELS.map(f => `<label class="check"><input type="checkbox" name="fuel" value="${f}"${(p.fuel || '').split(',').includes(f) ? ' checked' : ''}> ${t('fuel.' + f)}</label>`).join('')}</div>
+          </div>
+          <div class="form-group"><label class="form-label">${t('admin.f_sort')}</label>
+            <input class="form-input" name="sort_order" type="number" min="0" value="${p.sort_order ?? 0}">
+            <div class="upload-hint">${t('admin.f_sort_hint')}</div>
+          </div>
         </div>
+        <div class="form-group"><label class="form-label">${t('admin.f_desc')}</label>
+          <textarea class="form-textarea" name="description" rows="5" placeholder="${t('admin.f_desc_ph')}">${escH(p.description || '')}</textarea>
+          <div class="upload-hint">${t('admin.f_desc_hint')}</div>
+        </div>
+        <details class="tr-box"${['uz','en','ko'].some(l => p['name_' + l] || p['desc_' + l]) ? ' open' : ''}>
+          <summary>${t('admin.f_i18n')}<div class="upload-hint">${t('admin.f_i18n_hint')}</div></summary>
+          ${I18N.LANGS.filter(l => l.code !== 'ru').map(l => `
+            <div class="tr-lang"><div class="tr-lang-h">${l.flag} ${l.name}</div>
+              <div class="form-group"><label class="form-label">${t('admin.f_name').replace(' *', '')}</label><input class="form-input" name="name_${l.code}" value="${escH(p['name_' + l.code] || '')}"></div>
+              <div class="form-group"><label class="form-label">${t('admin.f_desc')}</label><textarea class="form-textarea" name="desc_${l.code}" rows="3">${escH(p['desc_' + l.code] || '')}</textarea></div>
+            </div>`).join('')}
+        </details>
         ${existingImgsHTML}
         <div class="section-title" style="margin-top:${isEdit?'12px':'0'}">${t('admin.f_add_photos')}</div>
         <label class="image-upload-box" for="img-file-input">
@@ -1163,9 +1212,11 @@ function openProductForm(product) {
     e.preventDefault();
     const form = e.target;
     const fd = new FormData();
-    ['name','brand','category','viscosity','litres','price','quantity','description'].forEach(k => {
+    ['name','brand','category','viscosity','litres','price','quantity','description','sort_order',
+     'name_uz','name_en','name_ko','desc_uz','desc_en','desc_ko'].forEach(k => {
       fd.append(k, form[k].value);
     });
+    fd.append('fuel', [...form.querySelectorAll('input[name=fuel]:checked')].map(c => c.value).join(','));
     fd.append('keep_images', 'true');
     S.newImageFiles.forEach(f => fd.append('images', f));
 
