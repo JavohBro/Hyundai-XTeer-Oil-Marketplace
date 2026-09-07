@@ -20,7 +20,8 @@
     </a>
 
     <nav class="hdr-nav" id="hdr-nav">
-      <a href="#/" data-route="catalog" data-i18n="nav.catalog">Каталог</a>
+      <a href="#/" data-route="home" data-i18n="nav.home">Главная</a>
+      <a href="#/catalog" data-route="catalog" data-i18n="nav.catalog">Каталог</a>
       <a href="#/orders" data-route="orders" data-i18n="nav.orders">Заказы</a>
       <a href="#/help" data-route="help" data-i18n="nav.help">Помощь</a>
       <a href="#/admin" data-route="admin" id="nav-admin" data-i18n="nav.admin" hidden>Админ</a>
@@ -44,24 +45,35 @@
 
 <footer id="ftr">
   <div class="ftr-inner">
+    <div class="ftr-about">
+      <img class="ftr-logo" src="/assets/logo.png" alt="Carmon Oil" onerror="this.style.display='none'">
+      <p class="ftr-note"><span data-i18n="footer.about">Официальный импортёр корейских масел.</span><br>Kixx, Hyundai XTeer, SK ZIC, Castrol, S-OIL, Shell, SpeedMate, Mobil, Autous.</p>
+      <div class="ftr-social">
+        <a href="https://t.me/r1m_nightrider" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor" style="stroke:none"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.013 4.52 13.1c-.658-.205-.67-.658.137-.975l10.84-4.179c.548-.2 1.027.12.85.975z"/></svg></a>
+        <a href="tel:+821037682270" aria-label="Phone"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg></a>
+        <a href="mailto:islombeksoyibboyev@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg></a>
+      </div>
+    </div>
     <div>
-      <div class="ftr-brand">Carmon <b>Lubricants</b></div>
-      <p class="ftr-note"><span data-i18n="footer.about">Официальный импортёр корейских масел.</span><br>Kixx, Hyundai XTeer, SK ZIC, Castrol, S-OIL, Shell, SpeedMate, Mobil, Autous.<br>South Korea, Goyang.</p>
+      <div class="ftr-h" data-i18n="footer.sections">Разделы</div>
+      <a href="#/" data-i18n="nav.home">Главная</a>
+      <a href="#/catalog" data-i18n="nav.catalog">Каталог</a>
+      <a href="#/orders" data-i18n="footer.my_orders">Мои заказы</a>
+      <a href="#/help" data-i18n="nav.help">Помощь</a>
     </div>
     <div>
       <div class="ftr-h" data-i18n="footer.contacts">Контакты</div>
-      <a href="https://t.me/r1m_nightrider" target="_blank" rel="noopener">Telegram — @r1m_nightrider</a>
+      <a href="https://t.me/r1m_nightrider" target="_blank" rel="noopener">@r1m_nightrider</a>
       <a href="tel:+821037682270">+82 10 3768 2270</a>
       <a href="mailto:islombeksoyibboyev@gmail.com">islombeksoyibboyev@gmail.com</a>
     </div>
     <div>
-      <div class="ftr-h" data-i18n="footer.sections">Разделы</div>
-      <a href="#/" data-i18n="nav.catalog">Каталог</a>
-      <a href="#/orders" data-i18n="footer.my_orders">Мои заказы</a>
-      <a href="#/help" data-i18n="nav.help">Помощь</a>
+      <div class="ftr-h">Carmon Lubricants</div>
+      <span class="ftr-line">South Korea, Goyang</span>
+      <span class="ftr-line">Hyundai XTeer · SK ZIC · Kixx</span>
     </div>
   </div>
-  <div class="ftr-base">© <span id="yr"></span> Carmon Lubricants. South Korea, Goyang.</div>
+  <div class="ftr-base"><span>© <span id="yr"></span> Carmon Lubricants</span><span>South Korea, Goyang</span></div>
 </footer>
 
 <!-- Cart drawer -->

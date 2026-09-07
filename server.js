@@ -653,6 +653,24 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
   res.json({ success: true, order_id: orderId, total_price: totalPrice, currency });
 });
 
+// ─── Call-back requests from the landing page ────────────────────────────────
+// One request per phone number per 10 minutes keeps a stuck button from spamming admins.
+const leadSeen = new Map();
+app.post('/api/lead', async (req, res) => {
+  const phone = String(req.body?.phone || '').trim();
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length < 7 || digits.length > 15) return res.status(400).json({ error: 'Некорректный номер' });
+  const last = leadSeen.get(digits) || 0;
+  if (Date.now() - last < 10 * 60e3) return res.json({ success: true });
+  leadSeen.set(digits, Date.now());
+  const text = tt('ru', 'bot.lead', { phone: esc(phone) });
+  for (const adminId of ADMIN_IDS) {
+    try { await bot.sendMessage(adminId, text, { parse_mode: 'HTML' }); }
+    catch (e) { console.error(`Lead → admin ${adminId} failed:`, e.message); }
+  }
+  res.json({ success: true });
+});
+
 app.get('/api/orders', authMiddleware, (req, res) => {
   let orders;
   if (req.isAdmin && req.query.all === 'true') {

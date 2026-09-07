@@ -148,10 +148,10 @@ function openLangPicker(force = false) {
 }
 
 // ═══ ROUTER ═══
-const routes = { '': catalogPage, '/': catalogPage, '/orders': ordersPage, '/help': helpPage, '/admin': adminPage };
+const routes = { '': homePage, '/': homePage, '/catalog': catalogPage, '/orders': ordersPage, '/help': helpPage, '/admin': adminPage };
 function router() {
   const hash = location.hash.replace(/^#/, '') || '/';
-  const fn = routes[hash] || catalogPage;
+  const fn = routes[hash] || homePage;
   $$('.hdr-nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + (hash === '/' ? '/' : hash)));
   $('#hdr-nav').classList.remove('open');
   window.scrollTo(0, 0);
@@ -174,45 +174,85 @@ const BRANDS = [
 ];
 const BRAND_IDS = BRANDS.slice(1).map(b => b.id);
 
-function catalogPage() {
-  $('#main').innerHTML = `
-  <section class="hero"><div class="hero-in">
-    <div>
-      <h1>${t('hero.title')}</h1>
-      <p>${esc(t('hero.p'))}</p>
-      <div class="hero-badges">
-        <span class="hero-badge">${esc(t('hero.b1'))}</span>
-        <span class="hero-badge">${esc(t('hero.b2'))}</span>
-        <span class="hero-badge">${esc(t('hero.b3'))}</span>
-      </div>
-      <div class="hero-actions">
-        <a class="btn-primary" href="#catalog-section">${esc(t('hero.cta'))}</a>
-        <a class="btn-tg" href="https://t.me/hyundaixteeroilbot" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.013 4.52 13.1c-.658-.205-.67-.658.137-.975l10.84-4.179c.548-.2 1.027.12.85.975-.002.003-.005.003.005-.003l-.79-.67z"/></svg>
-          ${esc(t('hero.tg'))}
-        </a>
-      </div>
-    </div>
-    <img class="hero-logo" src="/assets/logo.png" alt="" onerror="this.style.display='none'">
-  </div></section>
+// Jump to the shop with a filter preselected (from logos / category bubbles)
+function goCatalog(opts = {}) {
+  if (opts.brand !== undefined) S.brand = opts.brand;
+  if (opts.cat !== undefined) S.cat = opts.cat;
+  if (opts.fuel !== undefined) S.fuel = opts.fuel;
+  if (location.hash === '#/catalog') { catalogPage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  else location.hash = '#/catalog';
+}
 
-  <section class="brands-strip">
-    <div class="wrap">
-      <p class="brands-strip-label">${esc(t('brands.label'))}</p>
-      <div class="brands-strip-logos">
-        ${BRANDS.slice(1).map(b => `<button type="button" class="brands-strip-logo anim" data-b="${esc(b.id)}" aria-label="${esc(b.label)}"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></button>`).join('')}
+const CAT_ICONS = { passenger: '🚗', heavy: '🚛', transmission: '⚙️', brake: '🛑', grease: '🛢️', others: '📦' };
+const ART = [
+  { icon: '🧪', bg: 'linear-gradient(135deg,#fde7dc,#f9c9b4)' },
+  { icon: '⛽', bg: 'linear-gradient(135deg,#e3f0ff,#c6dcff)' },
+  { icon: '✅', bg: 'linear-gradient(135deg,#e6f7ea,#c9ecd2)' },
+  { icon: '🚚', bg: 'linear-gradient(135deg,#fff3d6,#ffe3a3)' },
+];
+
+// ═══ HOME (landing) ═══
+function homePage() {
+  const withImg = S.products.filter(p => p.images?.length);
+  const stack = [withImg[1], withImg[0], withImg[2]].map((p, i) =>
+    p ? `<img src="${esc(p.images[0])}" alt="${esc(pn(p))}">`
+      : `<div class="lp-stack-ph"><img src="${esc(BRANDS[[2, 1, 3][i]].logo)}" alt=""></div>`);
+  const bubbles = I18N.CATS.map((c, i) => {
+    const tt = i / (I18N.CATS.length - 1);
+    const x = 86 - 72 * tt, y = 6 + 88 * tt;
+    return `<button type="button" class="lp-bubble${i === 2 ? ' on' : ''}" style="left:${x}%;top:${y}%" data-cat="${c.key}">
+      <span class="lp-bubble-i">${CAT_ICONS[c.key] || '•'}</span><span class="lp-bubble-l">${esc(catL(c.key))}</span></button>`;
+  }).join('');
+
+  $('#main').innerHTML = `
+  <section class="lp-hero">
+    <img class="lp-hero-bg" src="/assets/hero.jpg" alt="" onerror="this.remove()">
+    <div class="lp-hero-in">
+      <div class="lp-hero-txt">
+        <h1>${t('home.hero_title')}</h1>
+        <p>${esc(t('home.hero_sub'))}</p>
+        <div class="lp-actions">
+          <a class="btn-or" href="#/catalog">${esc(t('home.hero_cta'))} <span class="arr">→</span></a>
+          <a class="btn-gl" href="https://t.me/hyundaixteeroilbot" target="_blank" rel="noopener">${esc(t('home.hero_tg'))}</a>
+        </div>
+        <div class="lp-clients-l">${esc(t('home.clients'))}</div>
+        <div class="lp-clients">
+          ${BRANDS.slice(1).map(b => `<button type="button" class="lp-client" data-b="${esc(b.id)}" aria-label="${esc(b.label)}"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></button>`).join('')}
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="about-strip wrap">
-    <div class="about-strip-tag anim">${esc(t('about.tag'))}</div>
-    <h2 class="about-big-title anim">${t('about.title')}</h2>
-    <p class="about-big-lead anim">${esc(t('about.lead'))}</p>
-    <div class="about-facts anim">
-      <div class="about-fact"><span class="about-fact-n">9</span><span>${esc(t('about.f1'))}</span></div>
-      <div class="about-fact"><span class="about-fact-n">🇰🇷</span><span>${esc(t('about.f2'))}</span></div>
-      <div class="about-fact"><span class="about-fact-n">${esc(t('about.f3n'))}</span><span>${esc(t('about.f3'))}</span></div>
+  <section class="lp-deliv">
+    <div class="wrap">
+      <h2 class="lp-h anim">${esc(t('home.deliv_title'))}</h2>
+      <p class="lp-sub anim">${esc(t('home.deliv_sub'))}</p>
+      <div class="lp-stack anim">
+        <div class="s s-l">${stack[0]}</div>
+        <div class="s s-c">${stack[1]}</div>
+        <div class="s s-r">${stack[2]}</div>
+        <div class="lp-stat">
+          <div><b>${BRANDS.length - 1}+</b><span>${esc(t('home.stat_brands'))}</span></div>
+          <div><b>4</b><span>${esc(t('home.stat_countries'))}</span></div>
+          <div><b>🇰🇷</b><span>${esc(t('home.stat_since'))}</span></div>
+        </div>
+      </div>
+      <div class="lp-center"><a class="btn-or" href="#/catalog">${esc(t('home.explore'))} <span class="arr">→</span></a></div>
+    </div>
+  </section>
+
+  <section class="lp-prod">
+    <div class="wrap lp-prod-in">
+      <div class="lp-prod-txt anim-left">
+        <h2 class="lp-h lp-h-l">${t('home.prod_title')}</h2>
+        <p class="lp-sub lp-sub-l">${esc(t('home.prod_sub'))}</p>
+        <a class="btn-or" href="#/catalog">${esc(t('home.explore'))} <span class="arr">→</span></a>
+      </div>
+      <div class="lp-diag anim-right">
+        <div class="lp-diag-panel"><img src="/assets/logo.png" alt="" onerror="this.remove()"></div>
+        <svg class="lp-diag-line" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="86" y1="6" x2="14" y2="94"/></svg>
+        <div class="lp-bubbles">${bubbles}</div>
+      </div>
     </div>
   </section>
 
@@ -220,7 +260,7 @@ function catalogPage() {
     <div class="delivery-inner">
       <div class="delivery-header anim">
         <div class="delivery-label">${esc(t('delivery.label'))}</div>
-        <h2 class="delivery-title">${esc(t('delivery.title'))}</h2>
+        <h2 class="lp-h">${esc(t('delivery.title'))}</h2>
       </div>
       <div class="delivery-stage">
         <canvas id="delivery-canvas"></canvas>
@@ -235,16 +275,88 @@ function catalogPage() {
     </div>
   </section>
 
+  <section class="lp-testi">
+    <div class="wrap">
+      <h2 class="lp-h anim">${esc(t('home.testi_title'))}</h2>
+      <p class="lp-sub anim">${esc(t('home.testi_sub'))}</p>
+      <div class="lp-testi-g">
+        ${[1, 2, 3].map(i => `<figure class="lp-quote anim">
+          <blockquote>“${esc(t(`testi.${i}q`))}”</blockquote>
+          <figcaption><span class="lp-av">${esc(t(`testi.${i}n`)[0] || '•')}</span><div><b>${esc(t(`testi.${i}n`))}</b><span>${esc(t(`testi.${i}r`))}</span></div></figcaption>
+        </figure>`).join('')}
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-art">
+    <div class="wrap">
+      <h2 class="lp-h anim">${esc(t('home.art_title'))}</h2>
+      <p class="lp-sub anim">${esc(t('home.art_sub'))}</p>
+      <div class="lp-art-g">
+        ${ART.map((a, i) => `<a class="lp-card anim" href="#/help">
+          <div class="lp-card-i" style="background:${a.bg}">${a.icon}</div>
+          <div class="lp-card-b"><b>${esc(t(`art.${i + 1}t`))}</b><span>${esc(t(`art.${i + 1}s`))}</span></div>
+        </a>`).join('')}
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-touch">
+    <div class="wrap lp-touch-in">
+      <div class="anim-left">
+        <h2 class="lp-h lp-h-l">${esc(t('home.touch_title'))}</h2>
+        <p class="lp-sub lp-sub-l">${esc(t('home.touch_sub'))}</p>
+      </div>
+      <form class="lp-lead anim-right" id="lead">
+        <input type="tel" name="phone" placeholder="${esc(t('home.touch_ph'))}" required autocomplete="tel">
+        <button class="btn-or" type="submit">${esc(t('home.touch_btn'))}</button>
+        <div class="lp-lead-msg" id="lead-msg"></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="lp-faq">
+    <div class="wrap">
+      <h2 class="lp-h anim">${esc(t('home.faq_title'))}</h2>
+      <p class="lp-sub anim">${esc(t('home.faq_sub'))}</p>
+      <div class="lp-faq-l anim">
+        ${[1, 2, 3, 4, 5, 6].map(n => `<details${n === 1 ? ' open' : ''}><summary>${esc(t(`faq.q${n}`))}<span class="lp-faq-x"></span></summary><p>${esc(t(`faq.a${n}`))}</p></details>`).join('')}
+      </div>
+    </div>
+  </section>`;
+
+  $$('.lp-client').forEach(b => b.onclick = () => goCatalog({ brand: b.dataset.b, cat: 'all' }));
+  $$('.lp-bubble').forEach(b => b.onclick = () => goCatalog({ cat: b.dataset.cat, brand: 'all' }));
+  $('#lead').onsubmit = async e => {
+    e.preventDefault();
+    const f = e.target, msg = $('#lead-msg'), phone = f.phone.value.trim();
+    if (phone.replace(/\D/g, '').length < 7) { msg.textContent = t('home.touch_err'); msg.className = 'lp-lead-msg err'; return; }
+    const btn = f.querySelector('button'); btn.disabled = true;
+    try {
+      await api('/api/lead', { method: 'POST', body: JSON.stringify({ phone }) });
+      msg.textContent = t('home.touch_ok'); msg.className = 'lp-lead-msg ok'; f.phone.value = '';
+    } catch (er) { msg.textContent = er.message; msg.className = 'lp-lead-msg err'; }
+    btn.disabled = false;
+  };
+  requestAnimationFrame(() => { initAnimations(); initDeliveryMap(); });
+}
+
+// ═══ CATALOG (shop) ═══
+function catalogPage() {
+  $('#main').innerHTML = `
   <div class="wrap" id="catalog-section">
-    <div class="catalog-head anim">
-      <h2 class="catalog-title">${esc(t('catalog.title'))}</h2>
+    <div class="sec-head">
+      <h1>${esc(t('catalog.title'))}</h1>
+      <p>${esc(t('hero.p'))}</p>
+    </div>
+    <div class="brands-strip-logos brands-strip-logos--compact">
+      ${BRANDS.slice(1).map(b => `<button type="button" class="brands-strip-logo${S.brand === b.id ? ' on' : ''}" data-b="${esc(b.id)}" aria-label="${esc(b.label)}"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></button>`).join('')}
     </div>
     <div class="toolbar">
       <div class="search">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input id="q" type="search" placeholder="${esc(t('catalog.search'))}" value="${esc(S.q)}">
       </div>
-      <div class="brand-pills" id="brand-pills"></div>
       <div class="pills" id="pills"></div>
       <div class="pills pills-fuel" id="fuel-pills"></div>
     </div>
@@ -252,13 +364,14 @@ function catalogPage() {
   </div>`;
 
   $('#q').addEventListener('input', e => { S.q = e.target.value; paintGrid(); });
-  // Brand logos double as filters: pick the brand and jump to the catalog
+  // Brand logos double as filters (toggle off when the active one is clicked again)
   $$('.brands-strip-logo').forEach(b => b.onclick = () => {
-    S.brand = b.dataset.b; paintBrandPills(); paintGrid();
-    $('#catalog-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    S.brand = S.brand === b.dataset.b ? 'all' : b.dataset.b;
+    $$('.brands-strip-logo').forEach(x => x.classList.toggle('on', x.dataset.b === S.brand));
+    paintBrandPills(); paintGrid();
   });
   paintBrandPills(); paintPills(); paintFuelPills(); paintGrid();
-  requestAnimationFrame(() => { initAnimations(); initDeliveryMap(); });
+  requestAnimationFrame(() => initAnimations());
 }
 
 function paintFuelPills() {
