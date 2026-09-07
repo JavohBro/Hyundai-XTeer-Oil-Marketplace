@@ -101,10 +101,18 @@ const Cart = {
     else { item.quantity = Math.min(qty, item.max || 9999); this.save(); }
     updateCartBadge();
   },
-  total() { return S.cart.reduce((t, i) => t + i.price * i.quantity, 0); },
+  // Unpriced items ("price on request") are carried at null and excluded from the sum
+  total() { return S.cart.reduce((t, i) => t + (i.price == null ? 0 : i.price * i.quantity), 0); },
+  hasTbd() { return S.cart.some(i => i.price == null); },
   count() { return S.cart.reduce((t, i) => t + i.quantity, 0); },
   clear() { S.cart = []; this.save(); updateCartBadge(); },
 };
+// "150 000 UZS", "150 000 UZS + Price on request" or just "Price on request"
+function sumLabel(total, tbd, cur = S.settings.currency) {
+  const s = `${fmt(total)} ${cur}`;
+  return tbd ? (total > 0 ? `${s} + ${t('price.ask')}` : t('price.ask')) : s;
+}
+const itemsTbd = items => items.some(i => i.price == null);
 
 // ─── Toast ────────────────────────────────────────────
 let toastTimer;
@@ -282,7 +290,7 @@ function filterAndRenderProducts() {
   grid.querySelectorAll('.product-card-add').forEach(b => b.addEventListener('click', e => {
     e.stopPropagation();
     const p = S.products.find(pr => pr.id === parseInt(b.dataset.id));
-    if (!p || p.quantity <= 0 || p.price === null) return;
+    if (!p || p.quantity <= 0) return;
     Cart.add(p);
     b.classList.add('pop');
     setTimeout(() => b.classList.remove('pop'), 250);
@@ -305,7 +313,7 @@ function productCard(p) {
       <div class="product-card-sub">${[p.viscosity, p.litres].filter(Boolean).join(' · ') || p.brand || ''}</div>
       <div class="product-card-footer">
         <div class="product-card-price">${priced ? `${fmt(p.price)} <span style="font-size:11px;font-weight:400;color:var(--text2)">${S.settings.currency}</span>` : `<span class="price-ask">${t('price.ask')}</span>`}</div>
-        ${inStock && priced ? `<button class="product-card-add" data-id="${p.id}">+</button>` : ''}
+        ${inStock ? `<button class="product-card-add" data-id="${p.id}">+</button>` : ''}
       </div>
     </div>
   </div>`;
@@ -369,7 +377,7 @@ function renderProductDetail(p) {
   const dots = imgs.length > 1 ? `<div class="carousel-dots">${imgs.map((_, i) => `<div class="dot ${i === 0 ? 'active' : ''}"></div>`).join('')}</div>` : '';
   const tags = [catL(p.category, true), p.viscosity, p.litres ? `${p.litres}` : ''].filter(Boolean).map(x => `<span class="tag">${x}</span>`).join('');
   const priced = p.price !== null && p.price !== undefined;
-  const inStock = p.quantity > 0 && priced;
+  const inStock = p.quantity > 0;
   return `
   <div class="product-detail-back">
     <button class="back-btn" id="pd-back"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>${t('back')}</button>
@@ -386,7 +394,7 @@ function renderProductDetail(p) {
       ${priced ? `<div class="product-price">${fmt(p.price)}</div><div class="product-price-cur">${S.settings.currency}</div>` : `<div class="product-price" style="font-size:18px">${t('price.ask')}</div>`}
     </div>
     ${p.description ? `<div class="product-desc">${p.description}</div>` : ''}
-    ${!priced ? `<a class="btn btn-primary btn-full" href="https://t.me/r1m_nightrider?text=${encodeURIComponent(p.name)}" target="_blank" style="margin-bottom:12px">${t('price.ask_btn')}</a>` : ''}
+    ${!priced ? `<div class="stock-note" style="margin-bottom:12px">${t('price.tbd')} · <a href="https://t.me/r1m_nightrider?text=${encodeURIComponent(p.name)}" target="_blank" style="text-decoration:underline">${t('price.ask_btn')}</a></div>` : ''}
     ${inStock ? `
     <div class="qty-row">
       <div class="qty-label">${t('qty')}</div>
@@ -484,7 +492,8 @@ function renderCart() {
     </div>
     <div class="cart-summary">
       <div class="cart-summary-row"><span>${t('cart.items')}</span><span>${Cart.count()} ${t('pcs')}</span></div>
-      <div class="cart-summary-total"><span>${t('cart.total')}</span><span>${fmt(total)} ${S.settings.currency}</span></div>
+      <div class="cart-summary-total"><span>${t('cart.total')}</span><span>${sumLabel(total, Cart.hasTbd())}</span></div>
+      ${Cart.hasTbd() ? `<div style="font-size:12px;color:var(--text2);margin-top:6px">${t('price.tbd')}</div>` : ''}
     </div>
     <div class="cart-actions">
       <button class="btn btn-primary btn-full" id="checkout-btn">${t('cart.checkout')}</button>
@@ -507,7 +516,7 @@ function cartItem(item) {
       <div class="cart-item-name">${item.name}</div>
       ${sub ? `<div class="cart-item-sub">${sub}</div>` : ''}
       <div class="cart-item-footer">
-        <div class="cart-item-price">${fmt(item.price * item.quantity)} ${S.settings.currency}</div>
+        <div class="cart-item-price">${item.price == null ? t('price.ask') : `${fmt(item.price * item.quantity)} ${S.settings.currency}`}</div>
         <div style="display:flex;align-items:center;gap:4px">
           <div class="cart-qty-ctrl">
             <button class="cart-qty-btn cart-minus" data-id="${item.product_id}">−</button>
@@ -565,7 +574,7 @@ async function doCheckout() {
   }
   const notes = document.getElementById('cart-notes')?.value || '';
   const ok = await showConfirm(t('ck.confirm_q', {
-    sum: `${fmt(Cart.total())} ${S.settings.currency}`,
+    sum: sumLabel(Cart.total(), Cart.hasTbd()),
     addr: `${S.profile.city}, ${S.profile.address}`,
     phone: S.profile.phone
   }));
@@ -631,7 +640,7 @@ function orderCard(o) {
     </div>
     <div class="order-items-preview">${preview}</div>
     <div class="order-footer">
-      <div class="order-total">${fmt(o.total_price)} ${o.currency}</div>
+      <div class="order-total">${sumLabel(o.total_price, itemsTbd(o.items), o.currency)}</div>
       <svg viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--text2)"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
   </div>`;
@@ -655,12 +664,12 @@ function openOrderDetail(id) {
         ${o.items.map(i => `
           <div class="order-detail-item">
             <div class="order-detail-item-name">${i.name}${i.litres ? ` (${i.litres})` : ''}${i.viscosity ? ` ${i.viscosity}` : ''} × ${i.quantity}</div>
-            <div class="order-detail-item-price">${fmt(i.subtotal)} ${o.currency}</div>
+            <div class="order-detail-item-price">${i.subtotal == null ? t('price.ask') : `${fmt(i.subtotal)} ${o.currency}`}</div>
           </div>`).join('')}
         <div class="divider" style="margin:10px 0"></div>
         <div class="order-detail-item">
           <div style="font-weight:700">${t('cart.total')}</div>
-          <div style="font-weight:700">${fmt(o.total_price)} ${o.currency}</div>
+          <div style="font-weight:700">${sumLabel(o.total_price, itemsTbd(o.items), o.currency)}</div>
         </div>
       </div>
       <div class="section-title">${t('orders.delivery')}</div>
@@ -921,7 +930,7 @@ function adminOrderCard(o) {
       <div class="status-badge status-${o.status}">${stL(o.status)}</div>
     </div>
     <div class="order-footer">
-      <div class="order-total">${fmt(o.total_price)} ${o.currency}</div>
+      <div class="order-total">${sumLabel(o.total_price, itemsTbd(o.items), o.currency)}</div>
       <svg viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--text2)"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
   </div>`;
@@ -956,12 +965,12 @@ function openAdminOrderDetail(id, orders, ac) {
         ${o.items.map(i => `
           <div class="order-detail-item">
             <div class="order-detail-item-name">${i.name}${i.litres ? ` (${i.litres})` : ''} × ${i.quantity}</div>
-            <div class="order-detail-item-price">${fmt(i.subtotal)} ${o.currency}</div>
+            <div class="order-detail-item-price">${i.subtotal == null ? t('price.ask') : `${fmt(i.subtotal)} ${o.currency}`}</div>
           </div>`).join('')}
         <div class="divider" style="margin:10px 0"></div>
         <div class="order-detail-item">
           <div style="font-weight:700">${t('cart.total')}</div>
-          <div style="font-weight:700">${fmt(o.total_price)} ${o.currency}</div>
+          <div style="font-weight:700">${sumLabel(o.total_price, itemsTbd(o.items), o.currency)}</div>
         </div>
       </div>
       <div class="section-title" style="margin-top:16px">${t('admin.change_status')}</div>

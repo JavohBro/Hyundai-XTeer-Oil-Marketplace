@@ -55,9 +55,17 @@ const Cart = {
   },
   del(id) { S.cart = S.cart.filter(i => i.product_id !== id); this.save(); },
   clear() { S.cart = []; this.save(); },
-  total() { return S.cart.reduce((t, i) => t + i.price * i.quantity, 0); },
+  // Unpriced items ("price on request") are carried at null and excluded from the sum
+  total() { return S.cart.reduce((t, i) => t + (i.price == null ? 0 : i.price * i.quantity), 0); },
+  hasTbd() { return S.cart.some(i => i.price == null); },
   count() { return S.cart.reduce((t, i) => t + i.quantity, 0); }
 };
+// "150 000 UZS", "150 000 UZS + Price on request" or just "Price on request"
+function sumLabel(total, tbd, cur = S.cur) {
+  const s = `${fmt(total)} ${esc(cur)}`;
+  return tbd ? (total > 0 ? `${s} + ${esc(t('price.ask'))}` : esc(t('price.ask'))) : s;
+}
+const itemsTbd = items => items.some(i => i.price == null);
 function paintCount() {
   const el = $('#cart-count'), c = Cart.count();
   el.textContent = c > 99 ? '99+' : c;
@@ -283,7 +291,7 @@ function paintGrid() {
   $$('#grid .card-add').forEach(b => b.onclick = e => {
     e.stopPropagation();
     const p = S.products.find(x => x.id === +b.dataset.id);
-    if (p?.quantity > 0 && p.price !== null) { Cart.add(p); toast(t('toast.added', { name: p.name })); }
+    if (p?.quantity > 0) { Cart.add(p); toast(t('toast.added', { name: p.name })); }
   });
   initAnimations();
 }
@@ -487,7 +495,7 @@ function cardHTML(p) {
       <div class="card-s">${esc(sub)}</div>
       <div class="card-f">
         <div class="card-p">${priced ? `${fmt(p.price)} <span>${esc(S.cur)}</span>` : `<span class="card-ask">${esc(t('price.ask'))}</span>`}</div>
-        ${ok && priced ? `<button class="card-add" data-id="${p.id}" aria-label="${esc(t('add'))}"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>` : ''}
+        ${ok ? `<button class="card-add" data-id="${p.id}" aria-label="${esc(t('add'))}"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>` : ''}
       </div>
     </div>
   </article>`;
@@ -498,7 +506,7 @@ function openProduct(id) {
   const p = S.products.find(x => x.id === id); if (!p) return;
   const imgs = p.images?.length ? p.images : [];
   const priced = p.price !== null && p.price !== undefined;
-  const ok = p.quantity > 0 && priced;
+  const ok = p.quantity > 0;
   const chips = [catL(p.category, true), p.viscosity, p.litres].filter(Boolean).map(x => `<span class="chip">${esc(x)}</span>`).join('');
 
   openModal(`
@@ -516,7 +524,7 @@ function openProduct(id) {
         <div class="pd-price">${priced ? `${fmt(p.price)} <span>${esc(S.cur)}</span>` : esc(t('price.ask'))}</div>
         <div class="pd-stock">${p.quantity > 0 ? esc(t('stock.in', { n: p.quantity })) : '😔 ' + esc(t('stock.out'))}</div>
         ${p.description ? `<div class="pd-desc">${esc(p.description)}</div>` : ''}
-        ${!priced ? `<a class="btn btn-p btn-full" href="https://t.me/r1m_nightrider?text=${encodeURIComponent(p.name)}" target="_blank" rel="noopener">${esc(t('price.ask_btn'))}</a>` : ''}
+        ${!priced ? `<div class="note" style="margin-bottom:14px">${esc(t('price.tbd'))} · <a href="https://t.me/r1m_nightrider?text=${encodeURIComponent(p.name)}" target="_blank" rel="noopener" style="text-decoration:underline">${esc(t('price.ask_btn'))}</a></div>` : ''}
         ${ok ? `
         <div class="qty">
           <div class="qbox">
@@ -622,7 +630,7 @@ function openCart() {
         <div class="ci-n">${esc(i.name)}</div>
         <div class="ci-s">${esc([i.litres, i.viscosity].filter(Boolean).join(' · '))}</div>
         <div class="ci-f">
-          <div class="ci-p">${fmt(i.price * i.quantity)} ${esc(S.cur)}</div>
+          <div class="ci-p">${i.price == null ? esc(t('price.ask')) : `${fmt(i.price * i.quantity)} ${esc(S.cur)}`}</div>
           <div style="display:flex;gap:6px;align-items:center">
             <div class="qbox qbox-sm">
               <button data-m="${i.product_id}" aria-label="${esc(t('less'))}">−</button>
@@ -637,7 +645,8 @@ function openCart() {
 
   const foot = `
     <div class="sum"><span>${esc(t('cart.items'))}</span><span>${Cart.count()} ${esc(t('pcs'))}</span></div>
-    <div class="sum-t"><span>${esc(t('cart.total'))}</span><span>${fmt(Cart.total())} ${esc(S.cur)}</span></div>
+    <div class="sum-t"><span>${esc(t('cart.total'))}</span><span>${sumLabel(Cart.total(), Cart.hasTbd())}</span></div>
+    ${Cart.hasTbd() ? `<div class="src" style="margin:-8px 0 12px">${esc(t('price.tbd'))}</div>` : ''}
     <button class="btn btn-p btn-full" id="tocheck">${esc(t('cart.checkout'))}</button>`;
 
   openDrawer(t('cart.title'), body, foot);
@@ -690,7 +699,8 @@ function openCheckout() {
 
   const foot = `
     <div class="sum"><span>${esc(t('cart.items'))}</span><span>${Cart.count()} ${esc(t('pcs'))}</span></div>
-    <div class="sum-t"><span>${esc(t('ck.topay'))}</span><span>${fmt(Cart.total())} ${esc(S.cur)}</span></div>
+    <div class="sum-t"><span>${esc(t('ck.topay'))}</span><span>${sumLabel(Cart.total(), Cart.hasTbd())}</span></div>
+    ${Cart.hasTbd() ? `<div class="src" style="margin:-8px 0 12px">${esc(t('price.tbd'))}</div>` : ''}
     <button class="btn btn-p btn-full" id="place">${esc(t('ck.place'))}</button>
     <button class="btn btn-s btn-full" id="backcart" style="margin-top:8px">${esc(t('ck.back'))}</button>`;
 
@@ -787,7 +797,7 @@ function oCard(o) {
     </div>
     <div class="oitems">${o.items.map(i => `${esc(i.name)}${i.litres ? ` (${esc(i.litres)})` : ''} × ${i.quantity}`).join('<br>')}</div>
     <div class="ocard-f">
-      <span class="ocard-t">${fmt(o.total_price)} ${esc(o.currency)}</span>
+      <span class="ocard-t">${sumLabel(o.total_price, itemsTbd(o.items), o.currency)}</span>
       <span class="src">${esc(o.city || '')}</span>
     </div>
   </div>`;
@@ -980,7 +990,7 @@ async function aOrders(ac) {
           <div class="src">${esc(o.phone || '')}</div>
           <div class="src">${esc(SRC[o.source] || '')}${o.user_username ? ` · @${esc(o.user_username)}` : ''}</div></td>
         <td class="src">${o.items.map(i => `${esc(i.name)} × ${i.quantity}`).join('<br>')}<div class="src">📍 ${esc(o.city || '')}, ${esc(o.address || '')}</div></td>
-        <td><b>${fmt(o.total_price)}</b> ${esc(o.currency)}</td>
+        <td><b>${sumLabel(o.total_price, itemsTbd(o.items), o.currency)}</b></td>
         <td><span class="st st-${o.status}">${esc(stL(o.status))}</span></td>
         <td><div class="row-acts">
           <select class="mini" style="width:auto;padding:6px 8px;font-size:12px" data-st="${o.id}">

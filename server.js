@@ -457,12 +457,18 @@ function normalizeGuest(g) {
   return { full_name, phone, city, address };
 }
 
+// Items without a price are ordered "on request": their line shows the label
+// instead of a sum, and the total covers only the priced items.
 function formatOrderText(order, profile, items, currency, orderId, lang = 'ru') {
   const pcs = tt(lang, 'pcs');
+  const ask = tt(lang, 'price.ask');
   const lines = items.map(i =>
-    `• ${esc(i.name)}${i.litres ? ` (${esc(i.litres)})` : ''}${i.viscosity ? ` ${esc(i.viscosity)}` : ''} × ${i.quantity} ${pcs} = ${i.subtotal.toLocaleString('ru')} ${esc(currency)}`
+    `• ${esc(i.name)}${i.litres ? ` (${esc(i.litres)})` : ''}${i.viscosity ? ` ${esc(i.viscosity)}` : ''} × ${i.quantity} ${pcs} = ${i.subtotal === null ? ask : `${i.subtotal.toLocaleString('ru')} ${esc(currency)}`}`
   ).join('\n');
-  return { lines, total: `${order.total_price.toLocaleString('ru')} ${esc(currency)}` };
+  const tbd = items.some(i => i.subtotal === null);
+  const sum = `${order.total_price.toLocaleString('ru')} ${esc(currency)}`;
+  const total = tbd ? (order.total_price > 0 ? `${sum} + ${ask}` : ask) : sum;
+  return { lines, total, tbd };
 }
 
 app.post('/api/orders', optionalAuth, async (req, res) => {
@@ -507,12 +513,10 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
   for (const item of items) {
     const product = db.prepare('SELECT * FROM products WHERE id=? AND is_active=1').get(item.product_id);
     if (!product) return res.status(400).json({ error: `Товар #${item.product_id} не найден` });
-    if (product.price === null)
-      return res.status(400).json({ error: `Цена по запросу: ${product.name}` });
     if (product.quantity < item.quantity)
       return res.status(400).json({ error: `Недостаточно товара: ${product.name}` });
-    const subtotal = product.price * item.quantity;
-    totalPrice += subtotal;
+    const subtotal = product.price === null ? null : product.price * item.quantity;
+    if (subtotal !== null) totalPrice += subtotal;
     orderItems.push({ product_id: product.id, name: product.name, litres: product.litres, viscosity: product.viscosity, price: product.price, quantity: item.quantity, subtotal });
   }
 
@@ -533,14 +537,15 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
 
   // Customer confirmation in their language; admin notification stays in Russian.
   const lang = isGuest ? 'ru' : userLang(u.id);
-  const { lines: userLines, total } = formatOrderText({ total_price: totalPrice }, profile, orderItems, currency, orderId, lang);
-  const { lines } = formatOrderText({ total_price: totalPrice }, profile, orderItems, currency, orderId, 'ru');
+  const { lines: userLines, total, tbd } = formatOrderText({ total_price: totalPrice }, profile, orderItems, currency, orderId, lang);
+  const { lines, total: adminTotal } = formatOrderText({ total_price: totalPrice }, profile, orderItems, currency, orderId, 'ru');
 
   const userMsg =
     `${tt(lang, 'bot.order_ok')}\n\n` +
     `📋 ${tt(lang, 'bot.order')} <b>#${orderId}</b>\n📅 ${esc(dateStr)}\n\n` +
     `📦 <b>${tt(lang, 'bot.items')}:</b>\n${userLines}\n\n` +
-    `💰 <b>${tt(lang, 'bot.total')}: ${total}</b>\n\n` +
+    `💰 <b>${tt(lang, 'bot.total')}: ${total}</b>\n` +
+    (tbd ? `ℹ️ ${tt(lang, 'price.tbd')}\n` : '') + `\n` +
     `📍 <b>${tt(lang, 'bot.delivery')}:</b>\n🏙 ${esc(profile.city)}\n🏠 ${esc(profile.address)}\n📞 ${esc(profile.phone)}\n\n` +
     tt(lang, 'bot.wait');
 
@@ -551,7 +556,8 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
     `📞 ${esc(profile.phone)}\n🏙 ${esc(profile.city)}\n🏠 ${esc(profile.address)}\n` +
     `🔗 ${SOURCE_LABEL[source]}\n\n` +
     `📦 <b>Состав:</b>\n${lines}\n\n` +
-    `💰 <b>Итого: ${total}</b>\n📅 ${esc(dateStr)}` +
+    `💰 <b>Итого: ${adminTotal}</b>\n📅 ${esc(dateStr)}` +
+    (tbd ? `\n⚠️ <b>Есть товары без цены — назовите цену покупателю.</b>` : '') +
     (notes ? `\n\n💬 <b>Примечание:</b> ${esc(notes)}` : '') +
     (isGuest ? `\n\n⚠️ <i>Гость без Telegram — свяжитесь по телефону.</i>` : '');
 
