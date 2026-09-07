@@ -216,7 +216,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 /* ── Brands strip ── */
 .brands-strip{border-bottom:1px solid var(--line);padding:28px 0}
 .brands-strip-label{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--tx);margin-bottom:20px}
-.brands-strip-logos{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.brands-strip-logos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .brands-strip-logo{
   display:flex;align-items:center;justify-content:center;
   height:150px;padding:16px 24px;border-radius:14px;
@@ -238,6 +238,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .brands-strip-logo:nth-child(6){transition-delay:.40s}
 .brands-strip-logo:nth-child(7){transition-delay:.47s}
 .brands-strip-logo:nth-child(8){transition-delay:.54s}
+.brands-strip-logo:nth-child(9){transition-delay:.61s}
 
 /* ── About strip ── */
 .about-strip{padding:72px 0 64px;border-top:1px solid var(--line)}

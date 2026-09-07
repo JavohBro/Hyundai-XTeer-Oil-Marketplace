@@ -230,6 +230,7 @@ const APP_BRANDS = [
   { id: 'Shell',         logo: '/assets/Color-Shell-Logo.png', label: 'Shell' },
   { id: 'SpeedMate',     logo: '/assets/speedmate-logo.png',   label: 'SpeedMate' },
   { id: 'Mobil',         logo: '/assets/mobil-logo.png',       label: 'Mobil' },
+  { id: 'Autous',        logo: '/assets/autous-logo.png',      label: 'Autous' },
 ];
 
 function renderBrandPills() {
