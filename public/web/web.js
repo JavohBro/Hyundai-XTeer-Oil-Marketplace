@@ -530,9 +530,14 @@ function openProduct(id) {
     </div>`);
 
   $('#mx').onclick = closeModal;
+  let cur = 0;
+  const bindZoom = () => { const im = $('#pdm img'); if (im) im.onclick = () => openLightbox(imgs, cur); };
+  bindZoom();
   imgs.length > 1 && $$('.pd-thumb').forEach(th => th.onclick = () => {
     $$('.pd-thumb').forEach(x => x.classList.remove('on')); th.classList.add('on');
-    $('#pdm').innerHTML = `<img src="${esc(imgs[+th.dataset.i])}" alt="">`;
+    cur = +th.dataset.i;
+    $('#pdm').innerHTML = `<img src="${esc(imgs[cur])}" alt="">`;
+    bindZoom();
   });
   if (ok) {
     const qi = $('#qv');
@@ -561,6 +566,47 @@ function openProduct(id) {
       closeModal();
     };
   }
+}
+
+// ═══ LIGHTBOX ═══
+// Full-screen viewer for product photos; keyboard arrows / swipe move between them.
+function openLightbox(imgs, idx = 0) {
+  if (!imgs?.length) return;
+  let i = idx;
+  let lb = $('#lightbox');
+  if (!lb) { lb = document.createElement('div'); lb.id = 'lightbox'; lb.className = 'lightbox'; document.body.appendChild(lb); }
+  const many = imgs.length > 1;
+  const go = d => { i = (i + d + imgs.length) % imgs.length; paint(); };
+  const paint = () => {
+    lb.innerHTML = `
+      <button class="lb-x" aria-label="${esc(t('close'))}"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      ${many ? `<button class="lb-nav lb-prev" aria-label="${esc(t('less'))}">‹</button><button class="lb-nav lb-next" aria-label="${esc(t('more'))}">›</button>` : ''}
+      <img src="${esc(imgs[i])}" alt="">
+      ${many ? `<div class="lb-count">${i + 1} / ${imgs.length}</div>` : ''}`;
+    lb.querySelector('.lb-x').onclick = closeLightbox;
+    if (many) { lb.querySelector('.lb-prev').onclick = e => { e.stopPropagation(); go(-1); }; lb.querySelector('.lb-next').onclick = e => { e.stopPropagation(); go(1); }; }
+    lb.querySelector('img').onclick = e => e.stopPropagation();
+  };
+  paint();
+  lb.onclick = closeLightbox;
+  let sx = 0;
+  lb.ontouchstart = e => { sx = e.touches[0].clientX; };
+  lb.ontouchend = e => { const dx = e.changedTouches[0].clientX - sx; if (many && Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); };
+  lb.onkeydown = null;
+  lb._keys = e => {
+    if (e.key === 'ArrowRight' && many) go(1);
+    else if (e.key === 'ArrowLeft' && many) go(-1);
+  };
+  document.addEventListener('keydown', lb._keys);
+  lb.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  const lb = $('#lightbox'); if (!lb || lb.classList.contains('hidden')) return;
+  lb.classList.add('hidden');
+  if (lb._keys) document.removeEventListener('keydown', lb._keys);
+  // the product modal underneath still wants the page locked
+  if ($('#modal').classList.contains('hidden') && $('#drawer').classList.contains('hidden')) document.body.style.overflow = '';
 }
 
 // ═══ CART DRAWER ═══
@@ -1020,7 +1066,12 @@ async function init() {
   $('#btn-menu').onclick = () => $('#hdr-nav').classList.toggle('open');
   $('#lang-btn').onclick = () => openLangPicker(false);
   $('#modal').onclick = e => { if (e.target.id === 'modal') closeModal(); };
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeDrawer(); } });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    const lb = $('#lightbox');
+    if (lb && !lb.classList.contains('hidden')) return closeLightbox();
+    closeModal(); closeDrawer();
+  });
   window.addEventListener('hashchange', router);
 
   // A language remembered in this browser applies immediately, before any fetch

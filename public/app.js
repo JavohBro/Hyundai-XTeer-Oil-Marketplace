@@ -163,6 +163,7 @@ function navigate(page, push = true) {
 }
 
 function goBack() {
+  if (closeLightbox()) return;
   if (S.page === 'product') navigate(S.prevPage);
   else if (S.page === 'order-detail') navigate('orders');
   else navigate('catalog');
@@ -323,6 +324,41 @@ function openProduct(id) {
   if (tg) { tg.BackButton.show(); }
   initCarousel(p.images || []);
   initQtyControls(p);
+  // Tap a photo to view it full screen
+  const imgs = p.images || [];
+  el.querySelectorAll('.carousel-slide img').forEach((im, i) => im.addEventListener('click', () => openLightbox(imgs, i)));
+}
+
+// ─── LIGHTBOX ─────────────────────────────────────────
+function openLightbox(imgs, idx = 0) {
+  if (!imgs?.length) return;
+  let i = idx;
+  let lb = document.getElementById('lightbox');
+  if (!lb) { lb = document.createElement('div'); lb.id = 'lightbox'; lb.className = 'lightbox'; document.body.appendChild(lb); }
+  const many = imgs.length > 1;
+  const go = d => { i = (i + d + imgs.length) % imgs.length; paint(); };
+  const paint = () => {
+    lb.innerHTML = `
+      <button class="lb-x" aria-label="${t('close')}">✕</button>
+      <img src="${imgs[i]}" alt="">
+      ${many ? `<div class="lb-count">${i + 1} / ${imgs.length}</div>` : ''}`;
+    lb.querySelector('.lb-x').addEventListener('click', e => { e.stopPropagation(); closeLightbox(); });
+    lb.querySelector('img').addEventListener('click', e => e.stopPropagation());
+  };
+  paint();
+  lb.onclick = closeLightbox;
+  let sx = 0;
+  lb.ontouchstart = e => { sx = e.touches[0].clientX; };
+  lb.ontouchend = e => { const dx = e.changedTouches[0].clientX - sx; if (many && Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); };
+  lb.classList.add('open');
+  tg?.HapticFeedback?.impactOccurred('light');
+}
+// Returns true when something was actually closed (so the back button stops there)
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  if (!lb || !lb.classList.contains('open')) return false;
+  lb.classList.remove('open');
+  return true;
 }
 
 function renderProductDetail(p) {
