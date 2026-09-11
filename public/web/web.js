@@ -185,10 +185,10 @@ function goCatalog(opts = {}) {
 
 const CAT_ICONS = { passenger: '🚗', heavy: '🚛', transmission: '⚙️', brake: '🛑', grease: '🛢️', others: '📦' };
 const ART = [
-  { icon: '🧪', bg: 'linear-gradient(135deg,#fde7dc,#f9c9b4)' },
-  { icon: '⛽', bg: 'linear-gradient(135deg,#e3f0ff,#c6dcff)' },
-  { icon: '✅', bg: 'linear-gradient(135deg,#e6f7ea,#c9ecd2)' },
-  { icon: '🚚', bg: 'linear-gradient(135deg,#fff3d6,#ffe3a3)' },
+  { icon: '🧪', img: '/assets/viscosity.jpg', bg: 'linear-gradient(135deg,#fde7dc,#f9c9b4)' },
+  { icon: '⛽', img: '/assets/gasoline.jpg',  bg: 'linear-gradient(135deg,#e3f0ff,#c6dcff)' },
+  { icon: '✅', img: '/assets/product.jpg',   bg: 'linear-gradient(135deg,#e6f7ea,#c9ecd2)' },
+  { icon: '🚚', img: '/assets/delivery.jpg',  bg: 'linear-gradient(135deg,#fff3d6,#ffe3a3)' },
 ];
 
 // ═══ HOME (landing) ═══
@@ -299,7 +299,7 @@ function homePage() {
       <p class="lp-sub anim">${esc(t('home.art_sub'))}</p>
       <div class="lp-art-g">
         ${ART.map((a, i) => `<a class="lp-card anim" href="#/help">
-          <div class="lp-card-i" style="background:${a.bg}">${a.icon}</div>
+          <div class="lp-card-i" style="background:${a.bg}"><img src="${a.img}" alt="" loading="lazy" onerror="this.remove()">${a.icon}</div>
           <div class="lp-card-b"><b>${esc(t(`art.${i + 1}t`))}</b><span>${esc(t(`art.${i + 1}s`))}</span></div>
         </a>`).join('')}
       </div>
