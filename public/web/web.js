@@ -206,7 +206,9 @@ function homePage() {
 
   $('#main').innerHTML = `
   <section class="lp-hero">
-    <img class="lp-hero-bg" src="/assets/hero.jpg" alt="" onerror="this.remove()">
+    <video class="lp-hero-video" autoplay muted playsinline preload="auto" poster="/assets/hero_poster.jpg" aria-hidden="true">
+      <source src="/assets/hero_bg.mp4" type="video/mp4">
+    </video>
     <div class="lp-hero-in">
       <div class="lp-hero-txt">
         <h1>${t('home.hero_title')}</h1>
