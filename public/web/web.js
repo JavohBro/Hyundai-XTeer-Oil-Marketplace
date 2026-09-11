@@ -193,10 +193,9 @@ const ART = [
 
 // ═══ HOME (landing) ═══
 function homePage() {
-  const withImg = S.products.filter(p => p.images?.length);
-  const stack = [withImg[1], withImg[0], withImg[2]].map((p, i) =>
-    p ? `<img src="${esc(p.images[0])}" alt="${esc(pn(p))}">`
-      : `<div class="lp-stack-ph"><img src="${esc(BRANDS[[2, 1, 3][i]].logo)}" alt=""></div>`);
+  // Fixed showcase photos: Kixx left, XTeer centre, SK ZIC right
+  const stack = ['/assets/stack-kixx.jpg', '/assets/stack-xteer.jpg', '/assets/stack-zic.jpg']
+    .map(src => `<img src="${src}" alt="" loading="lazy">`);
   // Bubbles sit on the panel's slanted edge: the edge runs from (EDGE_TOP%, 0) to (EDGE_BOT%, 100)
   const EDGE_TOP = 50, EDGE_BOT = 12;
   const cats = I18N.CATS.filter(c => c.key !== 'brake');
@@ -238,7 +237,7 @@ function homePage() {
         <div class="s s-r">${stack[2]}</div>
         <div class="lp-stat">
           <div><b>${BRANDS.length - 1}+</b><span>${esc(t('home.stat_brands'))}</span></div>
-          <div><b>4</b><span>${esc(t('home.stat_countries'))}</span></div>
+          <div><b>14+</b><span>${esc(t('home.stat_countries'))}</span></div>
           <div><b>🇰🇷</b><span>${esc(t('home.stat_since'))}</span></div>
         </div>
       </div>
