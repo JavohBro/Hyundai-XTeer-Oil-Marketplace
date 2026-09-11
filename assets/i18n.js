@@ -238,7 +238,7 @@
       'home.hero_title': 'Koreyadan original moylar —<br>butun MDH bo‘ylab.',
       'home.hero_sub': 'Kixx, Hyundai XTeer, SK ZIC, Castrol, Shell va boshqa brendlarni Janubiy Koreyadagi omborimizdan to‘g‘ridan-to‘g‘ri yetkazib beramiz. Tez, ishonchli, soxtasiz.',
       'home.hero_cta': 'Katalogni ko‘rish', 'home.hero_tg': 'Telegramda yozish', 'home.clients': 'Biz yetkazib beradigan brendlar',
-      ‘home.deliv_title’: ‘Tanlangan mahsulotlar’, ‘home.deliv_sub’: ‘Goyangdagi o’z omborimiz va yo’lga qo’yilgan logistika: buyurtma tasdiqlangan kuniyoq yo’lga chiqadi.’,
+      'home.deliv_title': 'Tanlangan mahsulotlar', 'home.deliv_sub': 'Goyangdagi o‘z omborimiz va yo‘lga qo‘yilgan logistika: buyurtma tasdiqlangan kuniyoq yo‘lga chiqadi.',
       'home.stat_brands': 'brend', 'home.stat_countries': 'davlatga yetkazish', 'home.stat_since': 'Koreya, Goyang',
       'home.explore': 'Katalogga o‘tish',
       'home.prod_title': 'Har qanday vazifa<br>uchun moylar', 'home.prod_sub': 'Yengil va yuk avtomobillari, transmissiya, tormoz, konsistent va gidravlik moylar — toifani tanlang va mos mahsulotlarni oching.',
