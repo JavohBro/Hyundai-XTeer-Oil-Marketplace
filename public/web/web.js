@@ -197,10 +197,13 @@ function homePage() {
   const stack = [withImg[1], withImg[0], withImg[2]].map((p, i) =>
     p ? `<img src="${esc(p.images[0])}" alt="${esc(pn(p))}">`
       : `<div class="lp-stack-ph"><img src="${esc(BRANDS[[2, 1, 3][i]].logo)}" alt=""></div>`);
-  const bubbles = I18N.CATS.map((c, i) => {
-    const tt = i / (I18N.CATS.length - 1);
-    const x = 86 - 72 * tt, y = 6 + 88 * tt;
-    return `<button type="button" class="lp-bubble${i === 2 ? ' on' : ''}" style="left:${x}%;top:${y}%" data-cat="${c.key}">
+  // Bubbles sit on the panel's slanted edge: the edge runs from (EDGE_TOP%, 0) to (EDGE_BOT%, 100)
+  const EDGE_TOP = 50, EDGE_BOT = 12;
+  const cats = I18N.CATS.filter(c => c.key !== 'brake');
+  const bubbles = cats.map((c, i) => {
+    const y = 8 + 84 * (i / (cats.length - 1));
+    const x = EDGE_TOP + (EDGE_BOT - EDGE_TOP) * (y / 100);
+    return `<button type="button" class="lp-bubble${i === 2 ? ' on' : ''}" style="left:${x.toFixed(2)}%;top:${y.toFixed(2)}%" data-cat="${c.key}">
       <span class="lp-bubble-i">${CAT_ICONS[c.key] || '•'}</span><span class="lp-bubble-l">${esc(catL(c.key))}</span></button>`;
   }).join('');
 
@@ -252,7 +255,7 @@ function homePage() {
       </div>
       <div class="lp-diag anim-right">
         <div class="lp-diag-panel"><img src="/assets/logo.png" alt="" onerror="this.remove()"></div>
-        <svg class="lp-diag-line" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="86" y1="6" x2="14" y2="94"/></svg>
+        <svg class="lp-diag-line" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="50" y1="0" x2="12" y2="100"/></svg>
         <div class="lp-bubbles">${bubbles}</div>
       </div>
     </div>

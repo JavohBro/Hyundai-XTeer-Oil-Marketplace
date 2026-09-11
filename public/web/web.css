@@ -724,7 +724,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-diag{position:relative;height:480px}
 .lp-diag-panel{
   position:absolute;inset:0;border-radius:28px;overflow:hidden;
-  clip-path:polygon(38% 0,100% 0,100% 100%,0 100%);
+  clip-path:polygon(50% 0,100% 0,100% 100%,12% 100%);
   background:linear-gradient(135deg,#0a3f57,#0f7583);display:flex;align-items:center;justify-content:flex-end;padding:40px;
 }
 .lp-diag-panel img{width:min(300px,50%);opacity:.92;filter:drop-shadow(0 12px 30px rgba(0,0,0,.35));border-radius:14px}
