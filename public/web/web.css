@@ -698,7 +698,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-client img{height:100%;width:auto;max-width:96px;object-fit:contain}
 
 /* delivery everyday */
-.lp-deliv{padding:88px 0 80px;background:linear-gradient(180deg,#fff 0%,var(--peach) 100%)}
+.lp-deliv{padding:88px 0 80px;background:linear-gradient(180deg,#fff 0%,var(--peach) 100%);overflow:hidden}
 .lp-stack{position:relative;height:420px;max-width:1100px;margin:52px auto 0}
 /* coverflow carousel */
 .lp-car{position:absolute;inset:0;overflow:visible;touch-action:pan-y}
