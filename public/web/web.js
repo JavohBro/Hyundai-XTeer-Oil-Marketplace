@@ -193,9 +193,9 @@ const ART = [
 
 // ═══ HOME (landing) ═══
 function homePage() {
-  // Fixed showcase photos: Kixx left, XTeer centre, SK ZIC right
-  const stack = ['/assets/stack-kixx.jpg', '/assets/stack-xteer.jpg', '/assets/stack-zic.jpg']
-    .map(src => `<img src="${src}" alt="" loading="lazy">`);
+  const CAROUSEL_N = 15;
+  const carCards = Array.from({ length: CAROUSEL_N }, (_, i) =>
+    `<div class="lp-car-card" data-i="${i}"><img src="/assets/carousel/carousel-${String(i + 1).padStart(2, '0')}.jpg" alt="" loading="lazy" draggable="false"></div>`).join('');
   // Bubbles sit on the panel's slanted edge: the edge runs from (EDGE_TOP%, 0) to (EDGE_BOT%, 100)
   const EDGE_TOP = 50, EDGE_BOT = 12;
   const cats = I18N.CATS.filter(c => c.key !== 'brake');
@@ -232,9 +232,9 @@ function homePage() {
       <h2 class="lp-h anim">${esc(t('home.deliv_title'))}</h2>
       <p class="lp-sub anim">${esc(t('home.deliv_sub'))}</p>
       <div class="lp-stack anim">
-        <div class="s s-l">${stack[0]}</div>
-        <div class="s s-c">${stack[1]}</div>
-        <div class="s s-r">${stack[2]}</div>
+        <div class="lp-car" id="lp-car">${carCards}</div>
+        <button type="button" class="lp-car-nav lp-car-prev" id="lp-car-prev" aria-label="‹">‹</button>
+        <button type="button" class="lp-car-nav lp-car-next" id="lp-car-next" aria-label="›">›</button>
         <div class="lp-stat">
           <div><b>${BRANDS.length - 1}+</b><span>${esc(t('home.stat_brands'))}</span></div>
           <div><b>14+</b><span>${esc(t('home.stat_countries'))}</span></div>
@@ -342,7 +342,45 @@ function homePage() {
     } catch (er) { msg.textContent = er.message; msg.className = 'lp-lead-msg err'; }
     btn.disabled = false;
   };
-  requestAnimationFrame(() => { initAnimations(); initDeliveryMap(); });
+  requestAnimationFrame(() => { initAnimations(); initDeliveryMap(); initShowcase(); });
+}
+
+// Coverflow carousel in the delivery block: cards fan out from the centre and
+// roll with a springy easing (defined in CSS). Auto-advances, arrows, swipe,
+// click a side card to bring it to the front.
+function initShowcase() {
+  const car = $('#lp-car'); if (!car) return;
+  const cards = $$('#lp-car .lp-car-card');
+  const n = cards.length; if (!n) return;
+  let cur = Math.floor(n / 2), timer;
+
+  function layout() {
+    const w = car.clientWidth;
+    const step = Math.min(300, w * 0.28);       // horizontal distance between cards
+    cards.forEach((c, i) => {
+      let d = i - cur;
+      if (d > n / 2) d -= n; else if (d < -n / 2) d += n;   // wrap around
+      const a = Math.abs(d);
+      const visible = a <= 3;
+      c.style.transform = `translate(-50%,-50%) translateX(${d * step}px) rotate(${d * 6}deg) scale(${d === 0 ? 1 : Math.max(.55, .84 - a * .08)})`;
+      c.style.opacity = !visible ? 0 : a === 0 ? 1 : Math.max(0, 1 - a * .3);
+      c.style.zIndex = 20 - a;
+      c.style.pointerEvents = visible ? 'auto' : 'none';
+      c.classList.toggle('on', d === 0);
+    });
+  }
+  const go = (i) => { cur = (i + n) % n; layout(); restart(); };
+  const restart = () => { clearInterval(timer); timer = setInterval(() => { if (!car.isConnected) return clearInterval(timer); cur = (cur + 1) % n; layout(); }, 3200); };
+
+  cards.forEach((c, i) => c.onclick = () => go(i));
+  $('#lp-car-prev').onclick = () => go(cur - 1);
+  $('#lp-car-next').onclick = () => go(cur + 1);
+  let sx = 0;
+  car.ontouchstart = e => { sx = e.touches[0].clientX; };
+  car.ontouchend = e => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(dx < 0 ? cur + 1 : cur - 1); };
+  window.addEventListener('resize', layout);
+
+  layout(); restart();
 }
 
 // ═══ CATALOG (shop) ═══
