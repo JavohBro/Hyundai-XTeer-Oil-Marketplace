@@ -883,8 +883,14 @@ async function renderAdminStats(ac) {
         <div class="stat-card"><div class="stat-val">${stats.totalCustomers}</div><div class="stat-label">${t('admin.customers')}</div></div>
       </div>
       <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
-        <button class="btn-primary" id="exp-products">📥 Export products (.xlsx)</button>
-        <button class="btn-primary" id="exp-orders">📥 Export sales history (.xlsx)</button>
+        <button id="exp-products" style="display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:14px;border:1.5px solid #22c55e;background:#f0fdf4;color:#16a34a;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Export products <span style="opacity:.6;font-weight:400;font-size:13px">.xlsx</span></span>
+        </button>
+        <button id="exp-orders" style="display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:14px;border:1.5px solid #3b82f6;background:#eff6ff;color:#2563eb;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Export sales history <span style="opacity:.6;font-weight:400;font-size:13px">.xlsx</span></span>
+        </button>
       </div>
       <div class="scroll-pad"></div>`;
     document.getElementById('exp-products').onclick = function() { downloadExcel('/api/admin/export/products', 'products.xlsx', this); };
