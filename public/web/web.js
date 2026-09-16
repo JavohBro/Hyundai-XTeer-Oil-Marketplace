@@ -1032,6 +1032,10 @@ async function aStats(ac) {
     <div class="stat"><div class="stat-v">${s.totalProducts}</div><div class="stat-l">${esc(t('admin.products_n'))}</div></div>
     <div class="stat"><div class="stat-v">${s.totalCustomers}</div><div class="stat-l">${esc(t('admin.customers'))}</div></div>
     <div class="stat"><div class="stat-v" style="color:var(--tx2)">${s.cancelledOrders}</div><div class="stat-l">${esc(t('admin.cancelled'))}</div></div>
+  </div>
+  <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+    <a class="btn btn-p" href="/api/admin/export/products" download="products.xlsx">📥 Export products (.xlsx)</a>
+    <a class="btn btn-p" href="/api/admin/export/orders" download="orders.xlsx">📥 Export sales history (.xlsx)</a>
   </div>`;
 }
 

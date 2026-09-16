@@ -5,6 +5,7 @@ const crypto   = require('crypto');
 const multer   = require('multer');
 const fs       = require('fs');
 const sharp    = require('sharp');
+const XLSX     = require('xlsx');
 const TelegramBot = require('node-telegram-bot-api');
 const db       = require('./db');
 const I18N     = require('./assets/i18n');
@@ -863,6 +864,67 @@ const COMMANDS = {
     } catch (e) { console.error('setMyCommands failed:', e.message); }
   }
 })();
+
+// ─── Excel exports ───────────────────────────────────────────────────────────
+app.get('/api/admin/export/products', authMiddleware, adminOnly, (_req, res) => {
+  const products = db.prepare('SELECT * FROM products ORDER BY CASE WHEN sort_order > 0 THEN 0 ELSE 1 END, sort_order ASC, id DESC').all().map(parseProduct);
+  const rows = products.map(p => ({
+    ID: p.id,
+    Name: p.name,
+    'Name (UZ)': p.name_uz || '',
+    'Name (EN)': p.name_en || '',
+    'Name (KO)': p.name_ko || '',
+    Brand: p.brand || '',
+    Category: p.category || '',
+    Viscosity: p.viscosity || '',
+    Litres: p.litres || '',
+    'Fuel types': Array.isArray(p.fuel) ? p.fuel.join(', ') : (p.fuel || ''),
+    Price: p.price !== null ? p.price : '',
+    Quantity: p.quantity,
+    Active: p.is_active ? 'Yes' : 'No',
+    'Sort order': p.sort_order || 0,
+    Description: p.description || '',
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Products');
+  const buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+  res.setHeader('Content-Disposition', 'attachment; filename="products.xlsx"');
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.send(buf);
+});
+
+app.get('/api/admin/export/orders', authMiddleware, adminOnly, (_req, res) => {
+  const orders = db.prepare(`
+    SELECT o.*, COALESCE(NULLIF(o.customer_name,''), u.full_name) AS full_name,
+           u.username AS user_username
+    FROM orders o LEFT JOIN users u ON o.user_id = u.telegram_id
+    ORDER BY o.created_at DESC
+  `).all();
+  const rows = orders.map(o => {
+    const items = JSON.parse(o.items || '[]');
+    const itemsStr = items.map(i => `${i.name} x${i.quantity}${i.price != null ? ' (' + i.price + ')' : ''}`).join('; ');
+    return {
+      ID: o.id,
+      Date: o.created_at,
+      Customer: o.full_name || o.customer_name || '',
+      Username: o.user_username ? '@' + o.user_username : '',
+      Phone: o.phone || '',
+      Status: o.status,
+      'Total price': o.total_price || '',
+      Currency: o.currency || '',
+      Items: itemsStr,
+      Note: o.note || '',
+    };
+  });
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Orders');
+  const buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+  res.setHeader('Content-Disposition', 'attachment; filename="orders.xlsx"');
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.send(buf);
+});
 
 // ─── Start ────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
