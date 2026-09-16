@@ -848,6 +848,24 @@ async function loadAdminSection() {
   }
 }
 
+async function downloadExcel(endpoint, filename, btn) {
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = '⏳ Loading...';
+  try {
+    const initData = tg?.initData || '';
+    const res = await fetch(endpoint, { headers: { 'X-Init-Data': initData } });
+    if (!res.ok) throw new Error('Server error ' + res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch (e) { alert('Export failed: ' + e.message); }
+  btn.disabled = false; btn.textContent = orig;
+}
+
 async function renderAdminStats(ac) {
   try {
     const stats = await api('/api/admin/stats');
@@ -864,7 +882,13 @@ async function renderAdminStats(ac) {
         <div class="stat-card"><div class="stat-val">${stats.totalProducts}</div><div class="stat-label">${t('admin.products_n')}</div></div>
         <div class="stat-card"><div class="stat-val">${stats.totalCustomers}</div><div class="stat-label">${t('admin.customers')}</div></div>
       </div>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
+        <button class="btn-primary" id="exp-products">📥 Export products (.xlsx)</button>
+        <button class="btn-primary" id="exp-orders">📥 Export sales history (.xlsx)</button>
+      </div>
       <div class="scroll-pad"></div>`;
+    document.getElementById('exp-products').onclick = function() { downloadExcel('/api/admin/export/products', 'products.xlsx', this); };
+    document.getElementById('exp-orders').onclick = function() { downloadExcel('/api/admin/export/orders', 'orders.xlsx', this); };
   } catch { ac.innerHTML = `<div class="empty"><div class="empty-icon">❌</div><div class="empty-title">${t('admin.err')}</div></div>`; }
 }
 
