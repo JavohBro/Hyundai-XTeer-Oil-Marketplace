@@ -171,6 +171,7 @@ const BRANDS = [
   { id: 'SpeedMate',     label: 'SpeedMate',     logo: '/assets/speedmate-logo.png' },
   { id: 'Mobil',         label: 'Mobil',         logo: '/assets/mobil-logo.png' },
   { id: 'Autous',        label: 'Autous',        logo: '/assets/autous-logo.png' },
+  { id: 'Hyundai Mobis', label: 'Hyundai Mobis', logo: '/assets/Hyundai_Mobis-Logo.wine.png' },
 ];
 const BRAND_IDS = BRANDS.slice(1).map(b => b.id);
 

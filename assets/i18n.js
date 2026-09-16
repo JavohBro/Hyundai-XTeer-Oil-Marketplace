@@ -23,7 +23,7 @@
     { key: 'others',       id: 'others' },
   ];
   // Fuel / engine types a product can be marked with (stored comma-separated).
-  const FUELS = ['diesel', 'gasoline', 'lpg'];
+  const FUELS = ['diesel', 'gasoline', 'lpg', 'hybrid', 'tgdi'];
 
   const T = {
     // ───────────────────────────── RU ─────────────────────────────
@@ -46,7 +46,7 @@
       'catalog.title': 'Каталог масел', 'catalog.search': 'Поиск по названию или вязкости…',
       'cat.all': 'Все', 'cat.passenger': 'Легковые масла', 'cat.heavy': 'Грузовые масла', 'cat.transmission': 'Трансмиссионное масло', 'cat.brake': 'Тормозная жидкость', 'cat.grease': 'Смазки и гидравлика', 'cat.others': 'Прочие масла',
       'catf.passenger': 'Масла для легковых авто', 'catf.heavy': 'Масла для грузовых и коммерческих авто', 'catf.transmission': 'Трансмиссионные и мостовые масла', 'catf.brake': 'Тормозная жидкость', 'catf.grease': 'Смазки и гидравлические жидкости', 'catf.others': 'Другое',
-      'fuel.label': 'Тип топлива', 'fuel.diesel': 'Дизель', 'fuel.gasoline': 'Бензин', 'fuel.lpg': 'Газ (LPG)',
+      'fuel.label': 'Тип топлива', 'fuel.diesel': 'Дизель', 'fuel.gasoline': 'Бензин', 'fuel.lpg': 'Газ (LPG)', 'fuel.hybrid': 'Гибрид', 'fuel.tgdi': 'TGDI',
       'admin.f_fuel': 'Двигатель / тип топлива', 'admin.f_sort': 'Порядок в каталоге (1, 2, 3…)', 'admin.f_sort_hint': 'Меньше — выше в списке', 'admin.th_sort': 'Порядок',
       'admin.f_i18n': 'Переводы названия и описания', 'admin.f_i18n_hint': 'Пусто — покажем русский текст',
       'admin.f_desc_hint': 'Абзацы — пустой строкой, списки через «- », **жирный**, *курсив*',
@@ -166,7 +166,7 @@
       'catalog.title': 'Moylar katalogi', 'catalog.search': 'Nomi yoki qovushqoqligi bo‘yicha qidirish…',
       'cat.all': 'Barchasi', 'cat.passenger': 'Yengil avto moyi', 'cat.heavy': 'Yuk avto moyi', 'cat.transmission': 'Transmissiya moyi', 'cat.brake': 'Tormoz moyi', 'cat.grease': 'Moy va gidravlika', 'cat.others': 'Boshqa moylar',
       'catf.passenger': 'Yengil avtomobil moylari', 'catf.heavy': 'Yuk va tijorat avtomobil moylari', 'catf.transmission': 'Transmissiya va ko‘prik moylari', 'catf.brake': 'Tormoz suyuqligi', 'catf.grease': 'Konsistent va gidravlik moylar', 'catf.others': 'Boshqa',
-      'fuel.label': 'Yoqilg‘i turi', 'fuel.diesel': 'Dizel', 'fuel.gasoline': 'Benzin', 'fuel.lpg': 'Gaz (LPG)',
+      'fuel.label': 'Yoqilg‘i turi', 'fuel.diesel': 'Dizel', 'fuel.gasoline': 'Benzin', 'fuel.lpg': 'Gaz (LPG)', 'fuel.hybrid': 'Gibrid', 'fuel.tgdi': 'TGDI',
       'admin.f_fuel': 'Dvigatel / yoqilg‘i turi', 'admin.f_sort': 'Katalogdagi tartib (1, 2, 3…)', 'admin.f_sort_hint': 'Kichik raqam — ro‘yxatda yuqorida', 'admin.th_sort': 'Tartib',
       'admin.f_i18n': 'Nom va tavsif tarjimalari', 'admin.f_i18n_hint': 'Bo‘sh qoldirilsa — ruscha matn ko‘rsatiladi',
       'admin.f_desc_hint': 'Abzats — bo‘sh qator, ro‘yxat «- » bilan, **qalin**, *kursiv*',
@@ -284,7 +284,7 @@
       'catalog.title': 'Oil catalog', 'catalog.search': 'Search by name or viscosity…',
       'cat.all': 'All', 'cat.passenger': 'Passenger oil', 'cat.heavy': 'Heavy duty oil', 'cat.transmission': 'Transmission oil', 'cat.brake': 'Brake oil', 'cat.grease': 'Grease & hydraulic oil', 'cat.others': 'Other oils',
       'catf.passenger': 'Passenger vehicle oil', 'catf.heavy': 'Heavy duty / commercial vehicle oil', 'catf.transmission': 'Transmission fluid / axle oil', 'catf.brake': 'Brake fluid', 'catf.grease': 'Grease / hydraulic fluid', 'catf.others': 'Others',
-      'fuel.label': 'Fuel type', 'fuel.diesel': 'Diesel', 'fuel.gasoline': 'Gasoline', 'fuel.lpg': 'LPG',
+      'fuel.label': 'Fuel type', 'fuel.diesel': 'Diesel', 'fuel.gasoline': 'Gasoline', 'fuel.lpg': 'LPG', 'fuel.hybrid': '하이브리드', 'fuel.tgdi': 'TGDI', 'fuel.hybrid': 'Hybrid', 'fuel.tgdi': 'TGDI',
       'admin.f_fuel': 'Engine / fuel type', 'admin.f_sort': 'Catalog position (1, 2, 3…)', 'admin.f_sort_hint': 'Lower numbers show first', 'admin.th_sort': 'Order',
       'admin.f_i18n': 'Name & description translations', 'admin.f_i18n_hint': 'Leave blank to show the Russian text',
       'admin.f_desc_hint': 'Blank line = paragraph, lists with "- ", **bold**, *italic*',
