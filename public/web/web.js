@@ -193,18 +193,19 @@ const ART = [
 ];
 
 // ═══ HOME (landing) ═══
-function homePage() {
-  const CAROUSEL_N = 15;
-  const carCards = Array.from({ length: CAROUSEL_N }, (_, i) =>
-    `<div class="lp-car-card" data-i="${i}"><img src="/assets/carousel/carousel-${String(i + 1).padStart(2, '0')}.jpg" alt="" loading="lazy" draggable="false"></div>`).join('');
-  // Bubbles sit on the panel's slanted edge: the edge runs from (EDGE_TOP%, 0) to (EDGE_BOT%, 100)
-  const EDGE_TOP = 50, EDGE_BOT = 12;
-  const cats = I18N.CATS.filter(c => c.key !== 'brake');
-  const bubbles = cats.map((c, i) => {
-    const y = 8 + 84 * (i / (cats.length - 1));
-    const x = EDGE_TOP + (EDGE_BOT - EDGE_TOP) * (y / 100);
-    return `<button type="button" class="lp-bubble${i === 2 ? ' on' : ''}" style="left:${x.toFixed(2)}%;top:${y.toFixed(2)}%" data-cat="${c.key}">
-      <span class="lp-bubble-i">${CAT_ICONS[c.key] || '•'}</span><span class="lp-bubble-l">${esc(catL(c.key))}</span></button>`;
+async function homePage() {
+  const cats = I18N.CATS;
+  const catDescs = {
+    passenger:    ['PASSENGER CAR<br>ENGINE OILS', 'Gasoline, diesel & hybrid passenger cars'],
+    heavy:        ['HEAVY-DUTY<br>DIESEL',          'Commercial vehicles, trucks & fleets'],
+    transmission: ['TRANSMISSION<br>FLUIDS',        'Automatic, manual & CVT systems'],
+    brake:        ['BRAKE FLUID',                   'DOT-rated hydraulic brake fluids'],
+    grease:       ['GREASE &<br>HYDRAULICS',        'Chassis & hydraulic oils'],
+    others:       ['INDUSTRIAL<br>& OTHER',         'Specialty lubricants'],
+  };
+  const catCards = cats.map((c) => {
+    const d = catDescs[c.key] || [c.key, ''];
+    return `<div class="lp-cat anim" data-cat="${c.key}"><div class="lp-cat-pic">${d[0]}</div><div class="lp-cat-body"><h3>${esc(catL(c.key))}</h3><p>${esc(d[1])}</p></div></div>`;
   }).join('');
 
   $('#main').innerHTML = `
@@ -214,95 +215,131 @@ function homePage() {
     </video>
     <div class="lp-hero-in">
       <div class="lp-hero-txt">
+        <div class="lp-kicker lp-kicker-or">Made in Korea · Trusted Worldwide</div>
         <h1>${t('home.hero_title')}</h1>
         <p>${esc(t('home.hero_sub'))}</p>
         <div class="lp-actions">
           <a class="btn-or" href="#/catalog">${esc(t('home.hero_cta'))} <span class="arr">→</span></a>
           <a class="btn-gl" href="https://t.me/hyundaixteeroilbot" target="_blank" rel="noopener">${esc(t('home.hero_tg'))}</a>
         </div>
-        <div class="lp-clients-l">${esc(t('home.clients'))}</div>
-        <div class="lp-clients">
-          ${BRANDS.slice(1).map(b => `<button type="button" class="lp-client" data-b="${esc(b.id)}" aria-label="${esc(b.label)}"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></button>`).join('')}
-        </div>
       </div>
     </div>
   </section>
 
-  <section class="lp-deliv">
+  <section class="lp-proof">
+    <div class="wrap lp-proof-grid">
+      <div class="lp-proof-item"><b>🇰🇷</b><span>Products from South Korea</span></div>
+      <div class="lp-proof-item"><b>${BRANDS.length - 1}+</b><span>${esc(t('home.stat_brands'))}</span></div>
+      <div class="lp-proof-item"><b>14+</b><span>${esc(t('home.stat_countries'))}</span></div>
+      <div class="lp-proof-item"><b>B2B</b><span>Distributor & wholesale support</span></div>
+      <div class="lp-proof-item"><b>24/7</b><span>Online request intake</span></div>
+    </div>
+  </section>
+
+  <section class="lp-cats-sec" id="lp-products">
     <div class="wrap">
-      <h2 class="lp-h anim">${esc(t('home.deliv_title'))}</h2>
-      <p class="lp-sub anim">${esc(t('home.deliv_sub'))}</p>
-      <div class="lp-stack anim">
-        <div class="lp-car" id="lp-car">${carCards}</div>
-        <button type="button" class="lp-car-nav lp-car-prev" id="lp-car-prev" aria-label="‹">‹</button>
-        <button type="button" class="lp-car-nav lp-car-next" id="lp-car-next" aria-label="›">›</button>
-        <div class="lp-stat">
-          <div><b>${BRANDS.length - 1}+</b><span>${esc(t('home.stat_brands'))}</span></div>
-          <div><b>14+</b><span>${esc(t('home.stat_countries'))}</span></div>
-          <div><b>🇰🇷</b><span>${esc(t('home.stat_since'))}</span></div>
-        </div>
-      </div>
-      <div class="lp-center"><a class="btn-or" href="#/catalog">${esc(t('home.explore'))} <span class="arr">→</span></a></div>
-    </div>
-  </section>
-
-  <section class="lp-prod">
-    <div class="wrap lp-prod-in">
-      <div class="lp-prod-txt anim-left">
-        <h2 class="lp-h lp-h-l">${t('home.prod_title')}</h2>
-        <p class="lp-sub lp-sub-l">${esc(t('home.prod_sub'))}</p>
+      <div class="lp-kicker">Product Categories</div>
+      <div class="lp-sechead">
+        <div><h2>${esc(t('home.prod_title') || 'Our Product Categories')}</h2><p class="lp-sub" style="text-align:left;margin:0">${esc(t('home.prod_sub') || 'Lubricant solutions for passenger cars, heavy-duty, transmission and industrial applications.')}</p></div>
         <a class="btn-or" href="#/catalog">${esc(t('home.explore'))} <span class="arr">→</span></a>
       </div>
-      <div class="lp-diag anim-right">
-        <div class="lp-diag-panel"><img src="/assets/logo.png" alt="" onerror="this.remove()"></div>
-        <svg class="lp-diag-line" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="50" y1="0" x2="12" y2="100"/></svg>
-        <div class="lp-bubbles">${bubbles}</div>
+      <div class="lp-catgrid">${catCards}</div>
+    </div>
+  </section>
+
+  <section class="lp-brands-sec" id="lp-brands">
+    <div class="wrap">
+      <div class="lp-kicker lp-kicker-or">Our Partners</div>
+      <div class="lp-sechead">
+        <div><h2>${esc(t('home.clients') || 'Brands We Work With')}</h2><p class="lp-sub" style="text-align:left;margin:8px 0 0;color:#b9c8d4">Recognized Korean and global lubricant brands. Availability confirmed per product and destination.</p></div>
+        <a class="btn-gl" href="#/catalog">${esc(t('home.explore'))} →</a>
+      </div>
+      <div class="lp-brands-logos">
+        ${BRANDS.slice(1).map(b => `<div class="lp-brand-box" data-b="${esc(b.id)}"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></div>`).join('')}
       </div>
     </div>
   </section>
 
-  <section class="delivery-section">
-    <div class="delivery-inner">
-      <div class="delivery-header anim">
-        <div class="delivery-label">${esc(t('delivery.label'))}</div>
-        <h2 class="lp-h">${esc(t('delivery.title'))}</h2>
+  <section class="lp-featured-sec" id="lp-featured">
+    <div class="wrap">
+      <div class="lp-kicker">${esc(t('home.deliv_title'))}</div>
+      <div class="lp-sechead">
+        <div><h2>Selected Products for Modern Powertrains</h2><p class="lp-sub" style="text-align:left;margin:0">Korean-manufactured lubricants for passenger cars, trucks and industrial equipment.</p></div>
+        <a class="btn-or" href="#/catalog">${esc(t('home.explore'))} <span class="arr">→</span></a>
       </div>
-      <div class="delivery-stage">
-        <canvas id="delivery-canvas"></canvas>
-        <div class="delivery-country-overlay">
-          <div id="delivery-flag" class="delivery-flag">🇺🇿</div>
-          <div id="delivery-name" class="delivery-name">${esc(t('country.uz'))}</div>
+      <div class="lp-feat-grid" id="lp-feat-grid">
+        <div class="lp-feat-side">
+          <div class="lp-fcard" style="min-height:120px"><div class="lp-fcard-img"><div class="spin"></div></div><div></div></div>
+          <div class="lp-fcard" style="min-height:120px"><div class="lp-fcard-img"></div><div></div></div>
         </div>
-        <button class="delivery-arrow delivery-arrow-l" id="delivery-prev">‹</button>
-        <button class="delivery-arrow delivery-arrow-r" id="delivery-next">›</button>
-      </div>
-      <div class="delivery-dots" id="delivery-dots"></div>
-    </div>
-  </section>
-
-  <section class="lp-testi">
-    <div class="wrap">
-      <h2 class="lp-h anim">${esc(t('home.testi_title'))}</h2>
-      <p class="lp-sub anim">${esc(t('home.testi_sub'))}</p>
-      <div class="lp-testi-g">
-        ${[1, 2, 3].map(i => `<figure class="lp-quote anim">
-          <blockquote>“${esc(t(`testi.${i}q`))}”</blockquote>
-          <figcaption><span class="lp-av">${esc(t(`testi.${i}n`)[0] || '•')}</span><div><b>${esc(t(`testi.${i}n`))}</b><span>${esc(t(`testi.${i}r`))}</span></div></figcaption>
-        </figure>`).join('')}
+        <div class="lp-feat-main" style="min-height:300px"><div class="lp-feat-main-img"><div class="spin"></div></div></div>
+        <div class="lp-feat-side">
+          <div class="lp-fcard" style="min-height:120px"><div class="lp-fcard-img"></div><div></div></div>
+          <div class="lp-fcard" style="min-height:120px"><div class="lp-fcard-img"></div><div></div></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="lp-art">
+  <section class="lp-logistics-sec" id="lp-logistics">
     <div class="wrap">
-      <h2 class="lp-h anim">${esc(t('home.art_title'))}</h2>
-      <p class="lp-sub anim">${esc(t('home.art_sub'))}</p>
-      <div class="lp-art-g">
-        ${ART.map((a, i) => `<a class="lp-card anim" href="#/help">
-          <div class="lp-card-i" style="background:${a.bg}"><img src="${a.img}" alt="" loading="lazy" onerror="this.remove()">${a.icon}</div>
-          <div class="lp-card-b"><b>${esc(t(`art.${i + 1}t`))}</b><span>${esc(t(`art.${i + 1}s`))}</span></div>
-        </a>`).join('')}
+      <div class="lp-kicker">Built for Global Distribution</div>
+      <div class="lp-sechead">
+        <div><h2>Reliable Logistics.<br>Clear Supply Process.</h2></div>
+        <a class="btn-or" href="#/catalog">Learn More <span class="arr">→</span></a>
       </div>
+      <div class="lp-logbox">
+        <div class="lp-logcopy">
+          <h2>Export Efficiency</h2>
+          <p>We coordinate the supply chain from product sourcing and order preparation to loading, documentation and agreed delivery.</p>
+          <div class="lp-ticks">
+            <span>✓ Export-ready documentation</span>
+            <span>✓ Warehouse and loading coordination</span>
+            <span>✓ Partner-aligned delivery support</span>
+            <span>✓ Product and destination confirmation</span>
+          </div>
+        </div>
+        <div class="lp-logphotos">
+          <div class="lp-logphoto">Advanced Warehousing</div>
+          <div class="lp-logphoto">Global Shipping</div>
+          <div class="lp-logphoto">On-Time Delivery</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-services-sec">
+    <div class="wrap">
+      <div class="lp-kicker">Our Services</div>
+      <div class="lp-sechead"><div><h2>Services for Lubricant Businesses</h2><p class="lp-sub" style="text-align:left;margin:0">From product sourcing to export coordination, Carmon Oil supports distributors, workshops and international buyers.</p></div></div>
+      <div class="lp-svc-grid">
+        <div class="lp-svc"><span class="lp-svc-num">01</span><h3>Global Export</h3><h4>Partner Supply</h4><p>Product sourcing and distribution support for overseas buyers and strategic partners.</p></div>
+        <div class="lp-svc"><span class="lp-svc-num">02</span><h3>Wholesale Supply</h3><h4>Distributor Networks</h4><p>Supply conversations for distributors, workshops, service networks and fleet operators.</p></div>
+        <div class="lp-svc"><span class="lp-svc-num">03</span><h3>Brand Sourcing</h3><h4>Recognized Brands</h4><p>Help finding suitable products from confirmed Korean and global lubricant brands.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-world-sec">
+    <div class="lp-world-copy wrap" style="padding-left:max(20px,calc((100vw - 1240px)/2));padding-right:40px">
+      <div class="lp-kicker lp-kicker-or">World-Class Logistics</div>
+      <h2>Export Efficiency</h2>
+      <p>We coordinate the supply chain from product sourcing and order preparation to loading, documentation and agreed delivery.</p>
+      <div class="lp-ticks" style="margin-top:20px">
+        <span>✓ Export-ready documentation</span>
+        <span>✓ Warehouse and loading coordination</span>
+        <span>✓ Partner-aligned delivery support</span>
+      </div>
+    </div>
+    <div class="lp-world-visual"></div>
+  </section>
+
+  <section class="lp-global-sec">
+    <div class="lp-global-in">
+      <div class="lp-kicker lp-kicker-or">Global Lubrication Solutions</div>
+      <h2>Improving B2B and B2C Markets with Premium Engine Oils and Reliable Global Logistics.</h2>
+      <p>We provide premium automotive and industrial lubrication solutions for engines, fleets, workshops and international distribution partners.</p>
+      <a class="btn-or" href="#/help">${esc(t('home.touch_btn') || 'Contact Us')} <span class="arr">→</span></a>
     </div>
   </section>
 
@@ -325,17 +362,17 @@ function homePage() {
       <h2 class="lp-h anim">${esc(t('home.faq_title'))}</h2>
       <p class="lp-sub anim">${esc(t('home.faq_sub'))}</p>
       <div class="lp-faq-l anim">
-        ${[1, 2, 3, 4, 5, 6].map(n => `<details${n === 1 ? ' open' : ''}><summary>${esc(t(`faq.q${n}`))}<span class="lp-faq-x"></span></summary><p>${esc(t(`faq.a${n}`))}</p></details>`).join('')}
+        ${[1,2,3,4,5,6].map(n => `<details${n===1?' open':''}><summary>${esc(t('faq.q'+n))}<span class="lp-faq-x"></span></summary><p>${esc(t('faq.a'+n))}</p></details>`).join('')}
       </div>
     </div>
   </section>`;
 
-  $$('.lp-client').forEach(b => b.onclick = () => goCatalog({ brand: b.dataset.b, cat: 'all' }));
-  $$('.lp-bubble').forEach(b => b.onclick = () => goCatalog({ cat: b.dataset.cat, brand: 'all' }));
+  $$('.lp-cat').forEach(el => el.onclick = () => goCatalog({ cat: el.dataset.cat, brand: 'all' }));
+  $$('.lp-brand-box').forEach(el => el.onclick = () => goCatalog({ brand: el.dataset.b, cat: 'all' }));
   $('#lead').onsubmit = async e => {
     e.preventDefault();
     const f = e.target, msg = $('#lead-msg'), phone = f.phone.value.trim();
-    if (phone.replace(/\D/g, '').length < 7) { msg.textContent = t('home.touch_err'); msg.className = 'lp-lead-msg err'; return; }
+    if (phone.replace(/\D/g,'').length < 7) { msg.textContent = t('home.touch_err'); msg.className = 'lp-lead-msg err'; return; }
     const btn = f.querySelector('button'); btn.disabled = true;
     try {
       await api('/api/lead', { method: 'POST', body: JSON.stringify({ phone }) });
@@ -343,7 +380,35 @@ function homePage() {
     } catch (er) { msg.textContent = er.message; msg.className = 'lp-lead-msg err'; }
     btn.disabled = false;
   };
-  requestAnimationFrame(() => { initAnimations(); initDeliveryMap(); initShowcase(); });
+  requestAnimationFrame(() => initAnimations());
+
+  // Load featured products async
+  try {
+    const products = await api('/api/products');
+    const ps = products.filter(p => p.images && p.images.length).slice(0, 5);
+    if (ps.length >= 3) {
+      const sideCard = (p) => {
+        const img = p.images?.[0] || '';
+        const spec = [p.viscosity, p.litres ? p.litres + 'L' : ''].filter(Boolean).join(' · ');
+        return `<div class="lp-fcard" onclick="location.hash='#/catalog'" style="cursor:pointer">
+          <div class="lp-fcard-img">${img ? `<img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy">` : '<div style="font-size:28px">🛢</div>'}</div>
+          <div><h3>${esc(pname(p))}</h3><p>${esc(spec || p.brand || '')}</p><a class="btn-or" href="#/catalog">${esc(t('home.explore'))} →</a></div>
+        </div>`;
+      };
+      const main = ps[2];
+      const mainImg = main.images?.[0] || '';
+      const mainSpec = [main.viscosity, main.litres ? main.litres + 'L' : '', main.brand].filter(Boolean).join(' · ');
+      $('#lp-feat-grid').innerHTML = `
+        <div class="lp-feat-side">${sideCard(ps[0])}${sideCard(ps[1])}</div>
+        <div class="lp-feat-main">
+          <div class="lp-feat-main-img">${mainImg ? `<img src="${esc(mainImg)}" alt="${esc(main.name)}">` : '<div style="font-size:52px">🛢</div>'}</div>
+          <h3>${esc(pname(main))}</h3>
+          <p>${esc(mainSpec)}</p>
+          <a class="btn-or" href="#/catalog">${esc(t('home.explore'))} <span class="arr">→</span></a>
+        </div>
+        <div class="lp-feat-side">${ps.length > 3 ? sideCard(ps[3]) : ''}${ps.length > 4 ? sideCard(ps[4]) : ''}</div>`;
+    }
+  } catch {}
 }
 
 // Coverflow carousel in the delivery block: cards fan out from the centre and
