@@ -216,14 +216,24 @@ function homePage() {
         <p>${esc(t('home.hero_sub'))}</p>
         <div class="lp-actions">
           <a class="btn-or" href="#/catalog">${esc(t('home.hero_cta'))} <span class="arr">→</span></a>
-          <a class="btn-gl" href="https://t.me/hyundaixteeroilbot" target="_blank" rel="noopener">${esc(t('home.hero_tg'))}</a>
+          <a class="btn-gl" href="#/help">${esc(t('home.hero_tg'))}</a>
         </div>
         <div class="lp-hero-badges">
-          <div class="lp-hero-badge">🇰🇷 <span>Engineered in Korea</span></div>
-          <div class="lp-hero-badge">📋 <span>Technical product information</span></div>
-          <div class="lp-hero-badge">🤝 <span>Supply support</span></div>
+          <span class="lp-hero-badge-txt"><span class="lp-hero-badge-flag">KR</span> Engineered in Korea</span>
+          <span class="lp-hero-badge-txt">Technical product information</span>
+          <span class="lp-hero-badge-txt">Supply support</span>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="lp-proof">
+    <div class="wrap lp-proof-grid">
+      <div class="lp-proof-item"><b>KR</b><span>Products from South Korea</span></div>
+      <div class="lp-proof-item"><b>6</b><span>Core product categories</span></div>
+      <div class="lp-proof-item"><b>B2B</b><span>Distributor support</span></div>
+      <div class="lp-proof-item"><b>10</b><span>Confirmed delivery markets</span></div>
+      <div class="lp-proof-item"><b>24/7</b><span>Online request intake</span></div>
     </div>
   </section>
 

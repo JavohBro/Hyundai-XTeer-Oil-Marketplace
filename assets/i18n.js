@@ -355,7 +355,7 @@
       'nav.home': 'Home',
       'home.hero_title': 'Genuine Korean oils —<br>delivered across the CIS.',
       'home.hero_sub': 'Direct supply of Kixx, Hyundai XTeer, SK ZIC, Castrol, Shell and more from our warehouse in South Korea. Fast, reliable, no fakes.',
-      'home.hero_cta': 'Browse catalog', 'home.hero_tg': 'Message on Telegram', 'home.clients': 'Brands we supply',
+      'home.hero_cta': 'Explore Products', 'home.hero_tg': 'For Business & Export', 'home.clients': 'Brands we supply',
       'home.deliv_title': 'Featured products', 'home.deliv_sub': 'Our own warehouse in Goyang and a proven logistics chain: orders ship the day they are confirmed.',
       'home.stat_brands': 'brands', 'home.stat_countries': 'delivery countries', 'home.stat_since': 'Goyang, Korea',
       'home.explore': 'Go to catalog',
