@@ -1029,3 +1029,13 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-skel-sm{width:60%}.lp-skel-md{width:85%}
 @media(max-width:900px){.lp-techcat-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.lp-techcat-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ── Oil Finder / Distributor CTA bar ── */
+.lp-finder-sec{background:#0b1a27;padding:0}
+.lp-finder-grid{display:grid;grid-template-columns:1fr 1fr}
+.lp-finder-card{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:36px 40px;border-right:1px solid rgba(255,255,255,.08)}
+.lp-finder-card:last-child{border-right:none}
+.lp-finder-card h3{font-size:18px;font-weight:800;color:#fff;margin:0 0 6px}
+.lp-finder-card p{font-size:13px;color:rgba(255,255,255,.55);margin:0;line-height:1.5;max-width:30ch}
+.lp-finder-card .btn-or{flex-shrink:0}
+@media(max-width:640px){.lp-finder-grid{grid-template-columns:1fr}.lp-finder-card{border-right:none;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap}.lp-finder-card:last-child{border-bottom:none}}

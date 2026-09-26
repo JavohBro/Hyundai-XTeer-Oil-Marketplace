@@ -437,6 +437,25 @@ function homePage() {
     </div>
   </section>
 
+  <section class="lp-finder-sec">
+    <div class="wrap lp-finder-grid">
+      <div class="lp-finder-card">
+        <div>
+          <h3>Find the Right Oil</h3>
+          <p>Select your vehicle or equipment to find a suitable lubricant category.</p>
+        </div>
+        <a class="btn-or" href="#/catalog">Oil Finder <span class="arr">→</span></a>
+      </div>
+      <div class="lp-finder-card">
+        <div>
+          <h3>Become a Distributor</h3>
+          <p>Join Carmon's global partner network and discuss your supply needs.</p>
+        </div>
+        <a class="btn-or" href="#/help">Request Wholesale Quote <span class="arr">→</span></a>
+      </div>
+    </div>
+  </section>
+
   <section class="delivery-section">
     <div class="delivery-inner">
       <div class="delivery-header anim">
