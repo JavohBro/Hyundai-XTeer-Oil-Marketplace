@@ -62,8 +62,8 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   display:flex;align-items:center;gap:24px;
 }
 .brand{display:flex;align-items:center;flex-shrink:0}
-/* Same wordmark as the hero — sized by height so it fits the header bar */
-.brand img{height:54px;width:auto;object-fit:contain}
+.brand-word{font-size:20px;font-weight:900;letter-spacing:-.02em;color:#fff}
+.brand-word span{color:var(--or,#ff571c)}
 .hdr-nav{display:flex;gap:4px;margin-right:auto;margin-left:24px}
 .hdr-nav a{
   padding:8px 14px;border-radius:var(--rs);font-size:14px;color:rgba(255,255,255,.72);

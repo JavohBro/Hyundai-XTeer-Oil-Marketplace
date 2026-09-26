@@ -509,12 +509,44 @@ function homePage() {
         ${[1, 2, 3, 4, 5, 6].map(n => `<details${n === 1 ? ' open' : ''}><summary>${esc(t(`faq.q${n}`))}<span class="lp-faq-x"></span></summary><p>${esc(t(`faq.a${n}`))}</p></details>`).join('')}
       </div>
     </div>
+  </section>
+
+  <section class="lp-touch lp-touch2">
+    <div class="wrap lp-touch2-in">
+      <h2 class="lp-h anim">${esc(t('home.touch_title'))}</h2>
+      <p class="lp-sub anim">${esc(t('home.touch_sub'))}</p>
+      <form class="lp-lead2 anim" id="lead">
+        <input type="text" name="company" placeholder="${esc(t('home.touch_company'))}" autocomplete="organization">
+        <input type="text" name="country" placeholder="${esc(t('home.touch_country'))}" autocomplete="country-name">
+        <input type="text" name="contact" placeholder="${esc(t('home.touch_contact'))}" required autocomplete="tel">
+        <textarea name="message" rows="4" placeholder="${esc(t('home.touch_msg'))}"></textarea>
+        <button class="btn-or" type="submit">${esc(t('home.touch_btn'))} <span class="arr">→</span></button>
+        <div class="lp-lead-msg" id="lead-msg"></div>
+      </form>
+      <div class="lp-touch2-info">
+        <div><b>${esc(t('home.touch_sales'))}:</b> +82 10 3768 2270 · islombeksoyibboyev@gmail.com · @r1m_nightrider</div>
+        <div><b>${esc(t('home.touch_hours'))}:</b> 09:00–17:00 · South Korea, Goyang</div>
+      </div>
+    </div>
   </section>`;
 
   $$('.lp-client').forEach(b => b.onclick = () => goCatalog({ brand: b.dataset.b, cat: 'all' }));
   $$('.lp-bubble').forEach(b => b.onclick = () => goCatalog({ cat: b.dataset.cat, brand: 'all' }));
   $$('.lp-catcard').forEach(c => c.onclick = () => goCatalog({ cat: c.dataset.cat, brand: 'all' }));
   $$('.lp-partner-card').forEach(c => c.onclick = () => goCatalog({ brand: c.dataset.b, cat: 'all' }));
+  $('#lead').onsubmit = async e => {
+    e.preventDefault();
+    const f = e.target, msg = $('#lead-msg');
+    const company = f.company.value.trim(), country = f.country.value.trim();
+    const contact = f.contact.value.trim(), message = f.message.value.trim();
+    if (contact.length < 3) { msg.textContent = t('home.touch_err'); msg.className = 'lp-lead-msg err'; return; }
+    const btn = f.querySelector('button'); btn.disabled = true;
+    try {
+      await api('/api/lead', { method: 'POST', body: JSON.stringify({ company, country, contact, message }) });
+      msg.textContent = t('home.touch_ok'); msg.className = 'lp-lead-msg ok'; f.reset();
+    } catch (er) { msg.textContent = er.message; msg.className = 'lp-lead-msg err'; }
+    btn.disabled = false;
+  };
   requestAnimationFrame(() => { initAnimations(); initDeliveryMap(); initShowcase(); });
 
   // Load technical catalog products async
