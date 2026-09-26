@@ -421,6 +421,22 @@ function homePage() {
     </div>
   </section>
 
+  <section class="lp-techcat-sec">
+    <div class="wrap">
+      <div class="lp-cats-hd">
+        <div class="lp-cats-hd-left">
+          <div class="lp-kicker">Technical Excellence in Every Drop</div>
+          <h2>Technical Product Catalog</h2>
+          <p>Compare products by application, viscosity, packaging and confirmed technical standards.</p>
+        </div>
+        <a class="btn-or" href="#/catalog">View Technical Data <span class="arr">→</span></a>
+      </div>
+      <div class="lp-techcat-grid" id="lp-techcat-grid">
+        ${[1,2,3,4,5].map(() => `<div class="lp-techcat-card lp-techcat-card--loading"><div class="lp-techcat-img"></div><div class="lp-techcat-body"><div class="lp-skel lp-skel-sm"></div><div class="lp-skel lp-skel-md"></div><div class="lp-skel lp-skel-sm"></div></div></div>`).join('')}
+      </div>
+    </div>
+  </section>
+
   <section class="delivery-section">
     <div class="delivery-inner">
       <div class="delivery-header anim">
@@ -506,6 +522,26 @@ function homePage() {
     btn.disabled = false;
   };
   requestAnimationFrame(() => { initAnimations(); initDeliveryMap(); initShowcase(); });
+
+  // Load technical catalog products async
+  api('/api/products').then(products => {
+    const grid = $('#lp-techcat-grid');
+    if (!grid) return;
+    const ps = products.filter(p => p.images && p.images.length).slice(0, 5);
+    if (!ps.length) { grid.innerHTML = ''; return; }
+    grid.innerHTML = ps.map(p => {
+      const img = p.images[0] || '';
+      const spec = [p.viscosity, p.litres ? p.litres + 'L' : '', p.brand].filter(Boolean).join(' · ');
+      return `<div class="lp-techcat-card" onclick="location.hash='#/catalog'" style="cursor:pointer">
+        <div class="lp-techcat-img"><img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy"></div>
+        <div class="lp-techcat-body">
+          <div class="lp-techcat-brand">${esc(p.brand || 'PRODUCT DATA')}</div>
+          <h4>${esc(pname(p))}</h4>
+          <p>${esc(spec)}</p>
+        </div>
+      </div>`;
+    }).join('');
+  }).catch(() => {});
 }
 
 // Coverflow carousel in the delivery block: cards fan out from the centre and

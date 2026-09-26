@@ -1012,3 +1012,20 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-prod-skus{font-size:11px;color:rgba(255,165,80,.75);margin-top:8px;line-height:1.5}
 @media(max-width:900px){.lp-prod-family-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.lp-prod-family-grid{grid-template-columns:1fr}.lp-production-hero{flex-direction:column;align-items:flex-start}.lp-production-hero-right{align-items:flex-start}}
+
+/* ── Technical Product Catalog section ── */
+.lp-techcat-sec{padding:72px 0;background:#f4f5f7;border-top:1px solid #eaedf0}
+.lp-techcat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:32px}
+.lp-techcat-card{background:#fff;border:1px solid #e8eaed;border-radius:10px;overflow:hidden;transition:transform .18s,box-shadow .18s}
+.lp-techcat-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1)}
+.lp-techcat-card--loading .lp-techcat-img{background:#eaedf0}
+.lp-techcat-img{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:#f9fafb;overflow:hidden}
+.lp-techcat-img img{width:100%;height:100%;object-fit:contain;padding:16px}
+.lp-techcat-body{padding:14px 14px 16px;border-top:1px solid #f0f2f4}
+.lp-techcat-brand{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--or,#ff571c);text-transform:uppercase;margin-bottom:4px}
+.lp-techcat-body h4{font-size:13px;font-weight:700;color:#0d1e2e;margin:0 0 4px}
+.lp-techcat-body p{font-size:12px;color:#7a8a9a;margin:0;line-height:1.5}
+.lp-skel{height:10px;border-radius:4px;background:#eaedf0;margin-bottom:6px}
+.lp-skel-sm{width:60%}.lp-skel-md{width:85%}
+@media(max-width:900px){.lp-techcat-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.lp-techcat-grid{grid-template-columns:repeat(2,1fr)}}
