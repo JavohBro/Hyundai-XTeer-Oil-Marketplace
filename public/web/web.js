@@ -209,20 +209,19 @@ function homePage() {
 
   $('#main').innerHTML = `
   <section class="lp-hero">
-    <video class="lp-hero-video" autoplay muted playsinline preload="auto" poster="/assets/hero_poster.jpg" aria-hidden="true">
-      <source src="/assets/hero_bg.mp4" type="video/mp4">
-    </video>
     <div class="lp-hero-in">
       <div class="lp-hero-txt">
+        <div class="lp-kicker lp-kicker-or" style="margin-bottom:16px">Made in Korea · Trusted Worldwide</div>
         <h1>${t('home.hero_title')}</h1>
         <p>${esc(t('home.hero_sub'))}</p>
         <div class="lp-actions">
           <a class="btn-or" href="#/catalog">${esc(t('home.hero_cta'))} <span class="arr">→</span></a>
           <a class="btn-gl" href="https://t.me/hyundaixteeroilbot" target="_blank" rel="noopener">${esc(t('home.hero_tg'))}</a>
         </div>
-        <div class="lp-clients-l">${esc(t('home.clients'))}</div>
-        <div class="lp-clients">
-          ${BRANDS.slice(1).map(b => `<button type="button" class="lp-client" data-b="${esc(b.id)}" aria-label="${esc(b.label)}"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></button>`).join('')}
+        <div class="lp-hero-badges">
+          <div class="lp-hero-badge">🇰🇷 <span>Engineered in Korea</span></div>
+          <div class="lp-hero-badge">📋 <span>Technical product information</span></div>
+          <div class="lp-hero-badge">🤝 <span>Supply support</span></div>
         </div>
       </div>
     </div>
