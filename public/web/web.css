@@ -984,7 +984,9 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 @media(max-width:760px){.lp-world-sec{grid-template-columns:1fr}.lp-world-copy{padding:48px 20px}.lp-world-img{aspect-ratio:16/9}}
 
 /* ── Global Lubrication Solutions CTA ── */
-.lp-global-sec{background:#0d1e2e;padding:80px 20px;text-align:center}
+.lp-global-sec{position:relative;padding:80px 20px;text-align:center}
+.lp-global-sec::before{content:'';position:absolute;inset:0;background:rgba(6,21,35,.78);z-index:0}
+.lp-global-in{position:relative;z-index:1}
 .lp-global-in{max-width:760px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:20px}
 .lp-global-in h2{font-size:clamp(22px,3vw,40px);font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1.18;margin:8px 0 0}
 .lp-global-in p{font-size:16px;color:#b9c8d4;line-height:1.7;margin:0;max-width:52ch}
