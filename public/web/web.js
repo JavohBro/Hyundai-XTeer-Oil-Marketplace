@@ -388,6 +388,21 @@ function homePage() {
     </div>
   </section>
 
+  <section class="lp-production-sec">
+    <div class="lp-production-overlay"></div>
+    <div class="lp-production-in wrap">
+      <div class="lp-kicker lp-kicker-or">Carmon Oil Production Project</div>
+      <h2>Complete Product<br>Introduction</h2>
+      <p>The production catalogue brings together Carmon Oil, Speedmate and SK AUTOUS product families, technical introductions and application-led ranges.</p>
+      <div class="lp-production-tags">
+        <span>Product Range.</span>
+        <span>Technical Detail.</span>
+        <span>Export Ready.</span>
+      </div>
+      <a class="btn-or" href="#/catalog">Request Product List <span class="arr">→</span></a>
+    </div>
+  </section>
+
   <section class="delivery-section">
     <div class="delivery-inner">
       <div class="delivery-header anim">
