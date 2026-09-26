@@ -379,6 +379,15 @@ function homePage() {
     </div>
   </section>
 
+  <section class="lp-global-sec">
+    <div class="lp-global-in">
+      <div class="lp-kicker lp-kicker-or">Global Lubrication Solutions</div>
+      <h2>Improving B2B and B2C Markets with Premium Engine Oils and Reliable Global Logistics.</h2>
+      <p>We provide premium automotive and industrial lubrication solutions for engines, fleets, workshops and international distribution partners.</p>
+      <a class="btn-or" href="#/help">Talk to Carmon <span class="arr">→</span></a>
+    </div>
+  </section>
+
   <section class="delivery-section">
     <div class="delivery-inner">
       <div class="delivery-header anim">
