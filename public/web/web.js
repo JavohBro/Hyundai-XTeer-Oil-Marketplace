@@ -237,6 +237,41 @@ function homePage() {
     </div>
   </section>
 
+  <section class="lp-cats-sec">
+    <div class="wrap">
+      <div class="lp-cats-hd">
+        <div class="lp-cats-hd-left">
+          <div class="lp-kicker">Product Categories</div>
+          <h2>Our Product Categories</h2>
+          <p>Lubricant solutions for passenger cars, heavy-duty diesel, racing, transmission and industrial applications.</p>
+        </div>
+        <a class="btn-or" href="#/catalog">View All Products <span class="arr">→</span></a>
+      </div>
+      <div class="lp-catgrid">
+        <div class="lp-catcard" data-cat="passenger">
+          <div class="lp-catcard-top" style="background:linear-gradient(145deg,#1a2f45,#0d1e2e)">PASSENGER CAR<br>ENGINE OILS</div>
+          <div class="lp-catcard-body"><h3>Passenger Car Oils</h3><p>Maximum engine and fuel efficiency.</p></div>
+        </div>
+        <div class="lp-catcard" data-cat="heavy">
+          <div class="lp-catcard-top" style="background:linear-gradient(145deg,#223348,#121f2c)">HEAVY-DUTY<br>DIESEL</div>
+          <div class="lp-catcard-body"><h3>Heavy-Duty Diesel Oils</h3><p>Engineered for durability and performance.</p></div>
+        </div>
+        <div class="lp-catcard" data-cat="transmission">
+          <div class="lp-catcard-top" style="background:linear-gradient(145deg,#1d3d58,#0f2438)">TRANSMISSION<br>FLUIDS</div>
+          <div class="lp-catcard-body"><h3>Transmission Fluids</h3><p>Advanced protection for smooth operation.</p></div>
+        </div>
+        <div class="lp-catcard" data-cat="grease">
+          <div class="lp-catcard-top" style="background:linear-gradient(145deg,#2a3020,#181c10)">GREASE &<br>HYDRAULICS</div>
+          <div class="lp-catcard-body"><h3>Grease &amp; Hydraulics</h3><p>Chassis and hydraulic lubrication.</p></div>
+        </div>
+        <div class="lp-catcard" data-cat="others">
+          <div class="lp-catcard-top" style="background:linear-gradient(145deg,#3a2e1a,#1e1a0e)">INDUSTRIAL<br>OILS</div>
+          <div class="lp-catcard-body"><h3>Industrial Oils</h3><p>Reliable lubrication for industrial applications.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="lp-deliv">
     <div class="wrap">
       <h2 class="lp-h anim">${esc(t('home.deliv_title'))}</h2>
@@ -341,6 +376,7 @@ function homePage() {
 
   $$('.lp-client').forEach(b => b.onclick = () => goCatalog({ brand: b.dataset.b, cat: 'all' }));
   $$('.lp-bubble').forEach(b => b.onclick = () => goCatalog({ cat: b.dataset.cat, brand: 'all' }));
+  $$('.lp-catcard').forEach(c => c.onclick = () => goCatalog({ cat: c.dataset.cat, brand: 'all' }));
   $('#lead').onsubmit = async e => {
     e.preventDefault();
     const f = e.target, msg = $('#lead-msg'), phone = f.phone.value.trim();
