@@ -658,13 +658,21 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
 // One request per phone number per 10 minutes keeps a stuck button from spamming admins.
 const leadSeen = new Map();
 app.post('/api/lead', async (req, res) => {
-  const phone = String(req.body?.phone || '').trim();
-  const digits = phone.replace(/\D/g, '');
-  if (digits.length < 7 || digits.length > 15) return res.status(400).json({ error: 'Некорректный номер' });
-  const last = leadSeen.get(digits) || 0;
+  const contact = String(req.body?.contact || req.body?.phone || '').trim();
+  const company = String(req.body?.company || '').trim();
+  const country = String(req.body?.country || '').trim();
+  const message = String(req.body?.message || '').trim();
+  if (contact.replace(/\s/g, '').length < 3) return res.status(400).json({ error: 'Некорректные данные' });
+  const dedupeKey = contact.replace(/\s+/g, '').toLowerCase();
+  const last = leadSeen.get(dedupeKey) || 0;
   if (Date.now() - last < 10 * 60e3) return res.json({ success: true });
-  leadSeen.set(digits, Date.now());
-  const text = tt('ru', 'bot.lead', { phone: esc(phone) });
+  leadSeen.set(dedupeKey, Date.now());
+  const text = tt('ru', 'bot.lead', {
+    phone: esc(contact),
+    company: esc(company || '—'),
+    country: esc(country || '—'),
+    message: esc(message || '—'),
+  });
   for (const adminId of ADMIN_IDS) {
     try { await bot.sendMessage(adminId, text, { parse_mode: 'HTML' }); }
     catch (e) { console.error(`Lead → admin ${adminId} failed:`, e.message); }

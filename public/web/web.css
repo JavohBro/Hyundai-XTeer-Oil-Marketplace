@@ -1039,3 +1039,17 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-finder-card p{font-size:13px;color:rgba(255,255,255,.55);margin:0;line-height:1.5;max-width:30ch}
 .lp-finder-card .btn-or{flex-shrink:0}
 @media(max-width:640px){.lp-finder-grid{grid-template-columns:1fr}.lp-finder-card{border-right:none;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap}.lp-finder-card:last-child{border-bottom:none}}
+
+/* ── B2B lead form section (redesigned) ── */
+.lp-touch2{background:#fff;padding:80px 0}
+.lp-touch2-in{max-width:600px;margin:0 auto;text-align:center}
+.lp-touch2-in h2{font-size:clamp(24px,3vw,38px);font-weight:800;letter-spacing:-.03em;color:#0d1e2e;margin:0 0 10px}
+.lp-touch2-in .lp-sub{text-align:center;margin:0 0 32px}
+.lp-lead2{text-align:left;background:#fff;border:1px solid #e8eaed;border-radius:16px;padding:28px;box-shadow:0 12px 40px rgba(13,30,46,.06);display:flex;flex-direction:column;gap:14px}
+.lp-lead2 input,.lp-lead2 textarea{width:100%;padding:14px 16px;font-size:15px;border:1px solid #e2e6ea;border-radius:8px;font-family:inherit;color:#0d1e2e;background:#fff}
+.lp-lead2 input:focus,.lp-lead2 textarea:focus{outline:none;border-color:var(--or,#ff571c)}
+.lp-lead2 textarea{resize:vertical;min-height:100px}
+.lp-lead2 .btn-or{width:100%;justify-content:center;display:flex;align-items:center;gap:8px;padding:14px;font-size:15px;border-radius:8px}
+.lp-touch2-info{margin-top:20px;font-size:13px;color:#7a8a9a;line-height:1.8;text-align:left}
+.lp-touch2-info b{color:#334}
+@media(max-width:640px){.lp-touch2{padding:56px 0}.lp-lead2{padding:20px}}

@@ -501,17 +501,22 @@ function homePage() {
     </div>
   </section>
 
-  <section class="lp-touch">
-    <div class="wrap lp-touch-in">
-      <div class="anim-left">
-        <h2 class="lp-h lp-h-l">${esc(t('home.touch_title'))}</h2>
-        <p class="lp-sub lp-sub-l">${esc(t('home.touch_sub'))}</p>
-      </div>
-      <form class="lp-lead anim-right" id="lead">
-        <input type="tel" name="phone" placeholder="${esc(t('home.touch_ph'))}" required autocomplete="tel">
-        <button class="btn-or" type="submit">${esc(t('home.touch_btn'))}</button>
+  <section class="lp-touch lp-touch2">
+    <div class="wrap lp-touch2-in">
+      <h2 class="lp-h anim">${esc(t('home.touch_title'))}</h2>
+      <p class="lp-sub anim">${esc(t('home.touch_sub'))}</p>
+      <form class="lp-lead2 anim" id="lead">
+        <input type="text" name="company" placeholder="${esc(t('home.touch_company'))}" autocomplete="organization">
+        <input type="text" name="country" placeholder="${esc(t('home.touch_country'))}" autocomplete="country-name">
+        <input type="text" name="contact" placeholder="${esc(t('home.touch_contact'))}" required autocomplete="tel">
+        <textarea name="message" rows="4" placeholder="${esc(t('home.touch_msg'))}"></textarea>
+        <button class="btn-or" type="submit">${esc(t('home.touch_btn'))} <span class="arr">→</span></button>
         <div class="lp-lead-msg" id="lead-msg"></div>
       </form>
+      <div class="lp-touch2-info">
+        <div><b>${esc(t('home.touch_sales'))}:</b> +82 10 3768 2270 · islombeksoyibboyev@gmail.com · @r1m_nightrider</div>
+        <div><b>${esc(t('home.touch_hours'))}:</b> 09:00–17:00 · South Korea, Goyang</div>
+      </div>
     </div>
   </section>
 
@@ -531,12 +536,14 @@ function homePage() {
   $$('.lp-partner-card').forEach(c => c.onclick = () => goCatalog({ brand: c.dataset.b, cat: 'all' }));
   $('#lead').onsubmit = async e => {
     e.preventDefault();
-    const f = e.target, msg = $('#lead-msg'), phone = f.phone.value.trim();
-    if (phone.replace(/\D/g, '').length < 7) { msg.textContent = t('home.touch_err'); msg.className = 'lp-lead-msg err'; return; }
+    const f = e.target, msg = $('#lead-msg');
+    const company = f.company.value.trim(), country = f.country.value.trim();
+    const contact = f.contact.value.trim(), message = f.message.value.trim();
+    if (contact.length < 3) { msg.textContent = t('home.touch_err'); msg.className = 'lp-lead-msg err'; return; }
     const btn = f.querySelector('button'); btn.disabled = true;
     try {
-      await api('/api/lead', { method: 'POST', body: JSON.stringify({ phone }) });
-      msg.textContent = t('home.touch_ok'); msg.className = 'lp-lead-msg ok'; f.phone.value = '';
+      await api('/api/lead', { method: 'POST', body: JSON.stringify({ company, country, contact, message }) });
+      msg.textContent = t('home.touch_ok'); msg.className = 'lp-lead-msg ok'; f.reset();
     } catch (er) { msg.textContent = er.message; msg.className = 'lp-lead-msg err'; }
     btn.disabled = false;
   };
