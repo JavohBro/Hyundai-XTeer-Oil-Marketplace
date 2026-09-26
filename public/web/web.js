@@ -389,17 +389,35 @@ function homePage() {
   </section>
 
   <section class="lp-production-sec">
-    <div class="lp-production-overlay"></div>
-    <div class="lp-production-in wrap">
-      <div class="lp-kicker lp-kicker-or">Carmon Oil Production Project</div>
-      <h2>Complete Product<br>Introduction</h2>
-      <p>The production catalogue brings together Carmon Oil, Speedmate and SK AUTOUS product families, technical introductions and application-led ranges.</p>
-      <div class="lp-production-tags">
-        <span>Product Range.</span>
-        <span>Technical Detail.</span>
-        <span>Export Ready.</span>
+    <div class="wrap lp-production-top">
+      <div>
+        <div class="lp-kicker lp-kicker-or">Carmon Oil Production Project</div>
+        <h2>Complete Product Introduction</h2>
+        <p>The production catalogue brings together Carmon Oil, Speedmate and SK AUTOUS product families, technical introductions and application-led ranges.</p>
       </div>
-      <a class="btn-or" href="#/catalog">Request Product List <span class="arr">→</span></a>
+      <a class="btn-or" href="#/catalog">View Catalogue <span class="arr">↓</span></a>
+    </div>
+    <div class="wrap">
+      <div class="lp-production-hero">
+        <div class="lp-production-hero-left">
+          <h3>Product Range. Technical Detail.<br>Export Ready.</h3>
+          <p>Explore the Carmon Oil, Speedmate and SK AUTOUS product families — technical introductions and product-story ranges now available in our catalogue.</p>
+        </div>
+        <div class="lp-production-hero-right">
+          <a class="lp-btn-outline" href="#/catalog">Explore Product Families <span class="arr">↓</span></a>
+          <a class="btn-or" href="#/help">Request Product List <span class="arr">→</span></a>
+        </div>
+      </div>
+      <div class="lp-prod-family-grid">
+        <div class="lp-prod-family"><span class="lp-svc-num">01 / PCMO</span><h4>Passenger Car Motor Oils</h4><p>Gasoline, diesel and LPG applications with fully synthetic, synthetic and mineral ranges.</p><div class="lp-prod-skus">FX-S · FX-SE · FX-PAO · FX-1 · FX-2 · FX-3</div></div>
+        <div class="lp-prod-family"><span class="lp-svc-num">02 / HDDEO</span><h4>Heavy-Duty Diesel Oils</h4><p>Engine oils for modern diesel engines, light trucks and demanding operating conditions.</p><div class="lp-prod-skus">K4 · J4 · I4 · H4 · F4</div></div>
+        <div class="lp-prod-family"><span class="lp-svc-num">03 / DRIVELINE</span><h4>Transmission Fluids</h4><p>Automatic, continuously variable and dual-clutch transmission support across vehicle platforms.</p><div class="lp-prod-skus">DCTF · CVTF · ATF MULTI · ATF SP-IV · ATF SP-III</div></div>
+        <div class="lp-prod-family"><span class="lp-svc-num">04 / GEAR</span><h4>Automotive Gear Oils</h4><p>High-quality gear oils for smooth shifting, wear protection and stable performance.</p><div class="lp-prod-skus">HP GEAR · SHP GEAR · GL-4 · GL-5</div></div>
+        <div class="lp-prod-family"><span class="lp-svc-num">05 / SK AUTOUS</span><h4>SK AUTOUS Engine Oils</h4><p>Low-SAPS, gasoline, diesel and power oil introductions for modern vehicle applications.</p><div class="lp-prod-skus">EK-9 C3 · EK-7 C3 · EK-9 SPEED · EK-7 SPEED</div></div>
+        <div class="lp-prod-family"><span class="lp-svc-num">06 / POWER</span><h4>Diesel Power Oils</h4><p>Performance-focused diesel engine families developed for protection, economy and durability.</p><div class="lp-prod-skus">EK-9000 POWER · EK-7000 POWER · EK-5000 POWER</div></div>
+        <div class="lp-prod-family"><span class="lp-svc-num">07 / SK DRIVELINE</span><h4>SK AUTOUS Driveline</h4><p>Automatic and CVT fluid introductions with broad OEM application references.</p><div class="lp-prod-skus">EK-ATF · EK-CVTF · ATF MULTI · FC-J</div></div>
+        <div class="lp-prod-family"><span class="lp-svc-num">08 / TECHNICAL</span><h4>Specifications &amp; Benefits</h4><p>Product pages include viscosity, approvals, key characteristics, benefits and application notes.</p><div class="lp-prod-skus" style="color:rgba(255,255,255,.4)">Verify final SKU data against current official technical sheets.</div></div>
+      </div>
     </div>
   </section>
 
