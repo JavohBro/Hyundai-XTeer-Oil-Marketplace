@@ -527,16 +527,17 @@ function homePage() {
   api('/api/products').then(products => {
     const grid = $('#lp-techcat-grid');
     if (!grid) return;
-    const ps = products.filter(p => p.images && p.images.length).slice(0, 5);
+    const ps = products.slice(0, 5);
     if (!ps.length) { grid.innerHTML = ''; return; }
     grid.innerHTML = ps.map(p => {
-      const img = p.images[0] || '';
-      const spec = [p.viscosity, p.litres ? p.litres + 'L' : '', p.brand].filter(Boolean).join(' · ');
+      const img = (p.images && p.images[0]) || '';
+      const name = p.name || '';
+      const spec = [p.viscosity, p.litres ? p.litres + 'L' : ''].filter(Boolean).join(' · ');
       return `<div class="lp-techcat-card" onclick="location.hash='#/catalog'" style="cursor:pointer">
-        <div class="lp-techcat-img"><img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy"></div>
+        <div class="lp-techcat-img">${img ? `<img src="${esc(img)}" alt="${esc(name)}" loading="lazy">` : '<div style="font-size:40px;opacity:.3">🛢</div>'}</div>
         <div class="lp-techcat-body">
           <div class="lp-techcat-brand">${esc(p.brand || 'PRODUCT DATA')}</div>
-          <h4>${esc(pname(p))}</h4>
+          <h4>${esc(name)}</h4>
           <p>${esc(spec)}</p>
         </div>
       </div>`;
