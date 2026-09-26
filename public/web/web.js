@@ -306,21 +306,6 @@ function homePage() {
     </div>
   </section>
 
-  <section class="lp-prod">
-    <div class="wrap lp-prod-in">
-      <div class="lp-prod-txt anim-left">
-        <h2 class="lp-h lp-h-l">${t('home.prod_title')}</h2>
-        <p class="lp-sub lp-sub-l">${esc(t('home.prod_sub'))}</p>
-        <a class="btn-or" href="#/catalog">${esc(t('home.explore'))} <span class="arr">→</span></a>
-      </div>
-      <div class="lp-diag anim-right">
-        <div class="lp-diag-panel"><img src="/assets/logo.png" alt="" onerror="this.remove()"></div>
-        <svg class="lp-diag-line" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="50" y1="0" x2="12" y2="100"/></svg>
-        <div class="lp-bubbles">${bubbles}</div>
-      </div>
-    </div>
-  </section>
-
   <section class="delivery-section">
     <div class="delivery-inner">
       <div class="delivery-header anim">
