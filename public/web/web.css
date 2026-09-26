@@ -955,11 +955,9 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-logistics-hd p{font-size:15px;color:#556;line-height:1.65;margin:0 0 24px}
 .lp-ticks{display:flex;flex-direction:column;gap:8px;margin-top:24px}
 .lp-ticks span{font-size:14px;color:#334;display:flex;align-items:center;gap:8px}
-.lp-logistics-photos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.lp-logphoto{border-radius:12px;overflow:hidden;position:relative;aspect-ratio:4/3}
-.lp-logphoto img{width:100%;height:100%;object-fit:cover}
-.lp-logphoto span{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(4,18,34,.75),transparent);color:#fff;font-size:12px;font-weight:700;padding:12px 12px 10px}
-@media(max-width:760px){.lp-logistics-hd{grid-template-columns:1fr}.lp-logistics-photos{grid-template-columns:1fr 1fr}}
+.lp-logistics-photo-single{border-radius:14px;overflow:hidden;aspect-ratio:4/3}
+.lp-logistics-photo-single img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:760px){.lp-logistics-hd{grid-template-columns:1fr}}
 
 /* ── Services section ── */
 .lp-services-sec{padding:72px 0;background:#f7f8fa;border-top:1px solid #eaedf0}

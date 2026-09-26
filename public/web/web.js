@@ -321,9 +321,8 @@ function homePage() {
             <span>✓ Product and destination confirmation</span>
           </div>
         </div>
-        <div class="lp-logistics-photos">
-          <div class="lp-logphoto"><img src="/assets/delivery.jpg" alt="Warehousing"><span>Advanced Warehousing</span></div>
-          <div class="lp-logphoto"><img src="/assets/bg_for.jpg" alt="Global Shipping"><span>Global Shipping</span></div>
+        <div class="lp-logistics-photo-single">
+          <img src="/assets/shipp.png" alt="Global Shipping">
         </div>
       </div>
     </div>
