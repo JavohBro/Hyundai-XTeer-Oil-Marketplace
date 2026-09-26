@@ -68,7 +68,7 @@ git push -u origin main
 
 ```ini
 BOT_TOKEN=8925813658:AAH1iSasWKIe9_OCUUT0bmWF1ET_9jFK0zI
-BOT_USERNAME=hyundaixteeroilbot
+BOT_USERNAME=carmonoilbot
 ADMIN_IDS=6049615368,795023201
 NODE_ENV=production
 WEB_AT_ROOT=1
