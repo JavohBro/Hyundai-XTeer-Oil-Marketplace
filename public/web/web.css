@@ -72,6 +72,8 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .hdr-nav a:hover{background:rgba(255,255,255,.08);color:#fff}
 .hdr-nav a.on{color:#fff;font-weight:600}
 .hdr-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;color:rgba(255,255,255,.85)}
+.nav-login-btn{padding:9px 20px;font-size:13px;box-shadow:none}
+.nav-login-btn:hover{box-shadow:0 6px 18px rgba(240,78,35,.35)}
 .icon-action{
   position:relative;width:38px;height:38px;border-radius:var(--rs);
   display:flex;align-items:center;justify-content:center;transition:background .15s;color:rgba(255,255,255,.85);

@@ -1490,7 +1490,7 @@ function paintAuth() {
     };
     $('#nav-admin').hidden = !S.me.is_admin;
   } else {
-    slot.innerHTML = S.cfg.telegram_login_enabled ? `<button class="btn btn-s btn-sm" id="lb">${esc(t('nav.login'))}</button>` : '';
+    slot.innerHTML = S.cfg.telegram_login_enabled ? `<button class="btn-or nav-login-btn" id="lb">${esc(t('nav.login'))}</button>` : '';
     const lb = $('#lb');
     if (lb) lb.onclick = () => {
       openModal(`<button class="modal-x" id="mx"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
