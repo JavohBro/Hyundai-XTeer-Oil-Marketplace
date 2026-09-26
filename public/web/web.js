@@ -113,7 +113,7 @@ function paintStatic() {
   const md = document.querySelector('meta[name="description"]');
   if (md) md.setAttribute('content', t('meta.desc'));
   const L = I18N.LANGS.find(l => l.code === S.lang);
-  $('#lang-btn-flag').textContent = L ? L.flag : '🌐';
+  $('#lang-btn-flag').textContent = '';
   $('#lang-btn-code').textContent = L ? L.code.toUpperCase() : '';
 }
 
@@ -134,7 +134,7 @@ function openLangPicker(force = false) {
       <h2>${I18N.LANGS.map(l => esc(I18N.t(l.code, 'lang.title'))).join(' · ')}</h2>
       <p>${esc(t('lang.sub'))}</p>
       <div class="lang-grid">
-        ${I18N.LANGS.map(l => `<button class="lang-card${S.lang === l.code ? ' on' : ''}" data-lang="${l.code}"><span>${l.flag}</span><span>${esc(l.name)}</span></button>`).join('')}
+        ${I18N.LANGS.map(l => `<button class="lang-card${S.lang === l.code ? ' on' : ''}" data-lang="${l.code}"><span>${esc(l.name)}</span></button>`).join('')}
       </div>
     </div>`, 'lang-modal');
   if (!force) $('#mx').onclick = closeModal;
