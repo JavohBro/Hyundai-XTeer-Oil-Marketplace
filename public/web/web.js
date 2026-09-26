@@ -272,6 +272,22 @@ function homePage() {
     </div>
   </section>
 
+  <section class="lp-partners-sec">
+    <div class="wrap">
+      <div class="lp-cats-hd">
+        <div class="lp-cats-hd-left">
+          <div class="lp-kicker">Our Partners</div>
+          <h2>Brands We Work With</h2>
+          <p>Recognized Korean and global lubricant brands. Availability confirmed per product and destination.</p>
+        </div>
+        <a class="btn-or" href="#/catalog">View All Brands <span class="arr">→</span></a>
+      </div>
+      <div class="lp-partners-grid">
+        ${BRANDS.slice(1).map(b => `<div class="lp-partner-card" data-b="${esc(b.id)}"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></div>`).join('')}
+      </div>
+    </div>
+  </section>
+
   <section class="lp-deliv">
     <div class="wrap">
       <h2 class="lp-h anim">${esc(t('home.deliv_title'))}</h2>
@@ -377,6 +393,7 @@ function homePage() {
   $$('.lp-client').forEach(b => b.onclick = () => goCatalog({ brand: b.dataset.b, cat: 'all' }));
   $$('.lp-bubble').forEach(b => b.onclick = () => goCatalog({ cat: b.dataset.cat, brand: 'all' }));
   $$('.lp-catcard').forEach(c => c.onclick = () => goCatalog({ cat: c.dataset.cat, brand: 'all' }));
+  $$('.lp-partner-card').forEach(c => c.onclick = () => goCatalog({ brand: c.dataset.b, cat: 'all' }));
   $('#lead').onsubmit = async e => {
     e.preventDefault();
     const f = e.target, msg = $('#lead-msg'), phone = f.phone.value.trim();
