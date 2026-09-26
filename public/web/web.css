@@ -947,3 +947,30 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-partner-card:hover img{filter:grayscale(0%)}
 @media(max-width:860px){.lp-partners-grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:560px){.lp-partners-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* ── Logistics section ── */
+.lp-logistics-sec{padding:72px 0;background:#fff;border-top:1px solid #eaedf0}
+.lp-logistics-hd{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:28px}
+.lp-logistics-hd h2{font-size:clamp(24px,2.8vw,38px);font-weight:800;letter-spacing:-.03em;color:#0d1e2e;margin:0 0 14px;line-height:1.15}
+.lp-logistics-hd p{font-size:15px;color:#556;line-height:1.65;margin:0 0 24px}
+.lp-ticks{display:flex;flex-direction:column;gap:8px;margin-top:24px}
+.lp-ticks span{font-size:14px;color:#334;display:flex;align-items:center;gap:8px}
+.lp-logistics-photos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lp-logphoto{border-radius:12px;overflow:hidden;position:relative;aspect-ratio:4/3}
+.lp-logphoto img{width:100%;height:100%;object-fit:cover}
+.lp-logphoto span{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(4,18,34,.75),transparent);color:#fff;font-size:12px;font-weight:700;padding:12px 12px 10px}
+@media(max-width:760px){.lp-logistics-hd{grid-template-columns:1fr}.lp-logistics-photos{grid-template-columns:1fr 1fr}}
+
+/* ── Services section ── */
+.lp-services-sec{padding:72px 0;background:#f7f8fa;border-top:1px solid #eaedf0}
+.lp-services-sec h2{font-size:clamp(24px,2.8vw,38px);font-weight:800;letter-spacing:-.03em;color:#0d1e2e;margin:0 0 10px}
+.lp-services-sec p{font-size:15px;color:#556;line-height:1.65;margin:0}
+.lp-svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.lp-svc{background:#fff;border:1px solid #e8eaed;border-radius:12px;padding:28px 24px;display:flex;flex-direction:column;gap:6px}
+.lp-svc-num{font-size:11px;font-weight:900;letter-spacing:.12em;color:var(--or,#ff571c);text-transform:uppercase}
+.lp-svc h3{font-size:18px;font-weight:800;color:#0d1e2e;margin:4px 0 0}
+.lp-svc h4{font-size:13px;font-weight:600;color:#7a8a9a;margin:0}
+.lp-svc p{font-size:14px;color:#556;line-height:1.6;margin:8px 0 0;flex:1}
+.lp-svc a{font-size:13px;font-weight:700;color:var(--or,#ff571c);text-decoration:none;margin-top:16px}
+.lp-svc a:hover{text-decoration:underline}
+@media(max-width:760px){.lp-svc-grid{grid-template-columns:1fr}}

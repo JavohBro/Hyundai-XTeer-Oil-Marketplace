@@ -306,6 +306,64 @@ function homePage() {
     </div>
   </section>
 
+  <section class="lp-logistics-sec">
+    <div class="wrap">
+      <div class="lp-kicker">Built for Global Distribution</div>
+      <div class="lp-logistics-hd">
+        <div>
+          <h2>Reliable Logistics.<br>Clear Supply Process.</h2>
+          <p>From product selection and documentation to order preparation, loading and agreed delivery.</p>
+          <a class="btn-or" href="#/help">Learn More About Logistics <span class="arr">→</span></a>
+          <div class="lp-ticks">
+            <span>✓ Export-ready documentation</span>
+            <span>✓ Warehouse and loading coordination</span>
+            <span>✓ Partner-aligned delivery support</span>
+            <span>✓ Product and destination confirmation</span>
+          </div>
+        </div>
+        <div class="lp-logistics-photos">
+          <div class="lp-logphoto"><img src="/assets/delivery.jpg" alt="Warehousing"><span>Advanced Warehousing</span></div>
+          <div class="lp-logphoto"><img src="/assets/bg_for.jpg" alt="Global Shipping"><span>Global Shipping</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-services-sec">
+    <div class="wrap">
+      <div class="lp-kicker">Our Services</div>
+      <div class="lp-cats-hd" style="margin-bottom:40px">
+        <div class="lp-cats-hd-left">
+          <h2>Services for Lubricant Businesses</h2>
+          <p>From product sourcing to export coordination, Carmon Oil supports distributors, workshops and international buyers.</p>
+        </div>
+      </div>
+      <div class="lp-svc-grid">
+        <div class="lp-svc">
+          <span class="lp-svc-num">01</span>
+          <h3>Global Export</h3>
+          <h4>Partner Supply</h4>
+          <p>Product sourcing and distribution support for overseas buyers and strategic partners.</p>
+          <a href="#/help">Explore Service <span class="arr">→</span></a>
+        </div>
+        <div class="lp-svc">
+          <span class="lp-svc-num">02</span>
+          <h3>Wholesale Supply</h3>
+          <h4>Distributor Networks</h4>
+          <p>Supply conversations for distributors, workshops, service networks and fleet operators.</p>
+          <a href="#/help">Explore Service <span class="arr">→</span></a>
+        </div>
+        <div class="lp-svc">
+          <span class="lp-svc-num">03</span>
+          <h3>Brand Sourcing</h3>
+          <h4>Recognized Brands</h4>
+          <p>Help finding suitable products from confirmed Korean and global lubricant brands.</p>
+          <a href="#/help">Explore Service <span class="arr">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="delivery-section">
     <div class="delivery-inner">
       <div class="delivery-header anim">
