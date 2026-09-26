@@ -363,6 +363,22 @@ function homePage() {
     </div>
   </section>
 
+  <section class="lp-world-sec">
+    <div class="lp-world-copy">
+      <div class="lp-kicker lp-kicker-or">World-Class Logistics</div>
+      <h2>Export Efficiency</h2>
+      <p>We coordinate the supply chain from product sourcing and order preparation to loading, documentation and agreed delivery.</p>
+      <div class="lp-ticks" style="margin-top:20px">
+        <span>✓ Export-ready documentation</span>
+        <span>✓ Warehouse and loading coordination</span>
+        <span>✓ Partner-aligned delivery support</span>
+      </div>
+    </div>
+    <div class="lp-world-img">
+      <img src="/assets/shipping.png" alt="Export Efficiency">
+    </div>
+  </section>
+
   <section class="delivery-section">
     <div class="delivery-inner">
       <div class="delivery-header anim">

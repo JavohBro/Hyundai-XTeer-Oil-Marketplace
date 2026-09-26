@@ -972,3 +972,13 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-svc a{font-size:13px;font-weight:700;color:var(--or,#ff571c);text-decoration:none;margin-top:16px}
 .lp-svc a:hover{text-decoration:underline}
 @media(max-width:760px){.lp-svc-grid{grid-template-columns:1fr}}
+
+/* ── World-Class Logistics split section ── */
+.lp-world-sec{display:grid;grid-template-columns:1fr 1fr;min-height:420px;background:#061523}
+.lp-world-copy{padding:72px max(40px,calc((100vw - 1240px)/2 + 40px));display:flex;flex-direction:column;justify-content:center;color:#fff}
+.lp-world-copy h2{font-size:clamp(28px,3vw,44px);font-weight:800;letter-spacing:-.03em;margin:12px 0 16px;color:#fff}
+.lp-world-copy p{font-size:15px;color:#b9c8d4;line-height:1.7;margin:0;max-width:46ch}
+.lp-world-copy .lp-ticks span{color:#b9c8d4;font-size:14px}
+.lp-world-img{overflow:hidden}
+.lp-world-img img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:760px){.lp-world-sec{grid-template-columns:1fr}.lp-world-copy{padding:48px 20px}.lp-world-img{aspect-ratio:16/9}}
