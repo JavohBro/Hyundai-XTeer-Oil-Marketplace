@@ -249,23 +249,23 @@ function homePage() {
       </div>
       <div class="lp-catgrid">
         <div class="lp-catcard" data-cat="passenger">
-          <div class="lp-catcard-top" style="background:linear-gradient(145deg,#1a2f45,#0d1e2e)">PASSENGER CAR<br>ENGINE OILS</div>
+          <div class="lp-catcard-top" style="background:#0d1e2e url('/assets/passenger_oil.jpg') center/cover no-repeat"><span>PASSENGER CAR<br>ENGINE OILS</span></div>
           <div class="lp-catcard-body"><h3>Passenger Car Oils</h3><p>Maximum engine and fuel efficiency.</p></div>
         </div>
         <div class="lp-catcard" data-cat="heavy">
-          <div class="lp-catcard-top" style="background:linear-gradient(145deg,#223348,#121f2c)">HEAVY-DUTY<br>DIESEL</div>
+          <div class="lp-catcard-top" style="background:#121f2c url('/assets/heavy_duty.jpg') center/cover no-repeat"><span>HEAVY-DUTY<br>DIESEL</span></div>
           <div class="lp-catcard-body"><h3>Heavy-Duty Diesel Oils</h3><p>Engineered for durability and performance.</p></div>
         </div>
         <div class="lp-catcard" data-cat="transmission">
-          <div class="lp-catcard-top" style="background:linear-gradient(145deg,#1d3d58,#0f2438)">TRANSMISSION<br>FLUIDS</div>
+          <div class="lp-catcard-top" style="background:#0f2438 url('/assets/transmission.jpg') center/cover no-repeat"><span>TRANSMISSION<br>FLUIDS</span></div>
           <div class="lp-catcard-body"><h3>Transmission Fluids</h3><p>Advanced protection for smooth operation.</p></div>
         </div>
         <div class="lp-catcard" data-cat="grease">
-          <div class="lp-catcard-top" style="background:linear-gradient(145deg,#2a3020,#181c10)">GREASE &<br>HYDRAULICS</div>
+          <div class="lp-catcard-top" style="background:#181c10 url('/assets/hydrolic.jpg') center/cover no-repeat"><span>GREASE &<br>HYDRAULICS</span></div>
           <div class="lp-catcard-body"><h3>Grease &amp; Hydraulics</h3><p>Chassis and hydraulic lubrication.</p></div>
         </div>
         <div class="lp-catcard" data-cat="others">
-          <div class="lp-catcard-top" style="background:linear-gradient(145deg,#3a2e1a,#1e1a0e)">INDUSTRIAL<br>OILS</div>
+          <div class="lp-catcard-top" style="background:#1e1a0e url('/assets/industrial.jpg') center/cover no-repeat"><span>INDUSTRIAL<br>OILS</span></div>
           <div class="lp-catcard-body"><h3>Industrial Oils</h3><p>Reliable lubrication for industrial applications.</p></div>
         </div>
       </div>
