@@ -179,6 +179,31 @@ async function processUploads(files) {
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(express.json());
+
+// Security headers on every response
+app.use((_req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
+
+// Simple in-memory rate limiter: max requests per IP per window
+function rateLimiter(maxReqs, windowMs) {
+  const hits = new Map();
+  return (req, res, next) => {
+    const key = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+    const now = Date.now();
+    const entry = hits.get(key) || { count: 0, start: now };
+    if (now - entry.start > windowMs) { entry.count = 0; entry.start = now; }
+    entry.count++;
+    hits.set(key, entry);
+    if (entry.count > maxReqs) return res.status(429).json({ error: 'Too many requests' });
+    next();
+  };
+}
+const orderRateLimit = rateLimiter(10, 60_000); // 10 orders/min per IP
 // Shared assets, reachable from both surfaces regardless of layout
 app.use('/uploads', express.static(uploadsDir, { maxAge: '1y', immutable: true }));
 app.use('/assets',  express.static(path.join(__dirname, 'assets')));
@@ -543,7 +568,7 @@ function formatOrderText(order, profile, items, currency, orderId, lang = 'ru', 
   return { lines, total, tbd };
 }
 
-app.post('/api/orders', optionalAuth, async (req, res) => {
+app.post('/api/orders', orderRateLimit, optionalAuth, async (req, res) => {
   const u = req.tgUser;
   const { items, notes, guest } = req.body;
 
@@ -671,7 +696,8 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
 // ─── Call-back requests from the landing page ────────────────────────────────
 // One request per phone number per 10 minutes keeps a stuck button from spamming admins.
 const leadSeen = new Map();
-app.post('/api/lead', async (req, res) => {
+const leadRateLimit = rateLimiter(5, 60_000); // 5 lead submissions/min per IP
+app.post('/api/lead', leadRateLimit, async (req, res) => {
   const contact = String(req.body?.contact || req.body?.phone || '').trim();
   const company = String(req.body?.company || '').trim();
   const country = String(req.body?.country || '').trim();

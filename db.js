@@ -10,6 +10,8 @@ if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 const db = new Database(path.join(DATA_DIR, 'oil_bot.db'));
 
 db.exec(`PRAGMA journal_mode=WAL;`);
+db.pragma('busy_timeout = 5000');   // queue writes instead of throwing "locked"
+db.pragma('synchronous = NORMAL');  // safe with WAL, faster than FULL
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
