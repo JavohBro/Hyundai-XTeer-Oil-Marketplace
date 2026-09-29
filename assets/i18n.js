@@ -1,5 +1,5 @@
 // ═══ Carmon Oil — translations (shared by bot, website and Mini App) ═══
-// UMD: `require('./assets/i18n')` in Node, `window.I18N` in the browser.
+// UMD: `require('.assets/i18n')` in Node, `window.I18N` in the browser.
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory();
   else root.I18N = factory();
@@ -11,7 +11,7 @@
     { code: 'en', flag: '🇬🇧', name: 'English',   locale: 'en-GB' },
     { code: 'ko', flag: '🇰🇷', name: '한국어',     locale: 'ko-KR' },
   ];
-  const DEFAULT = 'ru';
+  const DEFAULT = 'en';
 
   // Fixed category keys (stored as-is in products.category), in display order.
   const CATS = [
@@ -86,7 +86,7 @@
       'faq.q2': 'Как быстро доставят заказ?', 'faq.a2': 'По Ташкенту — 1–2 рабочих дня. По регионам Узбекистана — 3–5 дней. Другие страны СНГ — уточняйте у менеджера.',
       'faq.q3': 'Как оплатить заказ?', 'faq.a3': 'Оплата при получении. Также возможна предоплата — уточните при подтверждении заказа.',
       'faq.q4': 'Можно ли вернуть товар?', 'faq.a4': 'Возврат возможен в течение 7 дней при сохранении оригинальной упаковки. Свяжитесь с нами в Telegram.',
-      'faq.q5': 'В какие страны доставляете?', 'faq.a5': 'Узбекистан, Кыргызстан, Казахстан, Россия и другие страны СНГ. Уточните доставку в вашу страну через @r1m_nightrider.',
+      'faq.q5': 'В какие страны доставляете?', 'faq.a5': 'Узбекистан, Кыргызстан, Казахстан, Россия и другие страны СНГ. Уточните доставку в вашу страну через @carmon_oil_admin.',
       'faq.q6': 'Нужен ли Telegram для заказа?', 'faq.a6': 'Нет. Вы можете оформить заказ как гость — достаточно имени, телефона и адреса. Вход через Telegram даёт историю заказов и уведомления о статусе.',
       'profile.title': 'Профиль', 'profile.user': 'Пользователь', 'profile.name': 'ФИО *', 'profile.phone': 'Номер телефона *', 'profile.city': 'Город / Регион *', 'profile.address': 'Адрес доставки *',
       'profile.name_ph': 'Иванов Иван Иванович', 'profile.phone_ph': '+998 90 123 45 67', 'profile.city_ph': 'Ташкент', 'profile.addr_ph': 'ул. Амира Темура, д. 1, кв. 5',
@@ -124,7 +124,7 @@
       'home.hero_title': 'Оригинальные масла<br>из Кореи — по всей Центральной Азии.',
       'home.hero_sub': 'Прямые поставки Kixx, Hyundai XTeer, SK ZIC, Castrol, Shell и других брендов со склада в Южной Корее. Быстро, надёжно, без подделок.',
       'home.hero_cta': 'Смотреть каталог', 'home.hero_tg': 'Написать в Telegram', 'home.clients': 'Бренды, которые мы поставляем',
-      'home.deliv_title': 'Избранные продукты', 'home.deliv_sub': 'Собственный склад в Гояне и отлаженная логистика: заказ уходит в путь в день подтверждения.',
+      'home.deliv_title': 'Избранные продукты', 'home.deliv_sub': 'Собственный склад в Инчхоне и понятный процесс поставки: маршрут согласовывается под каждый запрос.',
       'home.stat_brands': 'брендов', 'home.stat_countries': 'страны доставки', 'home.stat_since': 'Корея, Гоян',
       'home.explore': 'Перейти в каталог',
       'home.prod_title': 'Масла для любых<br>задач', 'home.prod_sub': 'Легковые и грузовые, трансмиссионные, тормозные, смазки и гидравлика — выберите категорию и откройте подходящие продукты.',
@@ -150,7 +150,7 @@
       'bot.st_confirmed': '✅ Ваш заказ подтверждён! Готовим к отправке.', 'bot.st_shipped': '🚚 Ваш заказ отправлен и в пути!',
       'bot.st_delivered': '🎉 Заказ доставлен. Спасибо за покупку!', 'bot.st_cancelled': '❌ Заказ отменён. Свяжитесь с нами для уточнения.',
       'bot.accepted': '✅ <b>Заказ #{id} подтверждён!</b>\n\nСкоро свяжемся с вами для уточнения доставки.',
-      'bot.cancelled': '❌ <b>Заказ #{id} отменён.</b>\n\nСвяжитесь с нами: @r1m_nightrider или +82 10 3768 2270',
+      'bot.cancelled': '❌ <b>Заказ #{id} отменён.</b>\n\nСвяжитесь с нами: @carmon_oil_admin или +82 10-3768-2270',
     },
 
     // ───────────────────────────── UZ ─────────────────────────────
@@ -166,8 +166,8 @@
       'hero.cta': 'Katalogni ko‘rish', 'hero.tg': 'Mutaxassisga yozish',
       'brands.label': 'Biz yetakchi Koreya brendlari bilan ishlaymiz',
       'about.tag': 'Kompaniya haqida', 'about.title': 'Biz moyni to‘g‘ridan-to‘g‘ri<br>Koreyaning yuragidan olib kelamiz.',
-      'about.lead': 'Carmon Lubricants Janubiy Koreyaning Goyang shahrida joylashgan — Hyundai XTeer, SK ZIC, Kixx va boshqa yetakchi brendlarning moylarini ishlab chiqaradigan zavodlardan bir necha kilometr narida. Biz vositachi emasmiz: mahsulotni o‘zimiz tanlaymiz, sertifikatlarni tekshiramiz va MDH davlatlariga to‘g‘ridan-to‘g‘ri jo‘natamiz. Ortiqcha ustama va soxta mahsulotlarsiz.',
-      'about.f1': 'brend', 'about.f2': 'Koreya, Goyang', 'about.f3n': 'MDH', 'about.f3': 'yetkazib berish',
+      'about.lead': 'Carmon Lubricants Janubiy Koreyaning Incheon shahrida joylashgan — Hyundai XTeer, SK ZIC, Kixx va boshqa yetakchi brendlarning moylarini ishlab chiqaradigan zavodlardan bir necha kilometr narida. Biz vositachi emasmiz: mahsulotni o‘zimiz tanlaymiz, sertifikatlarni tekshiramiz va MDH davlatlariga to‘g‘ridan-to‘g‘ri jo‘natamiz. Ortiqcha ustama va soxta mahsulotlarsiz.',
+      'about.f1': 'brend', 'about.f2': 'Koreya, Incheon', 'about.f3n': 'MDH', 'about.f3': 'yetkazib berish',
       'delivery.label': 'Yetkazib berish hududi', 'delivery.title': 'MDH davlatlariga yetkazib beramiz',
       'country.uz': 'O‘zbekiston', 'country.kg': 'Qirg‘iziston', 'country.kz': 'Qozog‘iston', 'country.ru': 'Rossiya',
       'country.tm': 'Turkmaniston', 'country.az': 'Ozarbayjon', 'country.ly': 'Liviya', 'country.vn': 'Vyetnam', 'country.th': 'Tailand', 'country.ge': 'Gruziya',
@@ -213,7 +213,7 @@
       'faq.q2': 'Buyurtma qancha vaqtda yetkaziladi?', 'faq.a2': 'Toshkent bo‘ylab — 1–2 ish kuni. O‘zbekiston viloyatlariga — 3–5 kun. Boshqa MDH davlatlari — menejerdan aniqlashtiring.',
       'faq.q3': 'Buyurtmani qanday to‘lash mumkin?', 'faq.a3': 'Qabul qilishda to‘lov. Oldindan to‘lov ham mumkin — buyurtmani tasdiqlashda aniqlashtiring.',
       'faq.q4': 'Mahsulotni qaytarish mumkinmi?', 'faq.a4': 'Asl qadoq saqlangan holda 7 kun ichida qaytarish mumkin. Biz bilan Telegram orqali bog‘laning.',
-      'faq.q5': 'Qaysi davlatlarga yetkazib berasiz?', 'faq.a5': 'O‘zbekiston, Qirg‘iziston, Qozog‘iston, Rossiya va boshqa MDH davlatlari. Mamlakatingizga yetkazib berishni @r1m_nightrider orqali aniqlashtiring.',
+      'faq.q5': 'Qaysi davlatlarga yetkazib berasiz?', 'faq.a5': 'O‘zbekiston, Qirg‘iziston, Qozog‘iston, Rossiya va boshqa MDH davlatlari. Mamlakatingizga yetkazib berishni @carmon_oil_admin orqali aniqlashtiring.',
       'faq.q6': 'Buyurtma uchun Telegram kerakmi?', 'faq.a6': 'Yo‘q. Mehmon sifatida buyurtma berishingiz mumkin — ism, telefon va manzil kifoya. Telegram orqali kirish buyurtmalar tarixi va holat bildirishnomalarini beradi.',
       'profile.title': 'Profil', 'profile.user': 'Foydalanuvchi', 'profile.name': 'F.I.Sh. *', 'profile.phone': 'Telefon raqami *', 'profile.city': 'Shahar / Viloyat *', 'profile.address': 'Yetkazib berish manzili *',
       'profile.name_ph': 'Aliyev Ali Alievich', 'profile.phone_ph': '+998 90 123 45 67', 'profile.city_ph': 'Toshkent', 'profile.addr_ph': 'Amir Temur ko‘chasi, 1-uy, 5-xonadon',
@@ -250,8 +250,8 @@
       'home.hero_title': 'Koreyadan original moylar —<br>butun Markaziy Osiyo bo‘ylab.',
       'home.hero_sub': 'Kixx, Hyundai XTeer, SK ZIC, Castrol, Shell va boshqa brendlarni Janubiy Koreyadagi omborimizdan to‘g‘ridan-to‘g‘ri yetkazib beramiz. Tez, ishonchli, soxtasiz.',
       'home.hero_cta': 'Katalogni ko‘rish', 'home.hero_tg': 'Telegramda yozish', 'home.clients': 'Biz yetkazib beradigan brendlar',
-      'home.deliv_title': 'Tanlangan mahsulotlar', 'home.deliv_sub': 'Goyangdagi o‘z omborimiz va yo‘lga qo‘yilgan logistika: buyurtma tasdiqlangan kuniyoq yo‘lga chiqadi.',
-      'home.stat_brands': 'brend', 'home.stat_countries': 'davlatga yetkazish', 'home.stat_since': 'Koreya, Goyang',
+      'home.deliv_title': 'Tanlangan mahsulotlar', 'home.deliv_sub': 'Incheondagi o‘z omborimiz va yo‘lga qo‘yilgan logistika: buyurtma tasdiqlangan kuniyoq yo‘lga chiqadi.',
+      'home.stat_brands': 'brend', 'home.stat_countries': 'davlatga yetkazish', 'home.stat_since': 'Koreya, Incheon',
       'home.explore': 'Katalogga o‘tish',
       'home.prod_title': 'Har qanday vazifa<br>uchun moylar', 'home.prod_sub': 'Yengil va yuk avtomobillari, transmissiya, tormoz, konsistent va gidravlik moylar — toifani tanlang va mos mahsulotlarni oching.',
       'home.testi_title': 'Fikrlar', 'home.testi_sub': 'Mijozlarimiz nima deydi',
@@ -275,7 +275,7 @@
       'bot.st_confirmed': '✅ Buyurtmangiz tasdiqlandi! Jo‘natishga tayyorlamoqdamiz.', 'bot.st_shipped': '🚚 Buyurtmangiz jo‘natildi va yo‘lda!',
       'bot.st_delivered': '🎉 Buyurtma yetkazildi. Xaridingiz uchun rahmat!', 'bot.st_cancelled': '❌ Buyurtma bekor qilindi. Aniqlashtirish uchun biz bilan bog‘laning.',
       'bot.accepted': '✅ <b>Buyurtma #{id} tasdiqlandi!</b>\n\nYetkazib berishni aniqlashtirish uchun tez orada bog‘lanamiz.',
-      'bot.cancelled': '❌ <b>Buyurtma #{id} bekor qilindi.</b>\n\nBiz bilan bog‘laning: @r1m_nightrider yoki +82 10 3768 2270',
+      'bot.cancelled': '❌ <b>Buyurtma #{id} bekor qilindi.</b>\n\nBiz bilan bog‘laning: @carmon_oil_admin yoki +82 10-3768-2270',
     },
 
     // ───────────────────────────── EN ─────────────────────────────
@@ -291,8 +291,8 @@
       'hero.cta': 'Browse catalog', 'hero.tg': 'Ask an expert',
       'brands.label': 'We work with Korea’s leading brands',
       'about.tag': 'About us', 'about.title': 'We bring oil straight<br>from the heart of Korea.',
-      'about.lead': 'Carmon Lubricants is based in Goyang, South Korea — a few kilometres from the plants that produce Hyundai XTeer, SK ZIC, Kixx and other leading brands. We are not middlemen: we select the products ourselves, verify the certificates and ship directly to the CIS. No extra markups, no fakes.',
-      'about.f1': 'brands', 'about.f2': 'Goyang, Korea', 'about.f3n': 'CIS', 'about.f3': 'delivery',
+      'about.lead': 'Carmon Lubricants is based in Incheon, South Korea — a few kilometres from the plants that produce Hyundai XTeer, SK ZIC, Kixx and other leading brands. We are not middlemen: we select the products ourselves, verify the certificates and ship directly to the CIS. No extra markups, no fakes.',
+      'about.f1': 'brands', 'about.f2': 'Incheon, Korea', 'about.f3n': 'CIS', 'about.f3': 'delivery',
       'delivery.label': 'Delivery area', 'delivery.title': 'We deliver across the CIS',
       'country.uz': 'Uzbekistan', 'country.kg': 'Kyrgyzstan', 'country.kz': 'Kazakhstan', 'country.ru': 'Russia',
       'country.tm': 'Turkmenistan', 'country.az': 'Azerbaijan', 'country.ly': 'Libya', 'country.vn': 'Vietnam', 'country.th': 'Thailand', 'country.ge': 'Georgia',
@@ -338,7 +338,7 @@
       'faq.q2': 'How fast is delivery?', 'faq.a2': 'Tashkent — 1–2 business days. Regions of Uzbekistan — 3–5 days. Other CIS countries — ask our manager.',
       'faq.q3': 'How do I pay?', 'faq.a3': 'Cash on delivery. Prepayment is also possible — confirm when your order is approved.',
       'faq.q4': 'Can I return a product?', 'faq.a4': 'Returns are accepted within 7 days in the original packaging. Contact us on Telegram.',
-      'faq.q5': 'Which countries do you deliver to?', 'faq.a5': 'Uzbekistan, Kyrgyzstan, Kazakhstan, Russia and other CIS countries. Check delivery to your country via @r1m_nightrider.',
+      'faq.q5': 'Which countries do you deliver to?', 'faq.a5': 'Uzbekistan, Kyrgyzstan, Kazakhstan, Russia and other CIS countries. Check delivery to your country via @carmon_oil_admin.',
       'faq.q6': 'Do I need Telegram to order?', 'faq.a6': 'No. You can order as a guest — just your name, phone and address. Logging in with Telegram adds order history and status notifications.',
       'profile.title': 'Profile', 'profile.user': 'User', 'profile.name': 'Full name *', 'profile.phone': 'Phone number *', 'profile.city': 'City / Region *', 'profile.address': 'Delivery address *',
       'profile.name_ph': 'John Smith', 'profile.phone_ph': '+998 90 123 45 67', 'profile.city_ph': 'Tashkent', 'profile.addr_ph': '1 Amir Temur St., apt. 5',
@@ -372,11 +372,11 @@
       'footer.connect': 'Connect', 'footer.demo': 'Demo concept.', 'footer.privacy': 'Privacy Policy',
       'tg.float': 'Message on Telegram',
       'nav.home': 'Home',
-      'home.hero_title': 'Genuine Korean oils —<br>delivered across Central Asia.',
+      'home.hero_title': 'Premium Korean Engine Oil<br>Powering Performance Across Central Asia',
       'home.hero_sub': 'Direct supply of Kixx, Hyundai XTeer, SK ZIC, Castrol, Shell and more from our warehouse in South Korea. Fast, reliable, no fakes.',
       'home.hero_cta': 'Explore Products', 'home.hero_tg': 'For Business & Export', 'home.clients': 'Brands we supply',
-      'home.deliv_title': 'Featured products', 'home.deliv_sub': 'Our own warehouse in Goyang and a proven logistics chain: orders ship the day they are confirmed.',
-      'home.stat_brands': 'brands', 'home.stat_countries': 'delivery countries', 'home.stat_since': 'Goyang, Korea',
+      'home.deliv_title': 'Featured products', 'home.deliv_sub': 'Our own warehouse in Incheon and a proven logistics chain: orders ship the day they are confirmed.',
+      'home.stat_brands': 'brands', 'home.stat_countries': 'delivery countries', 'home.stat_since': 'Incheon, Korea',
       'home.explore': 'Go to catalog',
       'home.prod_title': 'Oils for every<br>job', 'home.prod_sub': 'Passenger and heavy duty, transmission, brake, grease and hydraulic — pick a category to open the matching products.',
       'home.testi_title': 'Testimonials', 'home.testi_sub': 'What our customers say',
@@ -400,7 +400,7 @@
       'bot.st_confirmed': '✅ Your order is confirmed! Preparing for shipment.', 'bot.st_shipped': '🚚 Your order has been shipped and is on its way!',
       'bot.st_delivered': '🎉 Order delivered. Thank you for your purchase!', 'bot.st_cancelled': '❌ Order cancelled. Contact us for details.',
       'bot.accepted': '✅ <b>Order #{id} confirmed!</b>\n\nWe will contact you shortly to arrange delivery.',
-      'bot.cancelled': '❌ <b>Order #{id} cancelled.</b>\n\nContact us: @r1m_nightrider or +82 10 3768 2270',
+      'bot.cancelled': '❌ <b>Order #{id} cancelled.</b>\n\nContact us: @carmon_oil_admin or +82 10-3768-2270',
     },
 
     // ───────────────────────────── KO ─────────────────────────────
@@ -417,7 +417,7 @@
       'brands.label': '한국의 선도 브랜드와 함께합니다',
       'about.tag': '회사 소개', 'about.title': '한국의 심장부에서<br>오일을 직접 가져옵니다.',
       'about.lead': 'Carmon Lubricants는 대한민국 고양시에 위치하며, Hyundai XTeer, SK ZIC, Kixx 등 선도 브랜드의 오일을 생산하는 공장에서 불과 몇 킬로미터 떨어져 있습니다. 우리는 중개업체가 아닙니다. 직접 제품을 선별하고 인증서를 확인한 뒤 CIS 국가로 곧바로 발송합니다. 불필요한 마진도, 가품도 없습니다.',
-      'about.f1': '브랜드', 'about.f2': '대한민국 고양', 'about.f3n': 'CIS', 'about.f3': '배송',
+      'about.f1': '브랜드', 'about.f2': '대한민국 인천', 'about.f3n': 'CIS', 'about.f3': '배송',
       'delivery.label': '배송 지역', 'delivery.title': 'CIS 국가로 배송합니다',
       'country.uz': '우즈베키스탄', 'country.kg': '키르기스스탄', 'country.kz': '카자흐스탄', 'country.ru': '러시아',
       'country.tm': '투르크메니스탄', 'country.az': '아제르바이잔', 'country.ly': '리비아', 'country.vn': '베트남', 'country.th': '태국', 'country.ge': '조지아',
@@ -463,7 +463,7 @@
       'faq.q2': '배송은 얼마나 걸리나요?', 'faq.a2': '타슈켄트 — 영업일 1~2일. 우즈베키스탄 지방 — 3~5일. 기타 CIS 국가 — 담당자에게 문의하세요.',
       'faq.q3': '결제는 어떻게 하나요?', 'faq.a3': '수령 시 결제. 선결제도 가능합니다 — 주문 확인 시 문의하세요.',
       'faq.q4': '반품이 가능한가요?', 'faq.a4': '원래 포장이 보존된 경우 7일 이내 반품 가능합니다. Telegram으로 문의하세요.',
-      'faq.q5': '어느 국가로 배송하나요?', 'faq.a5': '우즈베키스탄, 키르기스스탄, 카자흐스탄, 러시아 및 기타 CIS 국가. 해당 국가 배송 여부는 @r1m_nightrider로 문의하세요.',
+      'faq.q5': '어느 국가로 배송하나요?', 'faq.a5': '우즈베키스탄, 키르기스스탄, 카자흐스탄, 러시아 및 기타 CIS 국가. 해당 국가 배송 여부는 @carmon_oil_admin로 문의하세요.',
       'faq.q6': '주문에 Telegram이 필요한가요?', 'faq.a6': '아니요. 이름, 전화번호, 주소만으로 비회원 주문이 가능합니다. Telegram 로그인 시 주문 내역과 상태 알림을 이용할 수 있습니다.',
       'profile.title': '프로필', 'profile.user': '사용자', 'profile.name': '성명 *', 'profile.phone': '전화번호 *', 'profile.city': '도시 / 지역 *', 'profile.address': '배송 주소 *',
       'profile.name_ph': '홍길동', 'profile.phone_ph': '+998 90 123 45 67', 'profile.city_ph': '타슈켄트', 'profile.addr_ph': 'Amir Temur 거리 1, 5호',
@@ -525,7 +525,7 @@
       'bot.st_confirmed': '✅ 주문이 확인되었습니다! 발송을 준비 중입니다.', 'bot.st_shipped': '🚚 주문이 발송되어 배송 중입니다!',
       'bot.st_delivered': '🎉 배송이 완료되었습니다. 구매해 주셔서 감사합니다!', 'bot.st_cancelled': '❌ 주문이 취소되었습니다. 자세한 내용은 문의해 주세요.',
       'bot.accepted': '✅ <b>주문 #{id} 확인됨!</b>\n\n배송 조율을 위해 곧 연락드리겠습니다.',
-      'bot.cancelled': '❌ <b>주문 #{id} 취소됨.</b>\n\n문의: @r1m_nightrider 또는 +82 10 3768 2270',
+      'bot.cancelled': '❌ <b>주문 #{id} 취소됨.</b>\n\n문의: @carmon_oil_admin 또는 +82 10-3768-2270',
     },
   };
 

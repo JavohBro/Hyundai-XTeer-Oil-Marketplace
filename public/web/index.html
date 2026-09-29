@@ -1,110 +1,102 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carmon Oil — оригинальное масло из Кореи</title>
-<meta name="description" content="Carmon Oil — оригинальные масла Kixx, Hyundai XTeer, SK ZIC, Castrol, S-OIL, Shell, SpeedMate, Mobil, Autous из Южной Кореи. Доставка по Узбекистану и странам СНГ.">
-<link rel="icon" href="/assets/shortlogo.png">
+<title>Carmon Oil - Premium Korean Lubricants</title>
+<meta name="description" content="Carmon Oil supplies selected Korean and global lubricant brands with inquiry-led product selection and export support.">
+<link rel="icon" href="assets/shortlogo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="web.css">
+<link rel="stylesheet" href="web.css?v=202609291455">
 </head>
 <body>
-
 <header id="hdr">
   <div class="hdr-inner">
-    <a class="brand" href="#/" aria-label="Carmon Oil">
-      <span class="brand-word">CARMON <span>OIL</span></span>
-    </a>
-
+    <a class="brand" href="#/" aria-label="Carmon Oil"><span class="brand-word">CARMON <span>OIL</span></span></a>
     <nav class="hdr-nav" id="hdr-nav">
-      <a href="#/" data-route="home" data-i18n="nav.home">Главная</a>
-      <a href="#/catalog" data-route="catalog" data-i18n="nav.catalog">Каталог</a>
-      <a href="#/orders" data-route="orders" data-i18n="nav.orders">Заказы</a>
-      <a href="#/help" data-route="help" data-i18n="nav.help">Помощь</a>
-      <a href="#/admin" data-route="admin" id="nav-admin" data-i18n="nav.admin" hidden>Админ</a>
+      <a href="#/" data-route="home">Home</a>
+      <div class="nav-menu" data-nav-menu="products">
+        <button class="nav-menu-trigger" type="button" aria-expanded="false" data-route="products">Products <span class="nav-chevron">v</span></button>
+        <div class="nav-menu-panel" role="menu">
+          <a href="#/catalog?cat=passenger" data-route="catalog">Passenger Oil</a>
+          <a href="#/catalog?cat=heavy" data-route="catalog">Heavy-Duty Oil</a>
+          <a href="#/catalog?cat=transmission" data-route="catalog">Transmission Oil</a>
+          <a href="#/catalog?cat=others" data-route="catalog">Other Oils</a>
+        </div>
+      </div>
+      <div class="nav-menu" data-nav-menu="brands">
+        <button class="nav-menu-trigger" type="button" aria-expanded="false" data-route="brands">Brands <span class="nav-chevron">v</span></button>
+        <div class="nav-menu-panel nav-menu-panel--brands" role="menu">
+          <a class="nav-menu-feature" href="#/compare-brands" data-route="compare-brands">Compare Brands</a>
+          <a href="#/brand/Kixx" data-route="brand">Kixx</a>
+          <a href="#/brand/Hyundai%20XTeer" data-route="brand">Hyundai XTeer</a>
+          <a href="#/brand/SK%20ZIC" data-route="brand">SK ZIC</a>
+          <a href="#/brand/Castrol" data-route="brand">Castrol</a>
+          <a href="#/brand/S-OIL" data-route="brand">S-OIL</a>
+          <a href="#/brand/Shell" data-route="brand">Shell</a>
+          <a href="#/brand/SpeedMate" data-route="brand">SpeedMate</a>
+          <a href="#/brand/Mobil" data-route="brand">Mobil</a>
+          <a href="#/brand/Autous" data-route="brand">Autous</a>
+          <a href="#/brand/Hyundai%20Mobis" data-route="brand">Hyundai Mobis</a>
+        </div>
+      </div>
+      <a href="#/logistics" data-route="logistics">Logistics</a>
+      <a href="#/business" data-route="business">For Business</a>
+      <a href="#/presentation" data-route="presentation">Presentation</a>
+      <a href="#/admin" data-route="admin" id="nav-admin" data-i18n="nav.admin" hidden>Admin</a>
     </nav>
-
     <div class="hdr-actions">
-      <button class="lang-btn" id="lang-btn" aria-label="Language"><span id="lang-btn-flag">🌐</span><span id="lang-btn-code"></span></button>
-      <button class="icon-action" id="btn-cart" aria-label="Cart">
-        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
-        <span class="cart-count hidden" id="cart-count">0</span>
-      </button>
+      <button class="lang-btn" id="lang-btn" aria-label="Language"><span id="lang-btn-flag">EN</span><span id="lang-btn-code"></span></button>
       <div id="auth-slot"></div>
-      <button class="icon-action mobile-only" id="btn-menu" aria-label="Menu">
-        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
+      <a class="header-quote-btn" href="#/business">Request a Quote</a>
+      <button class="icon-action mobile-only" id="btn-menu" aria-label="Menu"><svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
   </div>
 </header>
-
 <main id="main"></main>
-
 <footer id="ftr">
   <div class="ftr-inner ftr-inner4">
     <div class="ftr-about">
       <div class="ftr-wordmark">CARMON <span>OIL</span></div>
-      <p class="ftr-note" data-i18n="footer.about2">Lubricant solutions for vehicles, equipment, workshops and industrial customers.</p>
-      <span class="ftr-line">South Korea, Goyang</span>
-      <span class="ftr-line">09:00–17:00</span>
+      <p class="ftr-note" data-i18n="footer.about2">Selected lubricant brands from Korea for vehicles, equipment, workshops and industrial customers.</p>
+      <span class="ftr-line">Incheon, South Korea</span>
+      <span class="ftr-line">09:00-17:00</span>
     </div>
     <div>
-      <div class="ftr-h" data-i18n="footer.products">Продукты</div>
-      <a href="#/catalog" data-i18n="cat.passenger">Легковые масла</a>
-      <a href="#/catalog" data-i18n="cat.heavy">Тяжёлый дизель</a>
-      <a href="#/catalog" data-i18n="cat.transmission">Трансмиссионные жидкости</a>
-      <a href="#/catalog" data-i18n="cat.others">Промышленные масла</a>
-      <a href="#/catalog" data-i18n="footer.techcat">Технический каталог</a>
-      <a href="#/catalog" data-i18n="footer.production">Каталог производства</a>
+      <div class="ftr-h" data-i18n="footer.products">Products</div>
+      <a href="#/catalog?cat=passenger" data-i18n="cat.passenger">Passenger oil</a>
+      <a href="#/catalog?cat=heavy" data-i18n="cat.heavy">Heavy duty oil</a>
+      <a href="#/catalog?cat=transmission" data-i18n="cat.transmission">Transmission oil</a>
+      <a href="#/catalog?cat=others" data-i18n="cat.others">Other oils</a>
+      <a href="#/catalog" data-i18n="footer.techcat">Technical Catalog</a>
+      <a href="#/catalog" data-i18n="footer.production">Production Catalogue</a>
     </div>
     <div>
-      <div class="ftr-h" data-i18n="footer.company">Компания</div>
-      <a href="#/catalog" data-i18n="footer.brands">Бренды</a>
-      <a href="#/help" data-i18n="footer.logistics">Логистика</a>
-      <a href="#/help" data-i18n="footer.forbiz">Для бизнеса</a>
-      <a href="#/help" data-i18n="footer.resources">Материалы</a>
-      <a href="#/help" data-i18n="footer.contact">Контакты</a>
+      <div class="ftr-h" data-i18n="footer.company">Company</div>
+      <a href="#/compare-brands" data-i18n="footer.brands">Brands</a>
+      <a href="#/logistics" data-i18n="footer.logistics">Logistics</a>
+      <a href="#/business" data-i18n="footer.forbiz">For Business</a>
+      <a href="#/article/viscosity" data-i18n="footer.resources">Resources</a>
+      <a href="#/business" data-i18n="footer.contact">Contact</a>
     </div>
     <div>
-      <div class="ftr-h" data-i18n="footer.connect">Связаться</div>
-      <a href="tel:+821037682270">+82 10 3768 2270</a>
-      <a href="mailto:islombeksoyibboyev@gmail.com">islombeksoyibboyev@gmail.com</a>
-      <a href="https://t.me/r1m_nightrider" target="_blank" rel="noopener">Telegram: @r1m_nightrider</a>
+      <div class="ftr-h" data-i18n="footer.connect">Connect</div>
+      <a href="tel:+821037682270">+82 10-3768-2270</a>
+      <a href="mailto:carmon1lubricants@gmail.com">carmon1lubricants@gmail.com</a>
+      <a href="https://t.me/carmon_oil_admin" target="_blank" rel="noopener">Telegram: @carmon_oil_admin</a>
     </div>
   </div>
-  <div class="ftr-base"><span>© <span id="yr"></span> Carmon Oil. <span data-i18n="footer.demo">Демо-концепт.</span></span><span><a href="#/help" data-i18n="footer.privacy">Политика конфиденциальности</a></span></div>
+  <div class="ftr-base"><span>(c) <span id="yr"></span> Carmon Oil. <span data-i18n="footer.demo">Demo concept.</span></span><span><a href="#/business" data-i18n="footer.privacy">Privacy Policy</a></span></div>
 </footer>
-
-<!-- Cart drawer -->
 <div class="scrim hidden" id="scrim"></div>
-<aside class="drawer hidden" id="drawer" aria-label="Cart">
-  <div class="drawer-head">
-    <h2 id="drawer-title">Корзина</h2>
-    <button class="icon-action" id="drawer-close" aria-label="Close">
-      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
-  <div class="drawer-body" id="drawer-body"></div>
-  <div class="drawer-foot" id="drawer-foot"></div>
-</aside>
-
-<!-- Modal -->
-<div class="modal hidden" id="modal">
-  <div class="modal-card" id="modal-card"></div>
-</div>
-
+<aside class="drawer hidden" id="drawer" aria-label="Cart"><div class="drawer-head"><h2 id="drawer-title">Cart</h2><button class="icon-action" id="drawer-close" aria-label="Close"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="drawer-body" id="drawer-body"></div><div class="drawer-foot" id="drawer-foot"></div></aside>
+<div class="modal hidden" id="modal"><div class="modal-card" id="modal-card"></div></div>
 <div class="toast" id="toast"></div>
-
-<a class="tg-float" href="https://t.me/carmonoilbot" target="_blank" rel="noopener" aria-label="Telegram">
-  <svg viewBox="0 0 24 24" fill="currentColor" style="stroke:none"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.013 4.52 13.1c-.658-.205-.67-.658.137-.975l10.84-4.179c.548-.2 1.027.12.85.975z"/></svg>
-  <span data-i18n="tg.float">Написать в Telegram</span>
-</a>
-
-<script src="/assets/i18n.js"></script>
-<script src="/assets/textfmt.js"></script>
-<script src="web.js"></script>
+<a class="tg-float" href="https://t.me/carmon_oil_admin" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor" style="stroke:none"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.013 4.52 13.1c-.658-.205-.67-.658.137-.975l10.84-4.179c.548-.2 1.027.12.85.975z"/></svg><span data-i18n="tg.float">Message on Telegram</span></a>
+<script src="assets/i18n.js?v=202609291430"></script>
+<script src="assets/textfmt.js"></script>
+<script src="web.js?v=202609291450"></script>
 </body>
 </html>
