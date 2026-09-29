@@ -527,10 +527,10 @@ function homePage() {
           <h2>Product Range. Brand Story. Export Ready.</h2>
           <p>Explore the full Carmon Oil presentation with product families, technical introductions and visual references from the production catalogue.</p>
         </div>
-        <a class="btn-or" href="https://strawberrybrowser.com/files/P40F5GwLzxAeGLGI" target="_blank" rel="noopener">Open Full Presentation <span class="arr">в†—</span></a>
+        <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Full Presentation <span class="arr">в†—</span></a>
       </div>
       <div class="lp-presentation-frame">
-        <iframe src="https://strawberrybrowser.com/files/P40F5GwLzxAeGLGI" title="Carmon Oil Presentation" loading="lazy"></iframe>
+        <iframe src="/assets/carmon-oil-presentation.pdf" title="Carmon Oil Presentation" loading="lazy"></iframe>
       </div>
     </div>
   </section>
@@ -1434,7 +1434,7 @@ function presentationPage() {
           <p>A visual introduction to Carmon Oil, our lubricant product families and the export solutions prepared for distributors, workshops, fleets and international buyers.</p>
           <div class="presentation-actions">
             <a class="btn-or" href="#presentation-view">View Presentation <span class="arr">в†“</span></a>
-            <a class="btn-gl" href="https://strawberrybrowser.com/files/P40F5GwLzxAeGLGI" target="_blank" rel="noopener">Open Fullscreen <span class="arr">в†—</span></a>
+            <a class="btn-gl" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Fullscreen <span class="arr">в†—</span></a>
           </div>
           <div class="presentation-meta"><span>57-page production catalogue</span><span>Product families</span><span>Technical introductions</span><span>Export support</span></div>
         </div>
@@ -1465,9 +1465,9 @@ function presentationPage() {
         <div class="wrap">
           <div class="presentation-view-head">
             <div><div class="lp-kicker lp-kicker-or">Full Presentation</div><h2>Explore the Carmon Oil catalogue.</h2></div>
-            <a class="btn-or" href="https://strawberrybrowser.com/files/P40F5GwLzxAeGLGI" target="_blank" rel="noopener">Open Full Presentation <span class="arr">в†—</span></a>
+            <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Full Presentation <span class="arr">в†—</span></a>
           </div>
-          <div class="presentation-pdf-frame"><iframe src="https://strawberrybrowser.com/files/P40F5GwLzxAeGLGI" title="Carmon Oil full presentation" loading="eager"></iframe></div>
+          <div class="presentation-pdf-frame"><iframe src="/assets/carmon-oil-presentation.pdf" title="Carmon Oil full presentation" loading="eager"></iframe></div>
         </div>
       </section>
 
@@ -1928,4 +1928,5 @@ async function init() {
   if (!S.lang) openLangPicker(true);
 }
 init();
+
 
