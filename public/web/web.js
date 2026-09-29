@@ -284,18 +284,6 @@ const ART = [
 
 // в•ђв•ђв•ђ HOME (landing) в•ђв•ђв•ђ
 function homePage() {
-  const CAROUSEL_N = 15;
-  const carCards = Array.from({ length: CAROUSEL_N }, (_, i) =>
-    `<div class="lp-car-card" data-i="${i}"><img src="assets/carousel/carousel-${String(i + 1).padStart(2, '0')}.jpg" alt="" loading="lazy" draggable="false"></div>`).join('');
-  // Bubbles sit on the panel's slanted edge: the edge runs from (EDGE_TOP%, 0) to (EDGE_BOT%, 100)
-  const EDGE_TOP = 50, EDGE_BOT = 12;
-  const cats = I18N.CATS.filter(c => c.key !== 'brake');
-  const bubbles = cats.map((c, i) => {
-    const y = 8 + 84 * (i / (cats.length - 1));
-    const x = EDGE_TOP + (EDGE_BOT - EDGE_TOP) * (y / 100);
-    return `<button type="button" class="lp-bubble${i === 2 ? ' on' : ''}" style="left:${x.toFixed(2)}%;top:${y.toFixed(2)}%" data-cat="${c.key}">
-      <span class="lp-bubble-i">${CAT_ICONS[c.key] || 'вЂў'}</span><span class="lp-bubble-l">${esc(catL(c.key))}</span></button>`;
-  }).join('');
 
   $('#main').innerHTML = `
   <section class="lp-hero">
@@ -424,23 +412,6 @@ function homePage() {
     </div>
   </section>
 
-  <section class="lp-deliv">
-    <div class="wrap">
-      <h2 class="lp-h anim">${esc(t('home.deliv_title'))}</h2>
-      <p class="lp-sub anim">${esc(t('home.deliv_sub'))}</p>
-      <div class="lp-stack anim">
-        <div class="lp-car" id="lp-car">${carCards}</div>
-        <button type="button" class="lp-car-nav lp-car-prev" id="lp-car-prev" aria-label="вЂ№">вЂ№</button>
-        <button type="button" class="lp-car-nav lp-car-next" id="lp-car-next" aria-label="вЂє">вЂє</button>
-        <div class="lp-stat">
-          <div><b>${BRANDS.length - 1}+</b><span>${esc(t('home.stat_brands'))}</span></div>
-          <div><b>14+</b><span>${esc(t('home.stat_countries'))}</span></div>
-          <div><b>рџ‡°рџ‡·</b><span>${esc(t('home.stat_since'))}</span></div>
-        </div>
-      </div>
-      <div class="lp-center"><a class="btn-or" href="#/catalog">${esc(t('home.explore'))} <span class="arr">в†’</span></a></div>
-    </div>
-  </section>
 
   <section class="lp-logistics-sec">
     <div class="wrap">
