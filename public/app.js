@@ -925,6 +925,14 @@ async function renderAdminProducts(ac) {
       catch (e) { await showAlert(`${t('admin.share_err')}: ${e.message}`); }
       b.disabled = false;
     }));
+    ac.querySelectorAll('.admin-dup-btn').forEach(b => b.addEventListener('click', async () => {
+      b.disabled = true;
+      try {
+        const np = await api(`/api/products/${b.dataset.id}/duplicate`, { method: 'POST' });
+        toast(`Duplicated: "${np.name}"`);
+        await renderAdminProducts(ac);
+      } catch (e) { toast(e.message); b.disabled = false; }
+    }));
     ac.querySelectorAll('.admin-toggle-btn').forEach(b => b.addEventListener('click', async () => {
       const p = products.find(x => x.id === parseInt(b.dataset.id));
       if (!p) return;
@@ -952,6 +960,7 @@ function adminProductItem(p) {
       <button class="icon-btn icon-btn-toggle admin-toggle-btn" data-id="${p.id}" title="${p.is_active ? t('admin.hide') : t('admin.show')}">${p.is_active ? '👁' : '🙈'}</button>
       <button class="icon-btn icon-btn-edit admin-edit-btn" data-id="${p.id}">✏️</button>
       <button class="icon-btn icon-btn-share admin-share-btn" data-id="${p.id}" title="${t('admin.share')}">📣</button>
+      <button class="icon-btn icon-btn-dup admin-dup-btn" data-id="${p.id}" title="Duplicate">⧉</button>
       <button class="icon-btn icon-btn-delete admin-del-btn" data-id="${p.id}">🗑</button>
     </div>
   </div>`;

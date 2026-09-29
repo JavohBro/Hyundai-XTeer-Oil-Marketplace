@@ -716,6 +716,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 }
 .icon-btn-edit { background: var(--bg2); }
 .icon-btn-delete { background: #FFF0F0; color: var(--error); }
+.icon-btn-dup { background: #F0FAF0; color: #1a7a3a; }
 .icon-btn-toggle { background: var(--bg2); }
 .inactive-badge {
   display: inline-block;
