@@ -429,6 +429,20 @@ app.post('/api/products', authMiddleware, adminOnly, upload.array('images', 10),
   res.json(parseProduct(db.prepare('SELECT * FROM products WHERE id = ?').get(r.lastInsertRowid)));
 });
 
+// Admin: duplicate a product (same fields, same image URLs, name prefixed with "Copy of")
+app.post('/api/products/:id/duplicate', authMiddleware, adminOnly, (req, res) => {
+  const p = db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id);
+  if (!p) return res.status(404).json({ error: 'Not found' });
+  const r = db.prepare(`
+    INSERT INTO products (name, description, litres, price, quantity, images, brand, viscosity,
+                          category, sort_order, fuel, name_uz, name_en, name_ko, desc_uz, desc_en, desc_ko)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run('Copy of ' + p.name, p.description, p.litres, p.price, p.quantity, p.images,
+    p.brand, p.viscosity, p.category, (p.sort_order || 0) + 1, p.fuel,
+    p.name_uz, p.name_en, p.name_ko, p.desc_uz, p.desc_en, p.desc_ko);
+  res.json(parseProduct(db.prepare('SELECT * FROM products WHERE id = ?').get(r.lastInsertRowid)));
+});
+
 // Admin: post the product card to the configured Telegram channel
 app.post('/api/products/:id/share', authMiddleware, adminOnly, async (req, res) => {
   if (!CHANNEL_ID) return res.status(400).json({ error: 'CHANNEL_ID не настроен' });

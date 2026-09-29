@@ -1667,8 +1667,9 @@ async function aProducts(ac) {
         <td><div class="row-acts">
           <button class="mini" data-tg="${p.id}" title="${esc(p.is_active ? t('admin.hide') : t('admin.show'))}">${p.is_active ? 'рџ‘Ѓ' : 'рџ™€'}</button>
           <button class="mini" data-ed="${p.id}" title="${esc(t('admin.edit'))}">вњЏпёЏ</button>
-          <button class="mini" data-sh="${p.id}" title="${esc(t('admin.share'))}">рџ“Ј</button>
-          <button class="mini mini-d" data-dl="${p.id}" title="${esc(t('admin.delete'))}">рџ—‘</button>
+          <button class=”mini” data-sh=”${p.id}” title=”${esc(t(‘admin.share’))}”>рџ”Ј</button>
+          <button class=”mini” data-dup=”${p.id}” title=”Duplicate”>⧉</button>
+          <button class=”mini mini-d” data-dl=”${p.id}” title=”${esc(t(‘admin.delete’))}”>рџ—‘</button>
         </div></td>
       </tr>`).join('')}</tbody>
     </table></div>`;
@@ -1697,6 +1698,13 @@ async function aProducts(ac) {
     if (!confirm(t('admin.del_q'))) return;
     await api(`/api/products/${b.dataset.dl}`, { method: 'DELETE' });
     toast(t('admin.deleted')); adminSection();
+  });
+  $$('[data-dup]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    try {
+      const np = await api(`/api/products/${b.dataset.dup}/duplicate`, { method: 'POST' });
+      toast(`Duplicated → "${np.name}"`); adminSection();
+    } catch (e) { toast(e.message); b.disabled = false; }
   });
 }
 
