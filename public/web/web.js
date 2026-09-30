@@ -1,4 +1,4 @@
-﻿// в•ђв•ђв•ђ Carmon Oil вЂ” website в•ђв•ђв•ђ
+// ═══ Carmon Oil — website ═══
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
@@ -11,7 +11,7 @@ const S = {
   lang: null, langLock: false
 };
 
-// в”Ђв”Ђ i18n в”Ђв”Ђ
+// ── i18n ──
 const LS_LANG = 'carmon_lang';
 const t    = (k, v) => I18N.t(S.lang || I18N.DEFAULT, k, v);
 const catL = (k, full) => I18N.catLabel(S.lang || I18N.DEFAULT, k, full);
@@ -21,7 +21,7 @@ const pn    = p => I18N.pname(p, S.lang || I18N.DEFAULT);
 const pd    = p => I18N.pdesc(p, S.lang || I18N.DEFAULT);
 const fuelL = p => I18N.fuelLabels(S.lang || I18N.DEFAULT, p.fuel);
 
-// в”Ђв”Ђ API в”Ђв”Ђ
+// ── API ──
 async function api(url, opts = {}) {
   const isForm = opts.body instanceof FormData;
   const res = await fetch(url, {
@@ -33,7 +33,7 @@ async function api(url, opts = {}) {
   return res.json();
 }
 
-// в”Ђв”Ђ Utils в”Ђв”Ђ
+// ── Utils ──
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = n => Number(n).toLocaleString('ru');
 const fmtDate = s => new Date(s).toLocaleString(I18N.locale(S.lang), { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -44,7 +44,7 @@ function toast(m) {
   clearTimeout(tT); tT = setTimeout(() => t.classList.remove('on'), 2600);
 }
 
-// в”Ђв”Ђ Cart (localStorage) в”Ђв”Ђ
+// ── Cart (localStorage) ──
 const Cart = {
   load() { try { S.cart = JSON.parse(localStorage.getItem('xteer_web_cart') || '[]'); } catch { S.cart = []; } },
   save() { localStorage.setItem('xteer_web_cart', JSON.stringify(S.cart)); paintCount(); },
@@ -79,7 +79,7 @@ function paintCount() {
   el.classList.toggle('hidden', c === 0);
 }
 
-// в”Ђв”Ђ Modal / Drawer в”Ђв”Ђ
+// ── Modal / Drawer ──
 function openModal(html, cls = '') {
   const card = $('#modal-card');
   card.className = 'modal-card' + (cls ? ' ' + cls : '');
@@ -106,8 +106,8 @@ function closeDrawer() {
   document.body.style.overflow = '';
 }
 
-// в•ђв•ђв•ђ LANGUAGE в•ђв•ђв•ђ
-// Static chrome (header nav, footer, floating button, <title>) вЂ” everything
+// ═══ LANGUAGE ═══
+// Static chrome (header nav, footer, floating button, <title>) — everything
 // outside #main that the router does not repaint.
 function paintStatic() {
   $$('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
@@ -134,7 +134,7 @@ function openLangPicker(force = false) {
     ${force ? '' : `<button class="modal-x" id="mx"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`}
     <div class="lang-pick">
       <img class="lang-pick-logo" src="assets/logo.png" alt="Carmon Oil" onerror="this.style.display='none'">
-      <h2>${I18N.LANGS.map(l => esc(I18N.t(l.code, 'lang.title'))).join(' В· ')}</h2>
+      <h2>${I18N.LANGS.map(l => esc(I18N.t(l.code, 'lang.title'))).join(' · ')}</h2>
       <p>${esc(t('lang.sub'))}</p>
       <div class="lang-grid">
         ${I18N.LANGS.map(l => `<button class="lang-card${S.lang === l.code ? ' on' : ''}" data-lang="${l.code}"><span>${esc(l.name)}</span></button>`).join('')}
@@ -150,7 +150,7 @@ function openLangPicker(force = false) {
   });
 }
 
-// в•ђв•ђв•ђ ROUTER в•ђв•ђв•ђ
+// ═══ ROUTER ═══
 const routes = {
   '': homePage, '/': homePage, '/catalog': catalogPage, '/orders': ordersPage, '/help': helpPage,
   '/logistics': logisticsPage, '/business': businessPage, '/compare-brands': compareBrandsPage,
@@ -186,10 +186,10 @@ function router() {
   fn();
 }
 
-// в•ђв•ђв•ђ CATALOG в•ђв•ђв•ђ
+// ═══ CATALOG ═══
 const CATS = ['all', ...I18N.CATS.map(c => c.key)];
 const BRANDS = [
-  { id: 'all',           label: 'Р’СЃРµ',           logo: null },
+  { id: 'all',           label: 'Все',           logo: null },
   { id: 'Kixx',          label: 'Kixx',          logo: 'assets/kixx-logo.png' },
   { id: 'Hyundai XTeer', label: 'Hyundai XTeer', logo: 'assets/hyundailogo1.png' },
   { id: 'SK ZIC',        label: 'SK ZIC',        logo: 'assets/SK-ZIC-LOGO.png' },
@@ -258,7 +258,7 @@ function initBrandShowcase() {
     feature.querySelector('.lp-brand-feature-copy h3').textContent = b.label;
     feature.querySelector('.lp-brand-feature-copy p').textContent = BRAND_STORIES[b.id] || 'Product availability is confirmed by application and destination.';
     feature.querySelector('.lp-brand-feature-cta').href = `#/brand/${brandSlug(b.id)}`;
-    feature.querySelector('.lp-brand-feature-cta').innerHTML = `Explore ${esc(b.label)} <span>в†—</span>`;
+    feature.querySelector('.lp-brand-feature-cta').innerHTML = `Explore ${esc(b.label)} <span>↗</span>`;
     choices.forEach(c => c.classList.toggle('on', c.dataset.brand === b.id));
   };
   choices.forEach(c => c.onclick = () => paint(c.dataset.brand));
@@ -274,26 +274,35 @@ function goCatalog(opts = {}) {
   else location.hash = '#/catalog';
 }
 
-const CAT_ICONS = { passenger: 'рџљ—', heavy: 'рџљ›', transmission: 'вљ™пёЏ', brake: 'рџ›‘', grease: 'рџ›ўпёЏ', others: 'рџ“¦' };
+const CAT_ICONS = { passenger: '🚗', heavy: '🚛', transmission: '⚙️', brake: '🛑', grease: '🛢️', others: '📦' };
 const ART = [
-  { icon: 'рџ§Є', img: 'assets/viscosity.jpg', bg: 'linear-gradient(135deg,#fde7dc,#f9c9b4)' },
-  { icon: 'в›Ѕ', img: 'assets/gasoline.jpg',  bg: 'linear-gradient(135deg,#e3f0ff,#c6dcff)' },
-  { icon: 'вњ…', img: 'assets/product.jpg',   bg: 'linear-gradient(135deg,#e6f7ea,#c9ecd2)' },
-  { icon: 'рџљљ', img: 'assets/delivery.jpg',  bg: 'linear-gradient(135deg,#fff3d6,#ffe3a3)' },
+  { icon: '🧪', img: 'assets/viscosity.jpg', bg: 'linear-gradient(135deg,#fde7dc,#f9c9b4)' },
+  { icon: '⛽', img: 'assets/gasoline.jpg',  bg: 'linear-gradient(135deg,#e3f0ff,#c6dcff)' },
+  { icon: '✅', img: 'assets/product.jpg',   bg: 'linear-gradient(135deg,#e6f7ea,#c9ecd2)' },
+  { icon: '🚚', img: 'assets/delivery.jpg',  bg: 'linear-gradient(135deg,#fff3d6,#ffe3a3)' },
 ];
 
-// в•ђв•ђв•ђ HOME (landing) в•ђв•ђв•ђ
+// ═══ HOME (landing) ═══
 function homePage() {
+  // Bubbles sit on the panel's slanted edge: the edge runs from (EDGE_TOP%, 0) to (EDGE_BOT%, 100)
+  const EDGE_TOP = 50, EDGE_BOT = 12;
+  const cats = I18N.CATS.filter(c => c.key !== 'brake');
+  const bubbles = cats.map((c, i) => {
+    const y = 8 + 84 * (i / (cats.length - 1));
+    const x = EDGE_TOP + (EDGE_BOT - EDGE_TOP) * (y / 100);
+    return `<button type="button" class="lp-bubble${i === 2 ? ' on' : ''}" style="left:${x.toFixed(2)}%;top:${y.toFixed(2)}%" data-cat="${c.key}">
+      <span class="lp-bubble-i">${CAT_ICONS[c.key] || '•'}</span><span class="lp-bubble-l">${esc(catL(c.key))}</span></button>`;
+  }).join('');
 
   $('#main').innerHTML = `
   <section class="lp-hero">
     <div class="lp-hero-in">
       <div class="lp-hero-txt">
-        <div class="lp-kicker lp-kicker-or" style="margin-bottom:16px">Made in Korea В· Trusted Worldwide</div>
+        <div class="lp-kicker lp-kicker-or" style="margin-bottom:16px">Made in Korea · Trusted Worldwide</div>
         <h1>${t('home.hero_title')}</h1>
         <p>${esc(t('home.hero_sub'))}</p>
         <div class="lp-actions">
-          <a class="btn-or" href="#/catalog">${esc(t('home.hero_cta'))} <span class="arr">в†’</span></a>
+          <a class="btn-or" href="#/catalog">${esc(t('home.hero_cta'))} <span class="arr">→</span></a>
           <a class="btn-gl" href="#/business">${esc(t('home.hero_tg'))}</a>
         </div>
         <div class="lp-hero-badges">
@@ -312,7 +321,7 @@ function homePage() {
       <div class="lp-section-two-kicker">Global Lubrication Solutions</div>
       <h2>Improving B2B and B2C Markets with Premium<br class="lp-section-two-break"> Engine Oils and Reliable Global Logistics.</h2>
       <p>We provide premium automotive and industrial lubrication solutions for engines,<br class="lp-section-two-break"> fleets, workshops and international distribution partners.</p>
-      <a class="lp-section-two-btn" href="#/business">Talk to Carmon <span>в†’</span></a>
+      <a class="lp-section-two-btn" href="#/business">Talk to Carmon <span>→</span></a>
     </div>
   </section>
 
@@ -340,13 +349,13 @@ function homePage() {
           <div class="lp-path-num">01 / FOR DRIVERS &amp; WORKSHOPS</div>
           <h3>Find the right oil for your vehicle.</h3>
           <p>Browse passenger-car oils by brand, viscosity and application. Every product stays inquiry-led with technical details before purchase.</p>
-          <a href="#/catalog">Browse passenger oils <span>в†—</span></a>
+          <a href="#/catalog">Browse passenger oils <span>↗</span></a>
         </article>
         <article class="lp-path-card lp-path-card--business">
           <div class="lp-path-num">02 / FOR DISTRIBUTORS</div>
           <h3>Build a reliable supply program.</h3>
           <p>Discuss wholesale volumes, product availability, destination and export coordination with the Carmon team.</p>
-          <a href="#/business">Start a B2B conversation <span>в†—</span></a>
+          <a href="#/business">Start a B2B conversation <span>↗</span></a>
         </article>
       </div>
     </div>
@@ -360,7 +369,7 @@ function homePage() {
           <h2>Our Product Categories</h2>
           <p>Lubricant solutions for passenger cars, heavy-duty diesel, racing, transmission and industrial applications.</p>
         </div>
-        <a class="btn-or" href="#/catalog">View All Products <span class="arr">в†’</span></a>
+        <a class="btn-or" href="#/catalog">View All Products <span class="arr">→</span></a>
       </div>
       <div class="lp-catgrid">
         <div class="lp-catcard" data-cat="passenger">
@@ -395,17 +404,17 @@ function homePage() {
           <h2>Brands We Work With</h2>
           <p>Recognized Korean and global lubricant brands. Availability confirmed per product and destination.</p>
         </div>
-        <a class="btn-or" href="#/catalog">View All Brands <span class="arr">в†’</span></a>
+        <a class="btn-or" href="#/catalog">View All Brands <span class="arr">→</span></a>
       </div>
       <div class="lp-brand-showcase" id="lp-brand-showcase">
         <div class="lp-brand-feature" id="lp-brand-feature">
           <div class="lp-brand-feature-glow"></div>
           <div class="lp-brand-feature-top"><span class="lp-brand-feature-index">01 / FEATURED BRAND</span><span class="lp-brand-feature-status">KOREAN &amp; GLOBAL RANGE</span></div>
           <div class="lp-brand-feature-logo"><img src="${esc(BRANDS[1].logo)}" alt="${esc(BRANDS[1].label)}"></div>
-          <div class="lp-brand-feature-copy"><h3>${esc(BRANDS[1].label)}</h3><p>${esc(BRAND_STORIES[BRANDS[1].label])}</p><a class="lp-brand-feature-cta" href="#/brand/${brandSlug(BRANDS[1].id)}">Explore ${esc(BRANDS[1].label)} <span>в†—</span></a></div>
+          <div class="lp-brand-feature-copy"><h3>${esc(BRANDS[1].label)}</h3><p>${esc(BRAND_STORIES[BRANDS[1].label])}</p><a class="lp-brand-feature-cta" href="#/brand/${brandSlug(BRANDS[1].id)}">Explore ${esc(BRANDS[1].label)} <span>↗</span></a></div>
         </div>
         <div class="lp-brand-choice-grid">
-          ${BRANDS.slice(1).map((b, i) => `<button type="button" class="lp-brand-choice${i === 0 ? ' on' : ''}" data-brand="${esc(b.id)}" aria-label="Explore ${esc(b.label)}"><span class="lp-brand-choice-no">${String(i + 1).padStart(2, '0')}</span><span class="lp-brand-choice-logo"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></span><span class="lp-brand-choice-name">${esc(b.label)}</span><span class="lp-brand-choice-arrow">в†—</span></button>`).join('')}
+          ${BRANDS.slice(1).map((b, i) => `<button type="button" class="lp-brand-choice${i === 0 ? ' on' : ''}" data-brand="${esc(b.id)}" aria-label="Explore ${esc(b.label)}"><span class="lp-brand-choice-no">${String(i + 1).padStart(2, '0')}</span><span class="lp-brand-choice-logo"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></span><span class="lp-brand-choice-name">${esc(b.label)}</span><span class="lp-brand-choice-arrow">↗</span></button>`).join('')}
         </div>
       </div>
       <div class="lp-brand-ticker" aria-label="Carmon Oil brands"><div class="lp-brand-ticker-track">${[...BRANDS.slice(1), ...BRANDS.slice(1)].map(b => `<span><img src="${esc(b.logo)}" alt="${esc(b.label)}"><b>${esc(b.label)}</b></span>`).join('')}</div></div>
@@ -420,12 +429,12 @@ function homePage() {
         <div>
           <h2>Reliable Logistics.<br>Clear Supply Process.</h2>
           <p>From product selection and documentation to order preparation, loading and agreed delivery.</p>
-          <a class="btn-or" href="#/logistics">Learn More About Logistics <span class="arr">в†’</span></a>
+          <a class="btn-or" href="#/logistics">Learn More About Logistics <span class="arr">→</span></a>
           <div class="lp-ticks">
-            <span>вњ“ Export-ready documentation</span>
-            <span>вњ“ Warehouse and loading coordination</span>
-            <span>вњ“ Partner-aligned delivery support</span>
-            <span>вњ“ Product and destination confirmation</span>
+            <span>✓ Export-ready documentation</span>
+            <span>✓ Warehouse and loading coordination</span>
+            <span>✓ Partner-aligned delivery support</span>
+            <span>✓ Product and destination confirmation</span>
           </div>
         </div>
         <div class="lp-logistics-photo-single">
@@ -450,21 +459,21 @@ function homePage() {
           <h3>Global Export</h3>
           <h4>Partner Supply</h4>
           <p>Product sourcing and distribution support for overseas buyers and strategic partners.</p>
-          <a href="#/business">Explore Service <span class="arr">в†’</span></a>
+          <a href="#/business">Explore Service <span class="arr">→</span></a>
         </div>
         <div class="lp-svc">
           <span class="lp-svc-num">02</span>
           <h3>Wholesale Supply</h3>
           <h4>Distributor Networks</h4>
           <p>Supply conversations for distributors, workshops, service networks and fleet operators.</p>
-          <a href="#/business">Explore Service <span class="arr">в†’</span></a>
+          <a href="#/business">Explore Service <span class="arr">→</span></a>
         </div>
         <div class="lp-svc">
           <span class="lp-svc-num">03</span>
           <h3>Brand Sourcing</h3>
           <h4>Recognized Brands</h4>
           <p>Help finding suitable products from confirmed Korean and global lubricant brands.</p>
-          <a href="#/business">Explore Service <span class="arr">в†’</span></a>
+          <a href="#/business">Explore Service <span class="arr">→</span></a>
         </div>
       </div>
     </div>
@@ -476,9 +485,9 @@ function homePage() {
       <h2>Export Efficiency</h2>
       <p>We coordinate the supply chain from product sourcing and order preparation to loading, documentation and agreed delivery.</p>
       <div class="lp-ticks" style="margin-top:20px">
-        <span>вњ“ Export-ready documentation</span>
-        <span>вњ“ Warehouse and loading coordination</span>
-        <span>вњ“ Partner-aligned delivery support</span>
+        <span>✓ Export-ready documentation</span>
+        <span>✓ Warehouse and loading coordination</span>
+        <span>✓ Partner-aligned delivery support</span>
       </div>
     </div>
     <div class="lp-world-img">
@@ -493,22 +502,22 @@ function homePage() {
         <h2>Complete Product Introduction</h2>
         <p>The production catalogue brings together Carmon Oil, Speedmate and SK AUTOUS product families, technical introductions and application-led ranges.</p>
       </div>
-      <a class="btn-or" href="#/catalog">View Catalogue <span class="arr">в†“</span></a>
+      <a class="btn-or" href="#/catalog">View Catalogue <span class="arr">↓</span></a>
     </div>
     <div class="wrap">
       <div class="lp-production-hero">
         <div class="lp-production-hero-left">
           <h3>Product Range. Technical Detail.<br>Export Ready.</h3>
-          <p>Explore the Carmon Oil, Speedmate and SK AUTOUS product families вЂ” technical introductions and product-story ranges now available in our catalogue.</p>
+          <p>Explore the Carmon Oil, Speedmate and SK AUTOUS product families — technical introductions and product-story ranges now available in our catalogue.</p>
         </div>
         <div class="lp-production-hero-right">
-          <a class="lp-btn-outline" href="#/catalog">Explore Product Families <span class="arr">в†“</span></a>
-          <a class="btn-or" href="#/business">Request Product List <span class="arr">в†’</span></a>
+          <a class="lp-btn-outline" href="#/catalog">Explore Product Families <span class="arr">↓</span></a>
+          <a class="btn-or" href="#/business">Request Product List <span class="arr">→</span></a>
         </div>
       </div>
       <div class="lp-prod-family-grid">
-        <div class="lp-prod-family"><span class="lp-svc-num">01 / PCMO</span><h4>Passenger Car Motor Oils</h4><p>Gasoline, diesel and LPG applications with fully synthetic, synthetic and mineral ranges.</p><div class="lp-prod-skus">FX-S В· FX-SE В· FX-PAO В· FX-1 В· FX-2 В· FX-3</div></div>
-        <div class="lp-prod-family"><span class="lp-svc-num">02 / HDDEO</span><h4>Heavy-Duty Diesel Oils</h4><p>Engine oils for modern diesel engines, light trucks and demanding operating conditions.</p><div class="lp-prod-skus">K4 В· J4 В· I4 В· H4 В· F4</div></div>
+        <div class="lp-prod-family"><span class="lp-svc-num">01 / PCMO</span><h4>Passenger Car Motor Oils</h4><p>Gasoline, diesel and LPG applications with fully synthetic, synthetic and mineral ranges.</p><div class="lp-prod-skus">FX-S · FX-SE · FX-PAO · FX-1 · FX-2 · FX-3</div></div>
+        <div class="lp-prod-family"><span class="lp-svc-num">02 / HDDEO</span><h4>Heavy-Duty Diesel Oils</h4><p>Engine oils for modern diesel engines, light trucks and demanding operating conditions.</p><div class="lp-prod-skus">K4 · J4 · I4 · H4 · F4</div></div>
         <div class="lp-prod-family"><span class="lp-svc-num">03 / DRIVELINE</span><h4>Transmission Fluids</h4><p>Automatic, continuously variable and dual-clutch transmission support across vehicle platforms.</p></div>
         <div class="lp-prod-family"><span class="lp-svc-num">04 / GEAR</span><h4>Automotive Gear Oils</h4><p>High-quality gear oils for smooth shifting, wear protection and stable performance.</p></div>
         <div class="lp-prod-family"><span class="lp-svc-num">05 / SK AUTOUS</span><h4>SK AUTOUS Engine Oils</h4><p>Low-SAPS, gasoline, diesel and power oil introductions for modern vehicle applications.</p></div>
@@ -527,7 +536,7 @@ function homePage() {
           <h2>Product Range. Brand Story. Export Ready.</h2>
           <p>Explore the full Carmon Oil presentation with product families, technical introductions and visual references from the production catalogue.</p>
         </div>
-        <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Full Presentation <span class="arr">в†—</span></a>
+        <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Full Presentation <span class="arr">↗</span></a>
       </div>
       <div class="lp-presentation-frame">
         <iframe src="/assets/carmon-oil-presentation.pdf" title="Carmon Oil Presentation" loading="lazy"></iframe>
@@ -543,7 +552,7 @@ function homePage() {
           <h2>Technical Product Catalog</h2>
           <p>Compare products by application, viscosity, packaging and confirmed technical standards.</p>
         </div>
-        <a class="btn-or" href="#/catalog">View Technical Data <span class="arr">в†’</span></a>
+        <a class="btn-or" href="#/catalog">View Technical Data <span class="arr">→</span></a>
       </div>
       <div class="lp-techcat-grid" id="lp-techcat-grid">
         ${[1,2,3,4,5].map(() => `<div class="lp-techcat-card lp-techcat-card--loading"><div class="lp-techcat-img"></div><div class="lp-techcat-body"><div class="lp-skel lp-skel-sm"></div><div class="lp-skel lp-skel-md"></div><div class="lp-skel lp-skel-sm"></div></div></div>`).join('')}
@@ -564,12 +573,12 @@ function homePage() {
         <label><span>Brand</span><select id="finder-brand"><option value="all">All brands</option><option value="Hyundai XTeer">Hyundai XTeer</option><option value="SK ZIC">SK ZIC</option></select></label>
         <label><span>Viscosity</span><select id="finder-viscosity"><option value="all">All viscosities</option></select></label>
         <label><span>Application</span><select id="finder-application"><option value="passenger">Passenger cars</option><option value="all">All applications</option></select></label>
-        <button class="finder-submit" type="submit">Find products <span>в†’</span></button>
+        <button class="finder-submit" type="submit">Find products <span>→</span></button>
       </form>
       <div class="finder-results" id="finder-results" aria-live="polite"></div>
       <div class="lp-finder-business">
         <div><b>Buying for a workshop, fleet or distribution business?</b><span>Request a product list, availability check or export quotation.</span></div>
-        <a class="btn-or" href="#/business">Request a B2B quote <span class="arr">в†—</span></a>
+        <a class="btn-or" href="#/business">Request a B2B quote <span class="arr">↗</span></a>
       </div>
     </div>
   </section>
@@ -583,11 +592,11 @@ function homePage() {
       <div class="delivery-stage">
         <canvas id="delivery-canvas"></canvas>
         <div class="delivery-country-overlay">
-          <div id="delivery-flag" class="delivery-flag">рџ‡єрџ‡ї</div>
+          <div id="delivery-flag" class="delivery-flag">🇺🇿</div>
           <div id="delivery-name" class="delivery-name">${esc(t('country.uz'))}</div>
         </div>
-        <button class="delivery-arrow delivery-arrow-l" id="delivery-prev">вЂ№</button>
-        <button class="delivery-arrow delivery-arrow-r" id="delivery-next">вЂє</button>
+        <button class="delivery-arrow delivery-arrow-l" id="delivery-prev">‹</button>
+        <button class="delivery-arrow delivery-arrow-r" id="delivery-next">›</button>
       </div>
       <div class="delivery-dots" id="delivery-dots"></div>
     </div>
@@ -599,8 +608,8 @@ function homePage() {
       <p class="lp-sub anim">${esc(t('home.testi_sub'))}</p>
       <div class="lp-testi-g">
         ${[1, 2, 3].map(i => `<figure class="lp-quote anim">
-          <blockquote>вЂњ${esc(t(`testi.${i}q`))}вЂќ</blockquote>
-          <figcaption><span class="lp-av">${esc(t(`testi.${i}n`)[0] || 'вЂў')}</span><div><b>${esc(t(`testi.${i}n`))}</b><span>${esc(t(`testi.${i}r`))}</span></div></figcaption>
+          <blockquote>“${esc(t(`testi.${i}q`))}”</blockquote>
+          <figcaption><span class="lp-av">${esc(t(`testi.${i}n`)[0] || '•')}</span><div><b>${esc(t(`testi.${i}n`))}</b><span>${esc(t(`testi.${i}r`))}</span></div></figcaption>
         </figure>`).join('')}
       </div>
     </div>
@@ -638,12 +647,12 @@ function homePage() {
         <input type="text" name="country" placeholder="${esc(t('home.touch_country'))}" autocomplete="country-name">
         <input type="text" name="contact" placeholder="${esc(t('home.touch_contact'))}" required autocomplete="tel">
         <textarea name="message" rows="4" placeholder="${esc(t('home.touch_msg'))}"></textarea>
-        <button class="btn-or" type="submit">${esc(t('home.touch_btn'))} <span class="arr">в†’</span></button>
+        <button class="btn-or" type="submit">${esc(t('home.touch_btn'))} <span class="arr">→</span></button>
         <div class="lp-lead-msg" id="lead-msg"></div>
       </form>
       <div class="lp-touch2-info">
-        <div><b>${esc(t('home.touch_sales'))}:</b> +82 10-3768-2270 В· carmon1lubricants@gmail.com В· @carmon_oil_admin</div>
-        <div><b>${esc(t('home.touch_hours'))}:</b> 09:00вЂ“17:00 В· Incheon, South Korea</div>
+        <div><b>${esc(t('home.touch_sales'))}:</b> +82 10-3768-2270 · carmon1lubricants@gmail.com · @carmon_oil_admin</div>
+        <div><b>${esc(t('home.touch_hours'))}:</b> 09:00–17:00 · Incheon, South Korea</div>
       </div>
     </div>
   </section>`;
@@ -665,7 +674,8 @@ function homePage() {
     } catch (er) { msg.textContent = er.message; msg.className = 'lp-lead-msg err'; }
     btn.disabled = false;
   };
-  requestAnimationFrame(() => { initAnimations(); initDeliveryMap(); initShowcase(); initProductFinder(); });
+  requestAnimationFrame(() => { initAnimations(); initDeliveryMap();
+ initProductFinder(); });
 
   // Load technical catalog products async
   Promise.resolve(S.products).then(products => {
@@ -676,9 +686,9 @@ function homePage() {
     grid.innerHTML = ps.map(p => {
       const img = (p.images && p.images[0]) || '';
       const name = p.name || '';
-      const spec = [p.viscosity, p.litres].filter(Boolean).join(' В· ');
+      const spec = [p.viscosity, p.litres].filter(Boolean).join(' · ');
       return `<div class="lp-techcat-card" onclick="location.hash='#/catalog'" style="cursor:pointer">
-        <div class="lp-techcat-img">${img ? `<img src="${esc(img)}" alt="${esc(name)}" loading="lazy">` : '<div style="font-size:40px;opacity:.3">рџ›ў</div>'}</div>
+        <div class="lp-techcat-img">${img ? `<img src="${esc(img)}" alt="${esc(name)}" loading="lazy">` : '<div style="font-size:40px;opacity:.3">🛢</div>'}</div>
         <div class="lp-techcat-body">
           <div class="lp-techcat-brand">${esc(p.brand || 'PRODUCT DATA')}</div>
           <h4>${esc(name)}</h4>
@@ -697,7 +707,7 @@ function initProductFinder() {
   const render = () => {
     const bs = brand.value, vs = viscosity.value, as = application.value;
     const matches = S.products.filter(p => (bs === 'all' || p.brand === bs) && (vs === 'all' || p.viscosity === vs) && (as === 'all' || p.category === as));
-    results.innerHTML = matches.length ? matches.map(p => `<button type="button" class="finder-result" data-id="${p.id}"><span class="finder-result-image"><img src="${esc(p.images?.[0] || '')}" alt=""></span><span><b>${esc(p.name)}</b><small>${esc(p.brand)} В· ${esc(p.viscosity)} В· ${esc(p.litres)}</small></span><strong>в†—</strong></button>`).join('') : '<div class="finder-empty">No matching products in the current catalogue. <a href="#/business">Ask our team for a recommendation.</a></div>';
+    results.innerHTML = matches.length ? matches.map(p => `<button type="button" class="finder-result" data-id="${p.id}"><span class="finder-result-image"><img src="${esc(p.images?.[0] || '')}" alt=""></span><span><b>${esc(p.name)}</b><small>${esc(p.brand)} · ${esc(p.viscosity)} · ${esc(p.litres)}</small></span><strong>↗</strong></button>`).join('') : '<div class="finder-empty">No matching products in the current catalogue. <a href="#/business">Ask our team for a recommendation.</a></div>';
     $$('.finder-result').forEach(b => b.onclick = () => openProduct(+b.dataset.id));
   };
   [brand, viscosity, application].forEach(el => el.addEventListener('change', render));
@@ -708,40 +718,6 @@ function initProductFinder() {
 // Coverflow carousel in the delivery block: cards fan out from the centre and
 // roll with a springy easing (defined in CSS). Auto-advances, arrows, swipe,
 // click a side card to bring it to the front.
-function initShowcase() {
-  const car = $('#lp-car'); if (!car) return;
-  const cards = $$('#lp-car .lp-car-card');
-  const n = cards.length; if (!n) return;
-  let cur = Math.floor(n / 2), timer;
-
-  function layout() {
-    const w = car.clientWidth;
-    const step = Math.min(300, w * 0.28);       // horizontal distance between cards
-    cards.forEach((c, i) => {
-      let d = i - cur;
-      if (d > n / 2) d -= n; else if (d < -n / 2) d += n;   // wrap around
-      const a = Math.abs(d);
-      const visible = a <= 3;
-      c.style.transform = `translate(-50%,-50%) translateX(${d * step}px) rotate(${d * 6}deg) scale(${d === 0 ? 1 : Math.max(.55, .84 - a * .08)})`;
-      c.style.opacity = !visible ? 0 : a === 0 ? 1 : Math.max(0, 1 - a * .3);
-      c.style.zIndex = 20 - a;
-      c.style.pointerEvents = visible ? 'auto' : 'none';
-      c.classList.toggle('on', d === 0);
-    });
-  }
-  const go = (i) => { cur = (i + n) % n; layout(); restart(); };
-  const restart = () => { clearInterval(timer); timer = setInterval(() => { if (!car.isConnected) return clearInterval(timer); cur = (cur + 1) % n; layout(); }, 3200); };
-
-  cards.forEach((c, i) => c.onclick = () => go(i));
-  $('#lp-car-prev').onclick = () => go(cur - 1);
-  $('#lp-car-next').onclick = () => go(cur + 1);
-  let sx = 0;
-  car.ontouchstart = e => { sx = e.touches[0].clientX; };
-  car.ontouchend = e => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(dx < 0 ? cur + 1 : cur - 1); };
-  window.addEventListener('resize', layout);
-
-  layout(); restart();
-}
 
 // Header dropdowns work on hover for desktop and on click/tap for touch devices.
 function initNavMenus() {
@@ -762,7 +738,7 @@ function initNavMenus() {
   });
 }
 
-// в•ђв•ђв•ђ CATALOG (shop) в•ђв•ђв•ђ
+// ═══ CATALOG (shop) ═══
 function catalogPage() {
   $('#main').innerHTML = `
   <div class="wrap" id="catalog-section">
@@ -770,7 +746,7 @@ function catalogPage() {
       <div class="catalog-route-kicker">${S.brand !== 'all' ? 'Brand collection' : S.cat !== 'all' ? 'Product line' : 'Carmon Oil catalogue'}</div>
       <h1>${esc(S.brand !== 'all' ? S.brand : S.cat !== 'all' ? catL(S.cat, true) : t('catalog.title'))}</h1>
       <p>${esc(S.brand !== 'all' ? `Products currently represented for ${S.brand}. Select a product to review its available viscosity and pack details.` : S.cat !== 'all' ? `Browse the ${catL(S.cat, true).toLowerCase()} product line and open any product for its available specifications.` : t('hero.p'))}</p>
-      ${(S.brand !== 'all' || S.cat !== 'all') ? '<a class="catalog-reset" href="#/catalog">View full catalogue в†’</a>' : ''}
+      ${(S.brand !== 'all' || S.cat !== 'all') ? '<a class="catalog-reset" href="#/catalog">View full catalogue →</a>' : ''}
     </div>
     <div class="brands-strip-logos brands-strip-logos--compact">
       ${BRANDS.slice(1).map(b => `<button type="button" class="brands-strip-logo${S.brand === b.id ? ' on' : ''}" data-b="${esc(b.id)}" aria-label="${esc(b.label)}"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></button>`).join('')}
@@ -832,7 +808,7 @@ function paintGrid() {
     list = list.filter(p => [p.name, pn(p), p.viscosity, p.brand, p.litres].some(v => (v || '').toLowerCase().includes(q)));
   }
   if (!list.length) {
-    g.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-i">рџ”Ќ</div><h3>${esc(t('empty.title'))}</h3><p>${esc(t('empty.sub'))}</p></div>`;
+    g.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-i">🔍</div><h3>${esc(t('empty.title'))}</h3><p>${esc(t('empty.sub'))}</p></div>`;
     return;
   }
   g.innerHTML = list.map(cardHTML).join('');
@@ -860,22 +836,22 @@ function initDeliveryMap() {
   const ctx = canvas.getContext('2d');
 
   const DELIVERY_COUNTRIES = [
-    { key: 'country.uz', flag: 'рџ‡єрџ‡ї',
+    { key: 'country.uz', flag: '🇺🇿',
       pts: [
-        // NW block (Karakalpakstan) вЂ” top edge with small bump, clockwise
+        // NW block (Karakalpakstan) — top edge with small bump, clockwise
         [10,28],[25,18],[55,15],[83,5],[105,3],[120,15],
         // NE slope of the block down to the waist
         [140,35],[165,40],[185,60],[195,85],[210,100],
-        // Tashkent shelf вЂ” flat top across the middle
+        // Tashkent shelf — flat top across the middle
         [225,95],[235,90],[255,90],[285,93],[305,88],[320,85],
         // east edge stepping down-right
         [325,100],[345,110],[360,135],[365,160],[375,180],[390,190],[405,200],
         // neck into Fergana valley
         [415,215],[435,210],[450,195],[470,175],[490,163],[515,153],[530,155],
-        // Fergana вЂ” top, east tip, bottom
+        // Fergana — top, east tip, bottom
         [525,170],[540,195],[565,200],[590,215],[570,230],[545,245],
         [520,235],[500,238],[475,225],[450,238],[440,250],
-        // south вЂ” Surkhandarya tail going down to the tip
+        // south — Surkhandarya tail going down to the tip
         [440,280],[425,295],[435,315],[430,345],[410,365],[400,380],
         // back up the long SW diagonal
         [370,360],[345,335],[315,300],[280,265],[245,235],[220,205],[210,185],
@@ -884,7 +860,7 @@ function initDeliveryMap() {
         // notch + bottom-left corner of the NW block
         [50,155],[50,193],[10,193]
       ]},
-    { key: 'country.kg', flag: 'рџ‡°рџ‡¬',
+    { key: 'country.kg', flag: '🇰🇬',
       pts: [
         // top-left squarish bump, clockwise
         [96,140],[93,91],[131,73],[163,80],[179,108],[219,105],
@@ -898,13 +874,13 @@ function initDeliveryMap() {
         [413,252],[364,248],[326,262],[284,273],
         // bay between main body and Batken (opens to the right)
         [256,287],[228,262],[184,245],[149,241],[133,266],[184,276],[228,283],
-        // Batken вЂ” right side, bottom, left
+        // Batken — right side, bottom, left
         [249,297],[242,322],[210,329],[172,322],[137,315],
         [102,327],[67,332],[32,315],[14,280],[44,266],[91,262],
         // back up the main body's left edge
         [96,227],[102,187]
       ]},
-    { key: 'country.kz', flag: 'рџ‡°рџ‡ї',
+    { key: 'country.kz', flag: '🇰🇿',
       pts: [
         // west tip and the small NW bump, clockwise
         [6,162],[31,152],[59,134],[70,120],[98,120],[108,138],
@@ -928,7 +904,7 @@ function initDeliveryMap() {
         // west coast back up to the tip
         [45,246],[20,225],[6,197]
       ]},
-    { key: 'country.ru', flag: 'рџ‡·рџ‡є',
+    { key: 'country.ru', flag: '🇷🇺',
       pts: [
         // NW corner and the northern coast going east, clockwise
         [48,145],[66,131],[102,123],[129,105],[151,100],[174,118],[201,131],
@@ -945,18 +921,18 @@ function initDeliveryMap() {
         // Kaliningrad-ish nub at the bottom-left, then up the west edge
         [30,293],[12,271],[32,253],[39,226],[21,199],[32,172]
       ]},
-    { key: 'country.tm', flag: 'рџ‡№рџ‡І',
+    { key: 'country.tm', flag: '🇹🇲',
       pts: [[359,343],[356,305],[330,303],[290,263],[262,258],[223,235],[198,230],[182,239],[159,238],[134,264],[103,272],[96,240],[101,193],[74,177],[83,146],[59,144],[67,105],[100,116],[131,102],[106,75],[96,49],[67,60],[64,93],[53,64],[68,49],[108,39],[132,52],[157,88],[175,86],[215,85],[209,62],[239,46],[268,20],[316,44],[320,80],[333,90],[371,88],[383,96],[400,143],[441,174],[464,195],[500,218],[547,237],[546,265],[536,264],[519,251],[514,268],[484,276],[477,313],[457,326],[429,333],[422,354],[395,360],[359,343]]},
-    { key: 'country.az', flag: 'рџ‡¦рџ‡ї',
+    { key: 'country.az', flag: '🇦🇿',
       pts: [[112,221],[134,246],[166,246],[166,261],[195,315],[145,303],[109,259],[97,223],[112,221]],
       pts2: [[284,81],[316,87],[329,63],[372,25],[410,75],[447,142],[480,146],[503,172],[443,180],[430,253],[418,286],[391,308],[393,355],[375,360],[330,310],[355,264],[334,236],[307,243],[221,313],[220,247],[187,231],[156,206],[177,176],[138,143],[153,119],[125,103],[110,78],[128,63],[182,90],[221,95],[231,84],[195,33],[214,20],[234,23],[284,81]]},
-    { key: 'country.ly', flag: 'рџ‡±рџ‡ѕ',
+    { key: 'country.ly', flag: '🇱🇾',
       pts: [[247,278],[232,287],[219,273],[184,262],[175,247],[157,235],[147,240],[139,226],[138,215],[125,197],[134,186],[132,170],[135,157],[133,145],[137,125],[136,113],[129,91],[140,85],[142,75],[139,64],[154,54],[161,46],[172,39],[173,20],[199,29],[208,26],[227,31],[256,42],[266,64],[286,69],[317,80],[341,92],[351,85],[362,74],[357,55],[364,43],[380,31],[395,27],[425,33],[432,44],[440,44],[447,48],[469,51],[475,59],[467,71],[470,82],[464,98],[471,118],[471,207],[471,299],[471,349],[446,349],[445,360],[357,312],[270,264],[247,278]]},
-    { key: 'country.vn', flag: 'рџ‡»рџ‡і',
+    { key: 'country.vn', flag: '🇻🇳',
       pts: [[351,61],[321,81],[303,103],[298,119],[315,143],[335,173],[355,188],[369,206],[379,249],[376,289],[358,304],[332,319],[314,339],[287,360],[279,345],[285,330],[269,317],[288,307],[311,306],[301,292],[338,274],[341,246],[336,231],[340,208],[334,192],[318,176],[304,155],[285,128],[259,114],[265,106],[279,100],[271,80],[244,80],[234,59],[221,40],[233,35],[250,35],[272,32],[291,20],[301,29],[321,33],[318,46],[328,55],[351,61]]},
-    { key: 'country.th', flag: 'рџ‡№рџ‡­',
+    { key: 'country.th', flag: '🇹🇭',
       pts: [[325,210],[305,199],[285,200],[289,182],[269,182],[267,207],[255,241],[248,261],[249,278],[264,279],[273,300],[277,320],[290,333],[303,336],[315,348],[307,357],[293,360],[291,348],[273,338],[269,342],[260,333],[256,322],[244,309],[233,298],[229,311],[225,299],[228,284],[234,262],[245,238],[257,217],[249,196],[249,185],[246,172],[231,154],[226,142],[234,138],[242,118],[233,103],[219,86],[208,66],[217,61],[227,36],[243,35],[256,25],[269,20],[279,27],[280,41],[295,42],[290,66],[290,87],[314,73],[321,77],[334,77],[339,69],[356,70],[373,89],[374,112],[392,132],[391,151],[384,162],[363,159],[334,163],[319,182],[325,210]]},
-    { key: 'country.ge', flag: 'рџ‡¬рџ‡Є',
+    { key: 'country.ge', flag: '🇬🇪',
       pts: [[154,277],[166,229],[146,152],[97,110],[51,97],[20,63],[30,49],[101,69],[224,87],[339,141],[353,162],[404,144],[482,168],[508,214],[560,241],[539,256],[580,317],[569,331],[523,324],[461,291],[440,310],[324,328],[243,272],[154,277]]},
   ];
 
@@ -1046,10 +1022,10 @@ function initDeliveryMap() {
 }
 
 function cardHTML(p) {
-  const img = p.images?.[0] ? `<img src="${esc(p.images[0])}" alt="${esc(pn(p))}" loading="lazy">` : `<div class="ph">рџ›ў</div>`;
+  const img = p.images?.[0] ? `<img src="${esc(p.images[0])}" alt="${esc(pn(p))}" loading="lazy">` : `<div class="ph">🛢</div>`;
   const ok = p.quantity > 0;
   const priced = p.price !== null && p.price !== undefined;
-  const sub = [p.viscosity, p.litres, ...fuelL(p)].filter(Boolean).join(' В· ') || p.brand || '';
+  const sub = [p.viscosity, p.litres, ...fuelL(p)].filter(Boolean).join(' · ') || p.brand || '';
   return `<article class="card${ok ? '' : ' dim'}" data-id="${p.id}">
     <div class="card-img">${img}${ok ? '' : `<span class="tag-out">${esc(t('stock.out'))}</span>`}</div>
     <div class="card-b">
@@ -1057,13 +1033,13 @@ function cardHTML(p) {
       <div class="card-s">${esc(sub)}</div>
       <div class="card-f">
         <div class="card-p">${priced ? `${fmt(p.price)} <span>${esc(S.cur)}</span>` : `<span class="card-ask">Price on request</span>`}</div>
-        <span class="card-view">View details <b>в†—</b></span>
+        <span class="card-view">View details <b>↗</b></span>
       </div>
     </div>
   </article>`;
 }
 
-// в”Ђв”Ђ Product modal в”Ђв”Ђ
+// ── Product modal ──
 function openProduct(id) {
   const p = S.products.find(x => x.id === id); if (!p) return;
   const imgs = p.images?.length ? p.images : [];
@@ -1077,7 +1053,7 @@ function openProduct(id) {
     <button class="modal-x" id="mx" aria-label="${esc(t('close'))}"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="pd">
       <div class="pd-media">
-        <div class="pd-main" id="pdm">${imgs.length ? `<img src="${esc(imgs[0])}" alt="${esc(pn(p))}">` : `<div class="ph">рџ›ў</div>`}</div>
+        <div class="pd-main" id="pdm">${imgs.length ? `<img src="${esc(imgs[0])}" alt="${esc(pn(p))}">` : `<div class="ph">🛢</div>`}</div>
         ${imgs.length > 1 ? `<div class="pd-thumbs">${imgs.map((im, i) => `<div class="pd-thumb${i === 0 ? ' on' : ''}" data-i="${i}"><img src="${esc(im)}" alt=""></div>`).join('')}</div>` : ''}
       </div>
       <div class="pd-info">
@@ -1087,13 +1063,13 @@ function openProduct(id) {
         <div class="pd-tags">${chips}</div>
         ${p.specs?.length ? `<div class="pd-specs">${p.specs.map(s => `<span>${esc(s)}</span>`).join('')}</div>` : ''}
         <div class="pd-price">${priced ? `${fmt(p.price)} <span>${esc(S.cur)}</span>` : 'Price on request'}</div>
-        <div class="pd-stock">${p.quantity > 0 ? esc(t('stock.in', { n: p.quantity })) : 'рџ” ' + esc(t('stock.out'))}</div>
+        <div class="pd-stock">${p.quantity > 0 ? esc(t('stock.in', { n: p.quantity })) : '😔 ' + esc(t('stock.out'))}</div>
         ${desc ? `<div class="pd-desc">${TextFmt.toHtml(desc)}</div>` : ''}
-        ${!priced ? `<div class="note" style="margin-bottom:14px">${esc(t('price.tbd'))} В· <a href="https://t.me/carmon_oil_admin?text=${encodeURIComponent(p.name)}" target="_blank" rel="noopener" style="text-decoration:underline">${esc(t('price.ask_btn'))}</a></div>` : ''}
+        ${!priced ? `<div class="note" style="margin-bottom:14px">${esc(t('price.tbd'))} · <a href="https://t.me/carmon_oil_admin?text=${encodeURIComponent(p.name)}" target="_blank" rel="noopener" style="text-decoration:underline">${esc(t('price.ask_btn'))}</a></div>` : ''}
         ${ok ? `
         <div class="qty">
           <div class="qbox">
-            <button id="qm" aria-label="${esc(t('less'))}">в€’</button>
+            <button id="qm" aria-label="${esc(t('less'))}">−</button>
             <input id="qv" type="text" inputmode="numeric" value="1" aria-label="${esc(t('qty'))}">
             <button id="qp" aria-label="${esc(t('more'))}">+</button>
           </div>
@@ -1141,7 +1117,7 @@ function openProduct(id) {
   }
 }
 
-// в•ђв•ђв•ђ LIGHTBOX в•ђв•ђв•ђ
+// ═══ LIGHTBOX ═══
 // Full-screen viewer for product photos; keyboard arrows / swipe move between them.
 function openLightbox(imgs, idx = 0) {
   if (!imgs?.length) return;
@@ -1153,7 +1129,7 @@ function openLightbox(imgs, idx = 0) {
   const paint = () => {
     lb.innerHTML = `
       <button class="lb-x" aria-label="${esc(t('close'))}"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      ${many ? `<button class="lb-nav lb-prev" aria-label="${esc(t('less'))}">вЂ№</button><button class="lb-nav lb-next" aria-label="${esc(t('more'))}">вЂє</button>` : ''}
+      ${many ? `<button class="lb-nav lb-prev" aria-label="${esc(t('less'))}">‹</button><button class="lb-nav lb-next" aria-label="${esc(t('more'))}">›</button>` : ''}
       <img src="${esc(imgs[i])}" alt="">
       ${many ? `<div class="lb-count">${i + 1} / ${imgs.length}</div>` : ''}`;
     lb.querySelector('.lb-x').onclick = closeLightbox;
@@ -1182,23 +1158,23 @@ function closeLightbox() {
   if ($('#modal').classList.contains('hidden') && $('#drawer').classList.contains('hidden')) document.body.style.overflow = '';
 }
 
-// в•ђв•ђв•ђ CART DRAWER в•ђв•ђв•ђ
+// ═══ CART DRAWER ═══
 function openCart() {
   if (!S.cart.length) {
-    openDrawer(t('cart.title'), `<div class="empty"><div class="empty-i">рџ›’</div><h3>${esc(t('cart.empty'))}</h3><p>${esc(t('cart.empty_sub'))}</p></div>`, '');
+    openDrawer(t('cart.title'), `<div class="empty"><div class="empty-i">🛒</div><h3>${esc(t('cart.empty'))}</h3><p>${esc(t('cart.empty_sub'))}</p></div>`, '');
     return;
   }
   const body = S.cart.map(i => `
     <div class="ci">
-      <div class="ci-img">${i.image ? `<img src="${esc(i.image)}" alt="">` : `<div class="ph" style="font-size:24px">рџ›ў</div>`}</div>
+      <div class="ci-img">${i.image ? `<img src="${esc(i.image)}" alt="">` : `<div class="ph" style="font-size:24px">🛢</div>`}</div>
       <div class="ci-b">
         <div class="ci-n">${esc(i.name)}</div>
-        <div class="ci-s">${esc([i.litres, i.viscosity].filter(Boolean).join(' В· '))}</div>
+        <div class="ci-s">${esc([i.litres, i.viscosity].filter(Boolean).join(' · '))}</div>
         <div class="ci-f">
           <div class="ci-p">${i.price == null ? esc(t('price.ask')) : `${fmt(i.price * i.quantity)} ${esc(S.cur)}`}</div>
           <div style="display:flex;gap:6px;align-items:center">
             <div class="qbox qbox-sm">
-              <button data-m="${i.product_id}" aria-label="${esc(t('less'))}">в€’</button>
+              <button data-m="${i.product_id}" aria-label="${esc(t('less'))}">−</button>
               <input type="text" inputmode="numeric" data-q="${i.product_id}" value="${i.quantity}" aria-label="${esc(t('qty'))}">
               <button data-p="${i.product_id}" aria-label="${esc(t('more'))}">+</button>
             </div>
@@ -1241,7 +1217,7 @@ function openCart() {
   $('#tocheck').onclick = openCheckout;
 }
 
-// в•ђв•ђв•ђ CHECKOUT в•ђв•ђв•ђ
+// ═══ CHECKOUT ═══
 function openCheckout() {
   const p = S.me?.profile || {};
   const authed = !!S.me?.authenticated;
@@ -1303,7 +1279,7 @@ async function placeOrder() {
     closeDrawer();
     openModal(`
       <div style="padding:44px 32px;text-align:center">
-        <div style="font-size:54px">вњ…</div>
+        <div style="font-size:54px">✅</div>
         <h2 style="font-size:23px;font-weight:700;margin:14px 0 8px">${esc(t('ck.done_title', { id: r.order_id }))}</h2>
         <p style="color:var(--tx2);font-size:15px;line-height:1.6;max-width:34ch;margin:0 auto 22px">
           ${t('ck.done_p', { phone: esc(g.phone) })}
@@ -1318,7 +1294,7 @@ async function placeOrder() {
   }
 }
 
-// в•ђв•ђв•ђ TELEGRAM LOGIN в•ђв•ђв•ђ
+// ═══ TELEGRAM LOGIN ═══
 function mountTelegramLogin(host) {
   if (!host || !S.cfg.bot_username) return;
   const s = document.createElement('script');
@@ -1333,11 +1309,11 @@ function mountTelegramLogin(host) {
   host.appendChild(s);
 }
 
-// в•ђв•ђв•ђ ORDERS в•ђв•ђв•ђ
+// ═══ ORDERS ═══
 async function ordersPage() {
   if (!S.me?.authenticated) {
     $('#main').innerHTML = `<div class="wrap"><div class="empty">
-      <div class="empty-i">рџ”’</div><h3>${esc(t('orders.login_title'))}</h3>
+      <div class="empty-i">🔒</div><h3>${esc(t('orders.login_title'))}</h3>
       <p>${esc(t('orders.login_p'))}</p>
       <div id="tgl2" style="margin-top:10px"></div></div></div>`;
     mountTelegramLogin($('#tgl2'));
@@ -1347,10 +1323,10 @@ async function ordersPage() {
   try {
     S.orders = await api('/api/orders');
     const list = S.orders.length ? `<div class="olist">${S.orders.map(oCard).join('')}</div>`
-      : `<div class="empty"><div class="empty-i">рџ“‹</div><h3>${esc(t('orders.none'))}</h3><p>${esc(t('orders.none_sub'))}</p><a class="btn btn-p" href="#/">${esc(t('orders.to_catalog'))}</a></div>`;
+      : `<div class="empty"><div class="empty-i">📋</div><h3>${esc(t('orders.none'))}</h3><p>${esc(t('orders.none_sub'))}</p><a class="btn btn-p" href="#/">${esc(t('orders.to_catalog'))}</a></div>`;
     $('#main').innerHTML = `<div class="wrap"><div class="sec-head"><h1>${esc(t('orders.title'))}</h1><p>${esc(t('orders.count', { n: S.orders.length }))}</p></div>${list}</div>`;
   } catch (e) {
-    $('#main').innerHTML = `<div class="wrap"><div class="empty"><div class="empty-i">вљ пёЏ</div><h3>${esc(t('orders.err'))}</h3><p>${esc(e.message)}</p></div></div>`;
+    $('#main').innerHTML = `<div class="wrap"><div class="empty"><div class="empty-i">⚠️</div><h3>${esc(t('orders.err'))}</h3><p>${esc(e.message)}</p></div></div>`;
   }
 }
 
@@ -1360,7 +1336,7 @@ function oCard(o) {
       <div><div class="ocard-id">${esc(t('orders.one', { id: o.id }))}</div><div class="ocard-d">${fmtDate(o.created_at)}</div></div>
       <span class="st st-${o.status}">${esc(stL(o.status))}</span>
     </div>
-    <div class="oitems">${o.items.map(i => `${esc(i.name)}${i.litres ? ` (${esc(i.litres)})` : ''} Г— ${i.quantity}`).join('<br>')}</div>
+    <div class="oitems">${o.items.map(i => `${esc(i.name)}${i.litres ? ` (${esc(i.litres)})` : ''} × ${i.quantity}`).join('<br>')}</div>
     <div class="ocard-f">
       <span class="ocard-t">${sumLabel(o.total_price, itemsTbd(o.items), o.currency)}</span>
       <span class="src">${esc(o.city || '')}</span>
@@ -1368,7 +1344,7 @@ function oCard(o) {
   </div>`;
 }
 
-// в•ђв•ђв•ђ KNOWLEDGE ARTICLES в•ђв•ђв•ђ
+// ═══ KNOWLEDGE ARTICLES ═══
 function articlePage(slug) {
   const articles = {
     viscosity: {
@@ -1377,7 +1353,7 @@ function articlePage(slug) {
       image: 'assets/viscosity.jpg',
       sections: [
         ['Read the SAE grade', '<p>Grades such as <b>5W-30</b> or <b>0W-20</b> describe how the oil behaves in cold and hot conditions. The number before W relates to low-temperature flow; the number after the dash describes viscosity at operating temperature.</p>'],
-        ['Match the vehicle requirement', '<p>Start with the ownerвЂ™s manual or the vehicle manufacturerвЂ™s current specification. Do not choose only by climate or marketing name: the required SAE grade and performance standard should match the engine.</p>'],
+        ['Match the vehicle requirement', '<p>Start with the owner’s manual or the vehicle manufacturer’s current specification. Do not choose only by climate or marketing name: the required SAE grade and performance standard should match the engine.</p>'],
         ['Ask for the correct application', '<p>For a product recommendation, send us the vehicle model, engine, model year, fuel type and destination market. Carmon Oil can then prepare a suitable product shortlist for review.</p>']
       ]
     },
@@ -1386,9 +1362,9 @@ function articlePage(slug) {
       intro: 'Fuel type is one of the first details to confirm when selecting engine oil because engines and operating conditions can require different standards.',
       image: 'assets/gasoline.jpg',
       sections: [
-        ['Gasoline engines', '<p>Confirm the manufacturerвЂ™s required viscosity and performance category. Modern gasoline engines may also require a specific low-SAPS or fuel-economy standard.</p>'],
+        ['Gasoline engines', '<p>Confirm the manufacturer’s required viscosity and performance category. Modern gasoline engines may also require a specific low-SAPS or fuel-economy standard.</p>'],
         ['Diesel engines', '<p>Diesel applications can have different soot, temperature and after-treatment requirements. Check whether the vehicle uses a particulate filter or other emissions equipment before choosing the oil.</p>'],
-        ['LPG and mixed fleets', '<p>LPG vehicles and mixed fleets should be matched to the vehicle makerвЂ™s specification and actual operating conditions. For workshops and distributors, we can prepare options by vehicle group and application.</p>']
+        ['LPG and mixed fleets', '<p>LPG vehicles and mixed fleets should be matched to the vehicle maker’s specification and actual operating conditions. For workshops and distributors, we can prepare options by vehicle group and application.</p>']
       ]
     },
     genuine: {
@@ -1415,26 +1391,26 @@ function articlePage(slug) {
   const a = articles[slug] || articles.viscosity;
   $('#main').innerHTML = `<main class="article-page">
     <section class="article-hero" style="background-image:linear-gradient(90deg,rgba(7,22,34,.94),rgba(7,22,34,.55)),url('${a.image}')">
-      <div class="wrap article-hero-in"><a class="article-back" href="#/">в†ђ Back to Carmon Oil</a><div class="lp-kicker lp-kicker-or">${a.kicker}</div><h1>${a.title}</h1><p>${a.intro}</p></div>
+      <div class="wrap article-hero-in"><a class="article-back" href="#/">← Back to Carmon Oil</a><div class="lp-kicker lp-kicker-or">${a.kicker}</div><h1>${a.title}</h1><p>${a.intro}</p></div>
     </section>
-    <section class="article-body"><div class="wrap article-layout"><div class="article-main">${a.sections.map(([h, body], i) => `<article class="article-block"><span>0${i + 1}</span><h2>${h}</h2>${body}</article>`).join('')}<div class="article-actions"><a class="btn-or" href="#/catalog">Explore Products <span class="arr">в†’</span></a><a class="article-link" href="#/business">Ask Carmon Oil <span>в†—</span></a></div></div><aside class="article-aside"><div class="article-aside-kicker">Carmon Oil Guide</div><h3>Need a product recommendation?</h3><p>Share the vehicle, application, destination and required quantity. We will help prepare a shortlist for review.</p><a class="btn-or" href="#/business">Request a Quote <span class="arr">в†—</span></a></aside></div></section>
+    <section class="article-body"><div class="wrap article-layout"><div class="article-main">${a.sections.map(([h, body], i) => `<article class="article-block"><span>0${i + 1}</span><h2>${h}</h2>${body}</article>`).join('')}<div class="article-actions"><a class="btn-or" href="#/catalog">Explore Products <span class="arr">→</span></a><a class="article-link" href="#/business">Ask Carmon Oil <span>↗</span></a></div></div><aside class="article-aside"><div class="article-aside-kicker">Carmon Oil Guide</div><h3>Need a product recommendation?</h3><p>Share the vehicle, application, destination and required quantity. We will help prepare a shortlist for review.</p><a class="btn-or" href="#/business">Request a Quote <span class="arr">↗</span></a></aside></div></section>
   </main>`;
   requestAnimationFrame(() => initAnimations());
 }
 
-// в•ђв•ђв•ђ PRESENTATION в•ђв•ђв•ђ
+// ═══ PRESENTATION ═══
 function presentationPage() {
   $('#main').innerHTML = `
     <main class="presentation-page">
       <section class="presentation-cover">
         <div class="presentation-cover-overlay"></div>
         <div class="wrap presentation-cover-in">
-          <div class="lp-kicker lp-kicker-or">Carmon Oil В· Production Presentation</div>
+          <div class="lp-kicker lp-kicker-or">Carmon Oil · Production Presentation</div>
           <h1>Product Range.<br><span>Brand Story.</span><br>Export Ready.</h1>
           <p>A visual introduction to Carmon Oil, our lubricant product families and the export solutions prepared for distributors, workshops, fleets and international buyers.</p>
           <div class="presentation-actions">
-            <a class="btn-or" href="#presentation-view">View Presentation <span class="arr">в†“</span></a>
-            <a class="btn-gl" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Fullscreen <span class="arr">в†—</span></a>
+            <a class="btn-or" href="#presentation-view">View Presentation <span class="arr">↓</span></a>
+            <a class="btn-gl" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Fullscreen <span class="arr">↗</span></a>
           </div>
           <div class="presentation-meta"><span>57-page production catalogue</span><span>Product families</span><span>Technical introductions</span><span>Export support</span></div>
         </div>
@@ -1449,7 +1425,7 @@ function presentationPage() {
             </div>
             <div class="presentation-intro-copy">
               <p>The Carmon Oil presentation brings together the company story, service model, lubricant families, technical references and export-focused supply process in one visual reference.</p>
-              <a class="text-link" href="#/business">Request a product list <span>в†—</span></a>
+              <a class="text-link" href="#/business">Request a product list <span>↗</span></a>
             </div>
           </div>
           <div class="presentation-points">
@@ -1465,20 +1441,20 @@ function presentationPage() {
         <div class="wrap">
           <div class="presentation-view-head">
             <div><div class="lp-kicker lp-kicker-or">Full Presentation</div><h2>Explore the Carmon Oil catalogue.</h2></div>
-            <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Full Presentation <span class="arr">в†—</span></a>
+            <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Full Presentation <span class="arr">↗</span></a>
           </div>
           <div class="presentation-pdf-frame"><iframe src="/assets/carmon-oil-presentation.pdf" title="Carmon Oil full presentation" loading="eager"></iframe></div>
         </div>
       </section>
 
       <section class="presentation-cta">
-        <div class="wrap presentation-cta-in"><div><div class="lp-kicker lp-kicker-or">Ready to Discuss Supply?</div><h2>Turn the presentation into a product conversation.</h2></div><a class="btn-or" href="#/business">Request a B2B quote <span class="arr">в†—</span></a></div>
+        <div class="wrap presentation-cta-in"><div><div class="lp-kicker lp-kicker-or">Ready to Discuss Supply?</div><h2>Turn the presentation into a product conversation.</h2></div><a class="btn-or" href="#/business">Request a B2B quote <span class="arr">↗</span></a></div>
       </section>
     </main>`;
   requestAnimationFrame(() => initAnimations());
 }
 
-// в•ђв•ђв•ђ BRAND PAGES & COMPARISON в•ђв•ђв•ђ
+// ═══ BRAND PAGES & COMPARISON ═══
 function brandPage(brandName) {
   const b = BRANDS.find(x => x.id === brandName) || BRANDS[1];
   const profile = BRAND_PROFILES[b.id] || { eyebrow: 'Carmon Oil brand reference', title: `${b.label} product range.`, benefits: ['Product availability confirmed per request', 'Application-led selection', 'Destination-specific supply review'] };
@@ -1492,17 +1468,17 @@ function brandPage(brandName) {
       <section class="brand-page-hero">
         <div class="brand-page-hero-glow"></div>
         <div class="wrap brand-page-hero-in">
-          <a class="article-back" href="#/compare-brands">в†ђ Back to Brand Comparison</a>
+          <a class="article-back" href="#/compare-brands">← Back to Brand Comparison</a>
           <div class="brand-page-hero-grid">
-            <div><div class="lp-kicker lp-kicker-or">${esc(profile.eyebrow)}</div><h1>${esc(profile.title)}</h1><p>${esc(BRAND_STORIES[b.id] || '')}</p><div class="brand-page-actions"><a class="btn-or" href="#brand-products">View Product Lineup <span class="arr">в†“</span></a><a class="btn-gl" href="#/business">Request Brand Availability <span class="arr">в†—</span></a></div></div>
+            <div><div class="lp-kicker lp-kicker-or">${esc(profile.eyebrow)}</div><h1>${esc(profile.title)}</h1><p>${esc(BRAND_STORIES[b.id] || '')}</p><div class="brand-page-actions"><a class="btn-or" href="#brand-products">View Product Lineup <span class="arr">↓</span></a><a class="btn-gl" href="#/business">Request Brand Availability <span class="arr">↗</span></a></div></div>
             <div class="brand-page-logo-card"><span>BRAND REFERENCE</span><img src="${esc(b.logo)}" alt="${esc(b.label)}"><b>${esc(b.label)}</b></div>
           </div>
         </div>
       </section>
-      <section class="brand-page-summary"><div class="wrap"><div class="brand-summary-grid"><div><div class="lp-kicker lp-kicker-or">At a glance</div><h2>Review the range.<br>Then build the request.</h2></div><p>Use this brand page to review the product records currently represented in the Carmon Oil catalogue. Final availability, commercial terms and destination support are confirmed per request.</p></div><div class="brand-stat-grid"><div><b>${products.length}</b><span>Catalogue products</span></div><div><b>${viscosities.length || 'вЂ”'}</b><span>Viscosities entered</span></div><div><b>${categories.length || 'вЂ”'}</b><span>Product types entered</span></div><div><b>${applications.length || 'вЂ”'}</b><span>Applications entered</span></div></div></div></section>
+      <section class="brand-page-summary"><div class="wrap"><div class="brand-summary-grid"><div><div class="lp-kicker lp-kicker-or">At a glance</div><h2>Review the range.<br>Then build the request.</h2></div><p>Use this brand page to review the product records currently represented in the Carmon Oil catalogue. Final availability, commercial terms and destination support are confirmed per request.</p></div><div class="brand-stat-grid"><div><b>${products.length}</b><span>Catalogue products</span></div><div><b>${viscosities.length || '—'}</b><span>Viscosities entered</span></div><div><b>${categories.length || '—'}</b><span>Product types entered</span></div><div><b>${applications.length || '—'}</b><span>Applications entered</span></div></div></div></section>
       <section class="brand-benefits"><div class="wrap"><div class="lp-kicker lp-kicker-or">Why review ${esc(b.label)}</div><div class="brand-benefit-grid">${profile.benefits.map((x, i) => `<article><span>0${i + 1}</span><h3>${esc(x)}</h3><p>Reviewed against the product and destination details provided for the request.</p></article>`).join('')}</div></div></section>
-      <section class="brand-data"><div class="wrap"><div class="brand-data-grid"><div><div class="lp-kicker lp-kicker-or">Catalogue snapshot</div><h2>What is currently entered.</h2><p class="brand-status">${esc(dataStatus)}</p></div><div class="brand-data-lists"><div><span>Product types</span><b>${esc(categories.length ? categories.join(' В· ') : 'To be confirmed')}</b></div><div><span>Viscosities</span><b>${esc(viscosities.length ? viscosities.join(' В· ') : 'To be confirmed')}</b></div><div><span>Applications</span><b>${esc(applications.length ? applications.join(' В· ') : 'To be confirmed')}</b></div></div></div></div></section>
-      <section class="brand-products" id="brand-products"><div class="wrap"><div class="brand-products-head"><div><div class="lp-kicker lp-kicker-or">${esc(b.label)} lineup</div><h2>Available products.</h2></div><a class="btn-or" href="#/compare-brands">Compare Brands <span class="arr">в†—</span></a></div>${products.length ? `<div class="grid brand-product-grid">${products.map(p => `<div class="brand-product-card card" data-id="${p.id}">${cardHTML(p)}</div>`).join('')}</div>` : `<div class="brand-empty"><div class="brand-empty-mark">пј‹</div><h3>No confirmed products are entered for this brand yet.</h3><p>Request the current ${esc(b.label)} product list, packaging and availability for your destination.</p><a class="btn-or" href="#/business">Request Product List <span class="arr">в†—</span></a></div>`}</div></section>
+      <section class="brand-data"><div class="wrap"><div class="brand-data-grid"><div><div class="lp-kicker lp-kicker-or">Catalogue snapshot</div><h2>What is currently entered.</h2><p class="brand-status">${esc(dataStatus)}</p></div><div class="brand-data-lists"><div><span>Product types</span><b>${esc(categories.length ? categories.join(' · ') : 'To be confirmed')}</b></div><div><span>Viscosities</span><b>${esc(viscosities.length ? viscosities.join(' · ') : 'To be confirmed')}</b></div><div><span>Applications</span><b>${esc(applications.length ? applications.join(' · ') : 'To be confirmed')}</b></div></div></div></div></section>
+      <section class="brand-products" id="brand-products"><div class="wrap"><div class="brand-products-head"><div><div class="lp-kicker lp-kicker-or">${esc(b.label)} lineup</div><h2>Available products.</h2></div><a class="btn-or" href="#/compare-brands">Compare Brands <span class="arr">↗</span></a></div>${products.length ? `<div class="grid brand-product-grid">${products.map(p => `<div class="brand-product-card card" data-id="${p.id}">${cardHTML(p)}</div>`).join('')}</div>` : `<div class="brand-empty"><div class="brand-empty-mark">＋</div><h3>No confirmed products are entered for this brand yet.</h3><p>Request the current ${esc(b.label)} product list, packaging and availability for your destination.</p><a class="btn-or" href="#/business">Request Product List <span class="arr">↗</span></a></div>`}</div></section>
     </main>`;
   brandProductsHandlers($('#main'));
 }
@@ -1519,14 +1495,14 @@ function compareBrandsPage() {
   const render = () => {
     const filtered = S.products.filter(p => (els.brand.value === 'all' || p.brand === els.brand.value) && (els.category.value === 'all' || p.category === els.category.value) && (els.viscosity.value === 'all' || p.viscosity === els.viscosity.value) && (els.application.value === 'all' || (p.fuel || '').split(',').includes(els.application.value)));
     const activeBrands = els.brand.value === 'all' ? BRANDS.slice(1) : BRANDS.filter(b => b.id === els.brand.value);
-    els.results.innerHTML = `<div class="compare-table-head"><span>Brand</span><span>Product types</span><span>Viscosities</span><span>Applications</span><span>Products</span><span></span></div><div class="compare-rows">${activeBrands.map(b => { const ps = filtered.filter(p => p.brand === b.id); const cats = uniqueValues(ps, p => p.category).map(x => catL(x, true)); const vs = uniqueValues(ps, p => p.viscosity); const apps = productApplications(ps); return `<article class="compare-row${ps.length ? '' : ' compare-row--empty'}"><div class="compare-brand-cell"><img src="${esc(b.logo)}" alt="${esc(b.label)}"><strong>${esc(b.label)}</strong><a href="#/brand/${brandSlug(b.id)}">Open brand page в†—</a></div><div>${esc(cats.length ? cats.join(' В· ') : 'вЂ”')}</div><div>${esc(vs.length ? vs.join(' В· ') : 'вЂ”')}</div><div>${esc(apps.length ? apps.join(' В· ') : 'вЂ”')}</div><div class="compare-count">${ps.length}<small>${ps.length === 1 ? 'product' : 'products'}</small></div><div>${ps.length ? `<button class="compare-view" data-brand="${esc(b.id)}">View lineup</button>` : '<span class="compare-pending">Pending</span>'}</div></article>`; }).join('')}</div>`;
+    els.results.innerHTML = `<div class="compare-table-head"><span>Brand</span><span>Product types</span><span>Viscosities</span><span>Applications</span><span>Products</span><span></span></div><div class="compare-rows">${activeBrands.map(b => { const ps = filtered.filter(p => p.brand === b.id); const cats = uniqueValues(ps, p => p.category).map(x => catL(x, true)); const vs = uniqueValues(ps, p => p.viscosity); const apps = productApplications(ps); return `<article class="compare-row${ps.length ? '' : ' compare-row--empty'}"><div class="compare-brand-cell"><img src="${esc(b.logo)}" alt="${esc(b.label)}"><strong>${esc(b.label)}</strong><a href="#/brand/${brandSlug(b.id)}">Open brand page ↗</a></div><div>${esc(cats.length ? cats.join(' · ') : '—')}</div><div>${esc(vs.length ? vs.join(' · ') : '—')}</div><div>${esc(apps.length ? apps.join(' · ') : '—')}</div><div class="compare-count">${ps.length}<small>${ps.length === 1 ? 'product' : 'products'}</small></div><div>${ps.length ? `<button class="compare-view" data-brand="${esc(b.id)}">View lineup</button>` : '<span class="compare-pending">Pending</span>'}</div></article>`; }).join('')}</div>`;
     els.results.querySelectorAll('.compare-view').forEach(btn => btn.onclick = () => location.hash = `#/brand/${brandSlug(btn.dataset.brand)}`);
   };
   Object.values(els).filter(x => x && x.tagName === 'SELECT').forEach(el => el.onchange = render);
   try { render(); } catch (err) { els.results.innerHTML = `<div class="empty"><div class="empty-i">!</div><h3>Comparison data needs review</h3><p>${esc(err.message || 'Please try again.')}</p></div>`; }
 }
 
-// в•ђв•ђв•ђ LOGISTICS в•ђв•ђв•ђ
+// ═══ LOGISTICS ═══
 function logisticsPage() {
   $('#main').innerHTML = `
     <main class="info-page logistics-page">
@@ -1535,7 +1511,7 @@ function logisticsPage() {
           <div class="lp-kicker lp-kicker-or">Built for Global Distribution</div>
           <h1>Reliable logistics.<br><span>Clear supply process.</span></h1>
           <p>From product selection and documentation to order preparation, loading and agreed delivery, Carmon Oil helps buyers move with a clearer plan.</p>
-          <a class="btn-or" href="#/business">Plan a shipment <span class="arr">в†’</span></a>
+          <a class="btn-or" href="#/business">Plan a shipment <span class="arr">→</span></a>
         </div>
       </section>
       <section class="info-section">
@@ -1550,14 +1526,14 @@ function logisticsPage() {
         </div>
       </section>
       <section class="info-split">
-        <div class="info-split-copy"><div class="lp-kicker lp-kicker-or">Export Support</div><h2>Built around your destination.</h2><p>Share the country, city, delivery point, product list and requested quantity. Carmon Oil can prepare a destination-specific supply conversation for distributors, workshops, fleets and retail networks.</p><div class="info-checks"><span>вњ“ Destination and product confirmation</span><span>вњ“ Warehouse and loading coordination</span><span>вњ“ Partner-aligned delivery support</span><span>вњ“ Documentation review before dispatch</span></div><a class="btn-or" href="#/business">Request a delivery plan <span class="arr">в†’</span></a></div>
+        <div class="info-split-copy"><div class="lp-kicker lp-kicker-or">Export Support</div><h2>Built around your destination.</h2><p>Share the country, city, delivery point, product list and requested quantity. Carmon Oil can prepare a destination-specific supply conversation for distributors, workshops, fleets and retail networks.</p><div class="info-checks"><span>✓ Destination and product confirmation</span><span>✓ Warehouse and loading coordination</span><span>✓ Partner-aligned delivery support</span><span>✓ Documentation review before dispatch</span></div><a class="btn-or" href="#/business">Request a delivery plan <span class="arr">→</span></a></div>
         <div class="info-split-image"><img src="assets/shipping.png" alt="Carmon Oil export logistics"></div>
       </section>
       <section class="markets-section"><div class="wrap"><div class="lp-kicker lp-kicker-or">Delivery Markets</div><h2>Discuss the route for your market.</h2><div class="market-grid">${['Uzbekistan','Kyrgyzstan','Kazakhstan','Russia','Turkmenistan','Azerbaijan','Libya','Vietnam','Thailand','Georgia'].map((x, i) => `<div class="market-chip"><span>0${i + 1}</span>${x}</div>`).join('')}</div></div></section>
     </main>`;
 }
 
-// в•ђв•ђв•ђ FOR BUSINESS в•ђв•ђв•ђ
+// ═══ FOR BUSINESS ═══
 function businessPage() {
   $('#main').innerHTML = `
     <main class="info-page business-page">
@@ -1566,11 +1542,11 @@ function businessPage() {
           <div class="lp-kicker lp-kicker-or">For Distributors, Fleets & Workshops</div>
           <h1>A product conversation<br><span>built for business.</span></h1>
           <p>Request a product list, availability check, destination-specific quotation or supply discussion. Our team will help define the next step.</p>
-          <a class="btn-or" href="#business-request">Start a request <span class="arr">в†“</span></a>
+          <a class="btn-or" href="#business-request">Start a request <span class="arr">↓</span></a>
         </div>
       </section>
       <section class="business-services info-section"><div class="wrap"><div class="info-section-head"><div><div class="lp-kicker lp-kicker-or">Business Support</div><h2>One contact for<br>the next move.</h2></div><p>Use this page for wholesale volumes, workshop supply, fleet requirements, distributor conversations and product sourcing.</p></div><div class="info-steps"><article><span>01</span><h3>Wholesale supply</h3><p>Discuss product families, packaging, quantities and repeat supply requirements.</p></article><article><span>02</span><h3>Product sourcing</h3><p>Share a brand, viscosity or application and we will prepare a relevant shortlist.</p></article><article><span>03</span><h3>Fleet & workshop</h3><p>Describe your vehicles or equipment so the requested application can be reviewed.</p></article><article><span>04</span><h3>Export coordination</h3><p>Confirm destination, documentation and delivery expectations with the supply team.</p></article></div></div></section>
-      <section class="business-request" id="business-request"><div class="wrap business-request-grid"><div><div class="lp-kicker lp-kicker-or">Request a Quote</div><h2>Tell us what you<br>need to move.</h2><p>Include the products, viscosities, quantities, destination and your preferred contact. Final availability and commercial terms are confirmed by the Carmon Oil team.</p><div class="direct-contact"><b>Direct contact</b><span>+82 10-3768-2270</span><span>carmon1lubricants@gmail.com</span><span>Telegram: @carmon_oil_admin</span><span>Incheon, South Korea В· 09:00вЂ“17:00</span></div></div><form class="business-form" id="business-lead"><label>Company<input name="company" placeholder="Company name" autocomplete="organization"></label><label>Country / destination<input name="country" placeholder="Uzbekistan, KazakhstanвЂ¦" autocomplete="country-name"></label><label>Phone, email or Telegram<input name="contact" placeholder="Your preferred contact" required autocomplete="tel"></label><label>Products and requirements<textarea name="message" rows="5" placeholder="Brands, product lines, viscosities, quantities and delivery needs"></textarea></label><button class="btn-or" type="submit">Send request <span class="arr">в†’</span></button><div class="business-form-msg" id="business-lead-msg"></div></form></div></section>
+      <section class="business-request" id="business-request"><div class="wrap business-request-grid"><div><div class="lp-kicker lp-kicker-or">Request a Quote</div><h2>Tell us what you<br>need to move.</h2><p>Include the products, viscosities, quantities, destination and your preferred contact. Final availability and commercial terms are confirmed by the Carmon Oil team.</p><div class="direct-contact"><b>Direct contact</b><span>+82 10-3768-2270</span><span>carmon1lubricants@gmail.com</span><span>Telegram: @carmon_oil_admin</span><span>Incheon, South Korea · 09:00–17:00</span></div></div><form class="business-form" id="business-lead"><label>Company<input name="company" placeholder="Company name" autocomplete="organization"></label><label>Country / destination<input name="country" placeholder="Uzbekistan, Kazakhstan…" autocomplete="country-name"></label><label>Phone, email or Telegram<input name="contact" placeholder="Your preferred contact" required autocomplete="tel"></label><label>Products and requirements<textarea name="message" rows="5" placeholder="Brands, product lines, viscosities, quantities and delivery needs"></textarea></label><button class="btn-or" type="submit">Send request <span class="arr">→</span></button><div class="business-form-msg" id="business-lead-msg"></div></form></div></section>
       <section class="business-faq"><div class="wrap"><div class="lp-kicker lp-kicker-or">Before You Contact Us</div><h2>What to include in your request.</h2><div class="faq">${[['Product','Brand, category, viscosity and packaging if known.'],['Quantity','Estimated units, cartons, pallets or recurring monthly demand.'],['Destination','Country, city and preferred receiving point.'],['Business type','Distributor, workshop, fleet, retailer or industrial buyer.']].map(([q,a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div></div></section>
     </main>`;
   const form = $('#business-lead');
@@ -1586,17 +1562,17 @@ function businessPage() {
   };
 }
 
-// в•ђв•ђв•ђ HELP в•ђв•ђв•ђ
+// ═══ HELP ═══
 function helpPage() {
   const faqs = [1, 2, 3, 4, 5, 6].map(n => [t(`faq.q${n}`), t(`faq.a${n}`)]);
   $('#main').innerHTML = `<div class="wrap">
     <div class="sec-head"><h1>${esc(t('help.title'))}</h1><p>${esc(t('help.sub'))}</p></div>
     <div class="help-g">
       <a class="help-c" href="https://t.me/carmon_oil_admin" target="_blank" rel="noopener">
-        <div class="help-i">вњ€пёЏ</div><div><div class="help-l">Telegram</div><div class="help-v">@carmon_oil_admin</div></div>
+        <div class="help-i">✈️</div><div><div class="help-l">Telegram</div><div class="help-v">@carmon_oil_admin</div></div>
       </a>
       <a class="help-c" href="tel:+821037682270">
-        <div class="help-i">рџ“ћ</div><div><div class="help-l">${esc(t('help.phone'))}</div><div class="help-v">+82 10-3768-2270</div></div>
+        <div class="help-i">📞</div><div><div class="help-l">${esc(t('help.phone'))}</div><div class="help-v">+82 10-3768-2270</div></div>
       </a>
     </div>
     <div class="sec-head" style="padding-top:8px"><h1 style="font-size:22px">${esc(t('help.faq'))}</h1></div>
@@ -1604,10 +1580,10 @@ function helpPage() {
   </div>`;
 }
 
-// в•ђв•ђв•ђ ADMIN в•ђв•ђв•ђ
+// ═══ ADMIN ═══
 function adminPage() {
   if (!S.me?.is_admin) {
-    $('#main').innerHTML = `<div class="wrap"><div class="empty"><div class="empty-i">рџ”’</div><h3>${esc(t('admin.only'))}</h3><p>${esc(t('admin.only_p'))}</p><div id="tgl3" style="margin-top:10px"></div></div></div>`;
+    $('#main').innerHTML = `<div class="wrap"><div class="empty"><div class="empty-i">🔒</div><h3>${esc(t('admin.only'))}</h3><p>${esc(t('admin.only_p'))}</p><div id="tgl3" style="margin-top:10px"></div></div></div>`;
     mountTelegramLogin($('#tgl3'));
     return;
   }
@@ -1629,7 +1605,7 @@ async function adminSection() {
     if (S.adminTab === 'orders') return aOrders(ac);
     if (S.adminTab === 'settings') return aSettings(ac);
   } catch (e) {
-    ac.innerHTML = `<div class="empty"><div class="empty-i">вљ пёЏ</div><h3>${esc(t('admin.err'))}</h3><p>${esc(e.message)}</p></div>`;
+    ac.innerHTML = `<div class="empty"><div class="empty-i">⚠️</div><h3>${esc(t('admin.err'))}</h3><p>${esc(e.message)}</p></div>`;
   }
 }
 
@@ -1646,8 +1622,8 @@ async function aStats(ac) {
     <div class="stat"><div class="stat-v" style="color:var(--tx2)">${s.cancelledOrders}</div><div class="stat-l">${esc(t('admin.cancelled'))}</div></div>
   </div>
   <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
-    <a class="btn btn-p" href="/api/admin/export/products" download="products.xlsx">рџ“Ґ Export products (.xlsx)</a>
-    <a class="btn btn-p" href="/api/admin/export/orders" download="orders.xlsx">рџ“Ґ Export sales history (.xlsx)</a>
+    <a class="btn btn-p" href="/api/admin/export/products" download="products.xlsx">📥 Export products (.xlsx)</a>
+    <a class="btn btn-p" href="/api/admin/export/orders" download="orders.xlsx">📥 Export sales history (.xlsx)</a>
   </div>`;
 }
 
@@ -1659,17 +1635,17 @@ async function aProducts(ac) {
       <thead><tr><th>${esc(t('admin.th_sort'))}</th><th></th><th>${esc(t('admin.th_name'))}</th><th>${esc(t('admin.th_specs'))}</th><th>${esc(t('admin.th_price'))}</th><th>${esc(t('admin.th_stock'))}</th><th></th></tr></thead>
       <tbody>${ps.map(p => `<tr>
         <td><input class="sort-in" type="number" min="0" value="${p.sort_order ?? 0}" data-so="${p.id}" title="${esc(t('admin.f_sort_hint'))}"></td>
-        <td>${p.images?.[0] ? `<img class="pimg" src="${esc(p.images[0])}" alt="">` : `<div class="pimg ph" style="font-size:18px">рџ›ў</div>`}</td>
+        <td>${p.images?.[0] ? `<img class="pimg" src="${esc(p.images[0])}" alt="">` : `<div class="pimg ph" style="font-size:18px">🛢</div>`}</td>
         <td><b>${esc(p.name)}</b>${p.is_active ? '' : `<span class="badge-off">${esc(t('admin.hidden'))}</span>`}<div class="src">${esc(p.brand || '')}</div></td>
-        <td class="src">${esc([catL(p.category, true), p.viscosity, p.litres, ...fuelL(p)].filter(Boolean).join(' В· '))}</td>
+        <td class="src">${esc([catL(p.category, true), p.viscosity, p.litres, ...fuelL(p)].filter(Boolean).join(' · '))}</td>
         <td>${p.price !== null ? `<b>${fmt(p.price)}</b> ${esc(S.cur)}` : `<span class="src">${esc(t('price.ask'))}</span>`}</td>
         <td>${p.quantity} ${esc(t('pcs'))}</td>
         <td><div class="row-acts">
-          <button class="mini" data-tg="${p.id}" title="${esc(p.is_active ? t('admin.hide') : t('admin.show'))}">${p.is_active ? 'рџ‘Ѓ' : 'рџ™€'}</button>
-          <button class="mini" data-ed="${p.id}" title="${esc(t('admin.edit'))}">вњЏпёЏ</button>
-          <button class=”mini” data-sh=”${p.id}” title=”${esc(t(‘admin.share’))}”>рџ”Ј</button>
-          <button class=”mini” data-dup=”${p.id}” title=”Duplicate”>⧉</button>
-          <button class=”mini mini-d” data-dl=”${p.id}” title=”${esc(t(‘admin.delete’))}”>рџ—‘</button>
+          <button class="mini" data-tg="${p.id}" title="${esc(p.is_active ? t('admin.hide') : t('admin.show'))}">${p.is_active ? '👁' : '🙈'}</button>
+          <button class="mini" data-ed="${p.id}" title="${esc(t('admin.edit'))}">✏️</button>
+          <button class="mini" data-sh="${p.id}" title="${esc(t('admin.share'))}">📣</button>
+          <button class="mini" data-dup="${p.id}" title="Duplicate">⧉</button>
+          <button class="mini mini-d" data-dl="${p.id}" title="${esc(t('admin.delete'))}">🗑</button>
         </div></td>
       </tr>`).join('')}</tbody>
     </table></div>`;
@@ -1687,6 +1663,13 @@ async function aProducts(ac) {
     catch (e) { toast(`${t('admin.share_err')}: ${e.message}`); }
     b.disabled = false;
   });
+  $$('[data-dup]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    try {
+      const np = await api(`/api/products/${b.dataset.dup}/duplicate`, { method: 'POST' });
+      toast(`Duplicated → "${np.name}"`); adminSection();
+    } catch (e) { toast(e.message); b.disabled = false; }
+  });
   $$('[data-ed]').forEach(b => b.onclick = () => productForm(ps.find(x => x.id === +b.dataset.ed)));
   $$('[data-tg]').forEach(b => b.onclick = async () => {
     const p = ps.find(x => x.id === +b.dataset.tg);
@@ -1698,13 +1681,6 @@ async function aProducts(ac) {
     if (!confirm(t('admin.del_q'))) return;
     await api(`/api/products/${b.dataset.dl}`, { method: 'DELETE' });
     toast(t('admin.deleted')); adminSection();
-  });
-  $$('[data-dup]').forEach(b => b.onclick = async () => {
-    b.disabled = true;
-    try {
-      const np = await api(`/api/products/${b.dataset.dup}/duplicate`, { method: 'POST' });
-      toast(`Duplicated → "${np.name}"`); adminSection();
-    } catch (e) { toast(e.message); b.disabled = false; }
   });
 }
 
@@ -1726,7 +1702,7 @@ function productForm(p) {
           <div class="f"><label>${esc(t('admin.f_vol'))}</label><input name="litres" value="${esc(p.litres || '')}" placeholder="${esc(t('admin.f_vol_ph'))}"></div>
         </div>
         <div class="f-row">
-          <div class="f"><label>${esc(t('admin.f_price'))}</label><input name="price" type="number" min="0" step="0.01" value="${p.price ?? ''}" placeholder="вЂ”"></div>
+          <div class="f"><label>${esc(t('admin.f_price'))}</label><input name="price" type="number" min="0" step="0.01" value="${p.price ?? ''}" placeholder="—"></div>
           <div class="f"><label>${esc(t('admin.f_stock'))}</label><input name="quantity" type="number" min="0" value="${p.quantity ?? 0}"></div>
         </div>
         <div class="f-row">
@@ -1737,16 +1713,16 @@ function productForm(p) {
         </div>
         <div class="f"><label>${esc(t('admin.f_desc'))}</label><textarea name="description" rows="6" placeholder="${esc(t('admin.f_desc_ph'))}">${esc(p.description || '')}</textarea><div class="src" style="margin-top:6px">${esc(t('admin.f_desc_hint'))}</div></div>
         <details class="f tr-box"${['uz','en','ko'].some(l => p['name_' + l] || p['desc_' + l]) ? ' open' : ''}>
-          <summary>${esc(t('admin.f_i18n'))} <span class="src">вЂ” ${esc(t('admin.f_i18n_hint'))}</span></summary>
+          <summary>${esc(t('admin.f_i18n'))} <span class="src">— ${esc(t('admin.f_i18n_hint'))}</span></summary>
           ${I18N.LANGS.filter(l => l.code !== 'ru').map(l => `
             <div class="tr-lang"><div class="tr-lang-h">${l.flag} ${esc(l.name)}</div>
               <div class="f"><label>${esc(t('admin.f_name').replace(' *', ''))}</label><input name="name_${l.code}" value="${esc(p['name_' + l.code] || '')}"></div>
               <div class="f"><label>${esc(t('admin.f_desc'))}</label><textarea name="desc_${l.code}" rows="4">${esc(p['desc_' + l.code] || '')}</textarea></div>
             </div>`).join('')}
         </details>
-        ${ed && p.images?.length ? `<div class="f"><label>${esc(t('admin.f_cur_photos'))}</label><div class="ups" id="exi">${p.images.map(i => `<div class="upi" data-img="${esc(i)}"><img src="${esc(i)}"><button type="button" data-rm="${esc(i)}">вњ•</button></div>`).join('')}</div></div>` : ''}
+        ${ed && p.images?.length ? `<div class="f"><label>${esc(t('admin.f_cur_photos'))}</label><div class="ups" id="exi">${p.images.map(i => `<div class="upi" data-img="${esc(i)}"><img src="${esc(i)}"><button type="button" data-rm="${esc(i)}">✕</button></div>`).join('')}</div></div>` : ''}
         <div class="f"><label>${esc(t('admin.f_add_photos'))}</label>
-          <label class="up" for="fi"><div style="font-size:26px">рџ“·</div><div style="font-size:14px;font-weight:600;margin-top:4px">${esc(t('admin.f_pick'))}</div><div class="src">${esc(t('admin.f_hint'))}</div><input type="file" id="fi" multiple accept="image/*"></label>
+          <label class="up" for="fi"><div style="font-size:26px">📷</div><div style="font-size:14px;font-weight:600;margin-top:4px">${esc(t('admin.f_pick'))}</div><div class="src">${esc(t('admin.f_hint'))}</div><input type="file" id="fi" multiple accept="image/*"></label>
           <div class="ups" id="nip"></div>
         </div>
         <div class="f-err hidden" id="pfe"></div>
@@ -1768,7 +1744,7 @@ function productForm(p) {
       r.onload = ev => {
         const d = document.createElement('div');
         d.className = 'upi';
-        d.innerHTML = `<img src="${ev.target.result}"><button type="button">вњ•</button>`;
+        d.innerHTML = `<img src="${ev.target.result}"><button type="button">✕</button>`;
         d.querySelector('button').onclick = () => { S.newImgs = S.newImgs.filter(x => x !== f); d.remove(); };
         g.appendChild(d);
       };
@@ -1813,18 +1789,18 @@ async function aOrders(ac) {
         <td><b>#${o.id}</b><div class="src">${fmtDate(o.created_at)}</div></td>
         <td><b>${esc(o.full_name || t('admin.unknown'))}</b>
           <div class="src">${esc(o.phone || '')}</div>
-          <div class="src">${esc(SRC[o.source] || '')}${o.user_username ? ` В· @${esc(o.user_username)}` : ''}</div></td>
-        <td class="src">${o.items.map(i => `${esc(i.name)} Г— ${i.quantity}`).join('<br>')}<div class="src">рџ“Ќ ${esc(o.city || '')}, ${esc(o.address || '')}</div></td>
+          <div class="src">${esc(SRC[o.source] || '')}${o.user_username ? ` · @${esc(o.user_username)}` : ''}</div></td>
+        <td class="src">${o.items.map(i => `${esc(i.name)} × ${i.quantity}`).join('<br>')}<div class="src">📍 ${esc(o.city || '')}, ${esc(o.address || '')}</div></td>
         <td><b>${sumLabel(o.total_price, itemsTbd(o.items), o.currency)}</b></td>
         <td><span class="st st-${o.status}">${esc(stL(o.status))}</span></td>
         <td><div class="row-acts">
           <select class="mini" style="width:auto;padding:6px 8px;font-size:12px" data-st="${o.id}">
             ${STATUSES.map(k => `<option value="${k}"${o.status === k ? ' selected' : ''}>${esc(stL(k))}</option>`).join('')}
           </select>
-          ${o.user_username ? `<a class="mini" href="https://t.me/${esc(o.user_username)}" target="_blank" title="${esc(t('admin.write'))}">рџ’¬</a>` : `<a class="mini" href="tel:${esc(o.phone || '')}" title="${esc(t('admin.call'))}">рџ“ћ</a>`}
+          ${o.user_username ? `<a class="mini" href="https://t.me/${esc(o.user_username)}" target="_blank" title="${esc(t('admin.write'))}">💬</a>` : `<a class="mini" href="tel:${esc(o.phone || '')}" title="${esc(t('admin.call'))}">📞</a>`}
         </div></td>
       </tr>`).join('')}</tbody></table></div>`
-      : `<div class="empty"><div class="empty-i">рџ“‹</div><h3>${esc(t('admin.no_orders'))}</h3></div>`}`;
+      : `<div class="empty"><div class="empty-i">📋</div><h3>${esc(t('admin.no_orders'))}</h3></div>`}`;
 
   $$('[data-f]').forEach(b => b.onclick = () => { S.orderFilter = b.dataset.f; adminSection(); });
   $$('[data-st]').forEach(s => s.onchange = async () => {
@@ -1858,7 +1834,7 @@ function aSettings(ac) {
   };
 }
 
-// в•ђв•ђв•ђ AUTH SLOT в•ђв•ђв•ђ
+// ═══ AUTH SLOT ═══
 function paintAuth() {
   const slot = $('#auth-slot');
   if (S.me?.authenticated) {
@@ -1877,7 +1853,7 @@ function paintAuth() {
     if (lb) lb.onclick = () => {
       openModal(`<button class="modal-x" id="mx"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         <div style="padding:40px 32px;text-align:center">
-          <div style="font-size:46px">вњ€пёЏ</div>
+          <div style="font-size:46px">✈️</div>
           <h2 style="font-size:21px;font-weight:700;margin:12px 0 8px">${esc(t('login.title'))}</h2>
           <p style="color:var(--tx2);font-size:14px;line-height:1.6;max-width:32ch;margin:0 auto 20px">${esc(t('login.p'))}</p>
           <div id="tglm" style="display:flex;justify-content:center"></div>
@@ -1890,7 +1866,7 @@ function paintAuth() {
   }
 }
 
-// в•ђв•ђв•ђ INIT в•ђв•ђв•ђ
+// ═══ INIT ═══
 async function init() {
   $('#yr').textContent = new Date().getFullYear();
   Cart.load(); paintCount();
@@ -1923,7 +1899,7 @@ async function init() {
   ]);
   S.me = me; S.cur = st.currency || 'UZS'; S.cfg = cfg;
 
-  // No local choice yet, but the account already picked one in the bot в†’ reuse it
+  // No local choice yet, but the account already picked one in the bot → reuse it
   if (!saved && me.authenticated && me.lang && I18N.T[me.lang]) applyLang(me.lang, { sync: false });
   else if (saved && me.authenticated && me.lang !== saved) applyLang(saved); // keep the account in step
 
@@ -1936,5 +1912,3 @@ async function init() {
   if (!S.lang) openLangPicker(true);
 }
 init();
-
-

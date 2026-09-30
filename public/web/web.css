@@ -1,4 +1,4 @@
-﻿/* в•ђв•ђв•ђ Carmon Oil вЂ” website в•ђв•ђв•ђ */
+/* ═══ Carmon Oil — website ═══ */
 :root{
   --bg:#fff; --bg2:#f5f5f7; --bg3:#e8e8ed;
   --tx:#000; --tx2:#6e6e73; --tx3:#a1a1a6;
@@ -13,7 +13,7 @@
   --ease:cubic-bezier(.4,0,.2,1);
 }
 
-/* в”Ђв”Ђ Keyframes в”Ђв”Ђ */
+/* ── Keyframes ── */
 @keyframes fadeUp{
   from{opacity:0;transform:translateY(32px)}
   to{opacity:1;transform:translateY(0)}
@@ -28,7 +28,7 @@
   100%{box-shadow:0 0 0 0 rgba(34,158,217,0)}
 }
 
-/* в”Ђв”Ђ Scroll reveal в”Ђв”Ђ */
+/* ── Scroll reveal ── */
 .anim{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
 .anim.visible{opacity:1;transform:none}
 .anim-left{opacity:0;transform:translateX(-28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
@@ -50,7 +50,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .hidden{display:none !important}
 [hidden]{display:none !important}
 
-/* в”Ђв”Ђ Header в”Ђв”Ђ */
+/* ── Header ── */
 #hdr{
   position:sticky;top:0;z-index:60;height:var(--hdr);
   background:rgba(11,26,39,.94);backdrop-filter:saturate(180%) blur(20px);
@@ -74,12 +74,6 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .hdr-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;color:rgba(255,255,255,.85)}
 .nav-login-btn{padding:9px 20px;font-size:13px;box-shadow:none}
 .nav-login-btn:hover{box-shadow:0 6px 18px rgba(240,78,35,.35)}
-.nav-login-ghost{
-  padding:8px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;
-  color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2);
-  background:transparent;transition:background .15s,color .15s,border-color .15s;
-}
-.nav-login-ghost:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.35)}
 .icon-action{
   position:relative;width:38px;height:38px;border-radius:var(--rs);
   display:flex;align-items:center;justify-content:center;transition:background .15s;color:rgba(255,255,255,.85);
@@ -131,7 +125,14 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 }
 .avatar-name{font-size:13px;font-weight:500;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff}
 
-/* в”Ђв”Ђ Buttons в”Ђв”Ђ */
+
+.nav-login-ghost{
+  padding:8px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;
+  color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2);
+  background:transparent;transition:background .15s,color .15s,border-color .15s;
+}
+.nav-login-ghost:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.35)}
+/* ── Buttons ── */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:12px 22px;border-radius:var(--rs);font-size:14px;font-weight:600;
@@ -149,14 +150,14 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .btn-full{width:100%}
 .btn-sm{padding:8px 14px;font-size:13px;border-radius:8px}
 
-/* в”Ђв”Ђ Layout в”Ђв”Ђ */
+/* ── Layout ── */
 #main{flex:1}
 .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
 .sec-head{padding:40px 0 20px}
 .sec-head h1{font-size:32px;font-weight:700;letter-spacing:-.02em}
 .sec-head p{color:var(--tx2);font-size:15px;margin-top:6px}
 
-/* в”Ђв”Ђ Hero в”Ђв”Ђ */
+/* ── Hero ── */
 .hero{
   background:#fff;
   position:relative;overflow:hidden;
@@ -200,7 +201,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   animation:fadeIn 1.2s .1s var(--ease) both;
 }
 
-/* в”Ђв”Ђ Hero actions в”Ђв”Ђ */
+/* ── Hero actions ── */
 .hero-actions{
   display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;align-items:center;
   animation:fadeUp .9s .32s var(--ease) both;
@@ -221,7 +222,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .btn-tg svg{width:18px;height:18px;flex-shrink:0}
 .btn-tg:hover{background:var(--bg3);transform:translateY(-2px)}
 
-/* в”Ђв”Ђ Brands strip в”Ђв”Ђ */
+/* ── Brands strip ── */
 .brands-strip{border-bottom:1px solid var(--line);padding:28px 0}
 .brands-strip-label{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--tx);margin-bottom:20px}
 .brands-strip-logos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -248,7 +249,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .brands-strip-logo:nth-child(8){transition-delay:.54s}
 .brands-strip-logo:nth-child(9){transition-delay:.61s}
 
-/* в”Ђв”Ђ About strip в”Ђв”Ђ */
+/* ── About strip ── */
 .about-strip{padding:72px 20px 64px;border-top:1px solid var(--line)}
 .about-strip-tag{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ac);margin-bottom:20px}
 .about-big-title{font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1.08;margin-bottom:28px;max-width:18ch}
@@ -264,7 +265,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   .about-fact-n{font-size:26px}
 }
 
-/* в”Ђв”Ђ Delivery map в”Ђв”Ђ */
+/* ── Delivery map ── */
 .delivery-section{background:var(--bg);padding:80px 0 60px;overflow:hidden;border-top:1px solid var(--line)}
 .delivery-inner{max-width:var(--max);margin:0 auto;padding:0 20px}
 .delivery-header{text-align:center;margin-bottom:40px}
@@ -304,11 +305,11 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   .delivery-title{font-size:28px}
 }
 
-/* в”Ђв”Ђ Catalog section head в”Ђв”Ђ */
+/* ── Catalog section head ── */
 .catalog-head{padding:32px 0 4px;border-top:1px solid var(--line)}
 .catalog-title{font-size:24px;font-weight:700;letter-spacing:-.02em}
 
-/* в”Ђв”Ђ Floating Telegram button в”Ђв”Ђ */
+/* ── Floating Telegram button ── */
 .tg-float{
   position:fixed;bottom:28px;right:24px;z-index:200;
   display:flex;align-items:center;gap:10px;
@@ -326,7 +327,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   .tg-float{padding:14px;bottom:20px;right:16px}
 }
 
-/* в”Ђв”Ђ Toolbar в”Ђв”Ђ */
+/* ── Toolbar ── */
 .toolbar{
   display:flex;gap:12px;align-items:center;flex-wrap:wrap;
   padding:22px 0 18px;
@@ -357,7 +358,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .pill:hover{background:var(--bg3)}
 .pill.on{background:var(--tx);color:#fff}
 
-/* в”Ђв”Ђ Product grid в”Ђв”Ђ */
+/* ── Product grid ── */
 .grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
   gap:20px;padding-bottom:56px;
@@ -392,7 +393,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .card-add:hover{opacity:.8}
 .dim{opacity:.55}
 
-/* в”Ђв”Ђ Modal в”Ђв”Ђ */
+/* ── Modal ── */
 .modal{
   position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);
   display:flex;align-items:center;justify-content:center;padding:20px;
@@ -418,7 +419,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .pd-main{aspect-ratio:1;overflow:hidden}
 .pd-main img{width:100%;height:100%;object-fit:cover;cursor:zoom-in}
 
-/* в”Ђв”Ђ Lightbox в”Ђв”Ђ */
+/* ── Lightbox ── */
 .lightbox{
   position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.93);
   display:flex;align-items:center;justify-content:center;
@@ -474,8 +475,8 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .tr-box{border:1px solid var(--line);border-radius:var(--rs);padding:12px 14px}
 .tr-box summary{cursor:pointer;font-size:13px;font-weight:600;list-style:none;display:flex;gap:6px;flex-wrap:wrap}
 .tr-box summary::-webkit-details-marker{display:none}
-.tr-box summary::before{content:'в–ё';color:var(--tx3)}
-.tr-box[open] summary::before{content:'в–ѕ'}
+.tr-box summary::before{content:'▸';color:var(--tx3)}
+.tr-box[open] summary::before{content:'▾'}
 .tr-lang{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
 .tr-lang-h{font-size:13px;font-weight:600;margin-bottom:8px}
 .sort-in{width:64px;background:var(--bg2);border-radius:8px;padding:7px 8px;font-size:13px;text-align:center;border:1.5px solid transparent}
@@ -484,7 +485,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .qbox{display:flex;align-items:center;background:var(--bg2);border-radius:var(--rs);overflow:hidden}
 .qbox button{width:38px;height:38px;font-size:18px;transition:background .15s;flex-shrink:0}
 .qbox button:hover{background:var(--bg3)}
-/* Editable quantity вЂ” typing 50 beats clicking + fifty times */
+/* Editable quantity — typing 50 beats clicking + fifty times */
 .qbox input{
   width:52px;text-align:center;font-weight:600;font-size:15px;
   background:transparent;padding:8px 2px;border-radius:6px;
@@ -494,7 +495,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .qbox input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .qbox input:focus{background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--tx)}
 
-/* в”Ђв”Ђ Drawer в”Ђв”Ђ */
+/* ── Drawer ── */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150;animation:fade .2s}
 .drawer{
   position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:160;
@@ -527,7 +528,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .sum{display:flex;justify-content:space-between;font-size:14px;color:var(--tx2);margin-bottom:7px}
 .sum-t{display:flex;justify-content:space-between;font-size:18px;font-weight:700;padding-top:11px;border-top:1px solid var(--line);margin-bottom:14px}
 
-/* в”Ђв”Ђ Forms в”Ђв”Ђ */
+/* ── Forms ── */
 .f{margin-bottom:14px}
 .f label{display:block;font-size:12px;font-weight:600;color:var(--tx2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
 .f input,.f textarea,.f select{
@@ -544,7 +545,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .f-err{color:var(--err);font-size:12px;margin-top:5px}
 
-/* в”Ђв”Ђ Checkout note в”Ђв”Ђ */
+/* ── Checkout note ── */
 .note{
   background:var(--bg2);border-radius:var(--rs);padding:13px 15px;
   font-size:13px;color:var(--tx2);line-height:1.55;margin-bottom:16px;
@@ -554,7 +555,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .tabs2 button{flex:1;padding:9px;border-radius:8px;font-size:13px;font-weight:600;color:var(--tx2);transition:all .15s}
 .tabs2 button.on{background:var(--bg);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.08)}
 
-/* в”Ђв”Ђ Empty / states в”Ђв”Ђ */
+/* ── Empty / states ── */
 .empty{text-align:center;padding:70px 20px;display:flex;flex-direction:column;align-items:center;gap:12px}
 .empty-i{font-size:52px;opacity:.5}
 .empty h3{font-size:19px;font-weight:700}
@@ -562,7 +563,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .spin{width:26px;height:26px;border:3px solid var(--bg3);border-top-color:var(--tx);border-radius:50%;animation:sp .8s linear infinite;margin:50px auto}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* в”Ђв”Ђ Orders в”Ђв”Ђ */
+/* ── Orders ── */
 .olist{display:flex;flex-direction:column;gap:12px;padding-bottom:56px}
 .ocard{
   border:1px solid var(--line);border-radius:var(--r);padding:18px;
@@ -582,7 +583,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .ocard-f{display:flex;justify-content:space-between;align-items:center}
 .ocard-t{font-size:16px;font-weight:700}
 
-/* в”Ђв”Ђ Help в”Ђв”Ђ */
+/* ── Help ── */
 .help-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:40px}
 .help-c{
   display:flex;align-items:center;gap:15px;padding:20px;
@@ -606,10 +607,10 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .faq summary:hover{background:var(--bg2)}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::after{content:'+';font-size:20px;font-weight:400;color:var(--tx2);flex-shrink:0}
-.faq details[open] summary::after{content:'в€’'}
+.faq details[open] summary::after{content:'−'}
 .faq p{padding:0 20px 18px;font-size:14px;color:var(--tx2);line-height:1.65}
 
-/* в”Ђв”Ђ Admin в”Ђв”Ђ */
+/* ── Admin ── */
 .atabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:24px;overflow-x:auto}
 .atab{padding:12px 18px;font-size:14px;font-weight:500;color:var(--tx2);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s}
 .atab:hover{color:var(--tx)}
@@ -649,7 +650,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   background:rgba(0,0,0,.65);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;
 }
 
-/* в•ђв•ђв•ђ Landing page в•ђв•ђв•ђ */
+/* ═══ Landing page ═══ */
 :root{--or:#F04E23;--or2:#ff7a4d;--navy:#141238;--peach:#fff1eb}
 .lp-h{font-size:clamp(30px,4vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.1;text-align:center;color:var(--navy)}
 .lp-sub{font-size:16px;color:var(--tx2);line-height:1.7;text-align:center;max-width:56ch;margin:14px auto 0}
@@ -683,7 +684,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 }
 .lp-hero ~ section,#ftr{position:relative;z-index:1}
 
-/* section 2 вЂ” reference layout with global logistics message */
+/* section 2 — reference layout with global logistics message */
 .lp-section-two{
   position:relative;min-height:390px;display:flex;align-items:center;justify-content:center;
   overflow:hidden;color:#fff;text-align:center;
@@ -880,7 +881,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   .brands-strip-logos--compact{grid-template-columns:repeat(3,1fr)}
 }
 
-/* в”Ђв”Ђ Footer в”Ђв”Ђ */
+/* ── Footer ── */
 #ftr{background:#eef1f5;border-top:1px solid var(--line);margin-top:auto}
 .ftr-inner{
   max-width:var(--max);margin:0 auto;padding:56px 20px 36px;
@@ -908,7 +909,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .ftr-base a{display:inline;padding:0;color:var(--tx3)}
 .ftr-base a:hover{color:var(--or,#ff571c)}
 
-/* в”Ђв”Ђ Toast в”Ђв”Ђ */
+/* ── Toast ── */
 .toast{
   position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(14px);
   background:rgba(0,0,0,.88);color:#fff;padding:12px 20px;border-radius:100px;
@@ -918,7 +919,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 }
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* в”Ђв”Ђ Responsive в”Ђв”Ђ */
+/* ── Responsive ── */
 @media(max-width:900px){
   .hero-in{grid-template-columns:1fr;padding:52px 20px}
   .hero-logo{display:none}
@@ -956,7 +957,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
   .delivery-name{font-size:16px}
 }
 
-/* в”Ђв”Ђ Product Categories section в”Ђв”Ђ */
+/* ── Product Categories section ── */
 .lp-cats-sec{padding:72px 0 64px;background:#fff}
 .lp-cats-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:36px;flex-wrap:wrap}
 .lp-cats-hd-left .lp-kicker{margin-bottom:10px}
@@ -974,7 +975,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 @media(max-width:900px){.lp-catgrid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.lp-catgrid{grid-template-columns:repeat(2,1fr)}.lp-cats-hd{flex-direction:column}.lp-cats-hd .btn-or{width:100%;text-align:center}}
 
-/* в”Ђв”Ђ Partners / Brands section в”Ђв”Ђ */
+/* ── Partners / Brands section ── */
 .lp-partners-sec{padding:64px 0;background:#f7f8fa;border-top:1px solid #eaedf0}
 .lp-partners-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:36px}
 .lp-partner-card{background:#fff;border:1px solid #e8eaed;border-radius:10px;padding:24px 16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .18s,box-shadow .18s;min-height:90px}
@@ -984,7 +985,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 @media(max-width:860px){.lp-partners-grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:560px){.lp-partners-grid{grid-template-columns:repeat(3,1fr)}}
 
-/* в”Ђв”Ђ Logistics section в”Ђв”Ђ */
+/* ── Logistics section ── */
 .lp-logistics-sec{padding:72px 0;background:#fff;border-top:1px solid #eaedf0}
 .lp-logistics-hd{display:grid;grid-template-columns:1fr 1.5fr;gap:48px;align-items:start;margin-top:28px}
 .lp-logistics-hd h2{font-size:clamp(24px,2.8vw,38px);font-weight:800;letter-spacing:-.03em;color:#0d1e2e;margin:0 0 14px;line-height:1.15}
@@ -995,7 +996,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-logistics-photo-single img{width:100%;height:100%;object-fit:cover;display:block}
 @media(max-width:760px){.lp-logistics-hd{grid-template-columns:1fr}}
 
-/* в”Ђв”Ђ Services section в”Ђв”Ђ */
+/* ── Services section ── */
 .lp-services-sec{padding:72px 0;background:#f7f8fa;border-top:1px solid #eaedf0}
 .lp-services-sec h2{font-size:clamp(24px,2.8vw,38px);font-weight:800;letter-spacing:-.03em;color:#0d1e2e;margin:0 0 10px}
 .lp-services-sec p{font-size:15px;color:#556;line-height:1.65;margin:0}
@@ -1009,7 +1010,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-svc a:hover{text-decoration:underline}
 @media(max-width:760px){.lp-svc-grid{grid-template-columns:1fr}}
 
-/* в”Ђв”Ђ World-Class Logistics split section в”Ђв”Ђ */
+/* ── World-Class Logistics split section ── */
 .lp-world-sec{display:grid;grid-template-columns:1fr 1fr;min-height:420px;background:#061523}
 .lp-world-copy{padding:72px max(40px,calc((100vw - 1240px)/2 + 40px));display:flex;flex-direction:column;justify-content:center;color:#fff}
 .lp-world-copy h2{font-size:clamp(28px,3vw,44px);font-weight:800;letter-spacing:-.03em;margin:12px 0 16px;color:#fff}
@@ -1019,7 +1020,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-world-img img{width:100%;height:100%;object-fit:cover;display:block}
 @media(max-width:760px){.lp-world-sec{grid-template-columns:1fr}.lp-world-copy{padding:48px 20px}.lp-world-img{aspect-ratio:16/9}}
 
-/* в”Ђв”Ђ Global Lubrication Solutions CTA в”Ђв”Ђ */
+/* ── Global Lubrication Solutions CTA ── */
 .lp-global-sec{position:relative;padding:80px 20px;text-align:center}
 .lp-global-sec::before{content:'';position:absolute;inset:0;background:rgba(6,21,35,.78);z-index:0}
 .lp-global-in{position:relative;z-index:1}
@@ -1028,7 +1029,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-global-in p{font-size:16px;color:#b9c8d4;line-height:1.7;margin:0;max-width:52ch}
 .lp-global-in .btn-or{margin-top:8px}
 
-/* в”Ђв”Ђ Production Project section в”Ђв”Ђ */
+/* ── Production Project section ── */
 .lp-production-sec{background:#0b1a27;color:#fff;padding-bottom:64px}
 .lp-production-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-top:64px;padding-bottom:32px}
 .lp-production-top h2{font-size:clamp(22px,2.8vw,36px);font-weight:800;letter-spacing:-.03em;color:#fff;margin:8px 0 10px}
@@ -1049,7 +1050,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 @media(max-width:900px){.lp-prod-family-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.lp-prod-family-grid{grid-template-columns:1fr}.lp-production-hero{flex-direction:column;align-items:flex-start}.lp-production-hero-right{align-items:flex-start}}
 
-/* в”Ђв”Ђ Technical Product Catalog section в”Ђв”Ђ */
+/* ── Technical Product Catalog section ── */
 .lp-techcat-sec{padding:72px 0;background:#f4f5f7;border-top:1px solid #eaedf0}
 .lp-techcat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:32px}
 .lp-techcat-card{background:#fff;border:1px solid #e8eaed;border-radius:10px;overflow:hidden;transition:transform .18s,box-shadow .18s}
@@ -1066,7 +1067,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 @media(max-width:900px){.lp-techcat-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.lp-techcat-grid{grid-template-columns:repeat(2,1fr)}}
 
-/* в”Ђв”Ђ Oil Finder / Distributor CTA bar в”Ђв”Ђ */
+/* ── Oil Finder / Distributor CTA bar ── */
 .lp-finder-sec{background:#0b1a27;padding:0}
 .lp-finder-grid{display:grid;grid-template-columns:1fr 1fr}
 .lp-finder-card{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:36px 40px;border-right:1px solid rgba(255,255,255,.08)}
@@ -1076,7 +1077,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-finder-card .btn-or{flex-shrink:0}
 @media(max-width:640px){.lp-finder-grid{grid-template-columns:1fr}.lp-finder-card{border-right:none;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap}.lp-finder-card:last-child{border-bottom:none}}
 
-/* в”Ђв”Ђ B2B lead form section (redesigned) в”Ђв”Ђ */
+/* ── B2B lead form section (redesigned) ── */
 .lp-touch2{background:#fff;padding:80px 0}
 .lp-touch2-in{max-width:600px;margin:0 auto;text-align:center}
 .lp-touch2-in h2{font-size:clamp(24px,3vw,38px);font-weight:800;letter-spacing:-.03em;color:#0d1e2e;margin:0 0 10px}
@@ -1090,10 +1091,10 @@ svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-l
 .lp-touch2-info b{color:#334}
 @media(max-width:640px){.lp-touch2{padding:56px 0}.lp-lead2{padding:20px}}
 
-/* в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ
-   CARMON OIL вЂ” PREMIUM B2B DESIGN SYSTEM
+/* ═══════════════════════════════════════════════════════════════
+   CARMON OIL — PREMIUM B2B DESIGN SYSTEM
    Final visual layer: deep navy, warm white, orange signal colour.
-   в•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђв•ђ */
+   ═══════════════════════════════════════════════════════════════ */
 :root{
   --navy:#071522;--navy-2:#0b2030;--navy-3:#102f42;--ink:#10202c;
   --muted:#71808d;--line:#dce4e9;--paper:#f5f7f8;--orange:#ff5628;
@@ -1278,7 +1279,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
 .presentation-cover h1 span{color:var(--orange)}
 .presentation-cover p{max-width:570px;margin:0;color:rgba(255,255,255,.72);font-size:16px;line-height:1.75}
 .presentation-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}.presentation-actions .btn-gl{border-color:rgba(255,255,255,.35);color:#fff}
-.presentation-meta{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:48px;color:rgba(255,255,255,.6);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}.presentation-meta span::before{content:'вњ“';margin-right:7px;color:var(--orange)}
+.presentation-meta{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:48px;color:rgba(255,255,255,.6);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}.presentation-meta span::before{content:'✓';margin-right:7px;color:var(--orange)}
 .presentation-intro{padding:112px 0;background:#fff}.presentation-intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:end}.presentation-intro h2{margin:10px 0 0;font-size:clamp(38px,5vw,70px);line-height:.98;letter-spacing:-.07em;color:var(--ink)}.presentation-intro-copy{max-width:500px}.presentation-intro-copy p{margin:0;color:var(--muted);font-size:15px;line-height:1.8}.text-link{display:inline-block;margin-top:24px;color:var(--ink);font-size:12px;font-weight:800;text-decoration:none}.text-link span{color:var(--orange);font-size:18px;margin-left:5px}
 .presentation-points{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:76px;background:#dfe7ea;border:1px solid #dfe7ea}.presentation-points article{min-height:190px;padding:24px;background:#f7f9fa}.presentation-points span{color:var(--orange);font-size:11px;font-weight:800;letter-spacing:.12em}.presentation-points h3{margin:36px 0 10px;font-size:16px;letter-spacing:-.03em}.presentation-points p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
 .presentation-view{padding:104px 0 112px;background:#0b1d2c;color:#fff}.presentation-view-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}.presentation-view h2{margin:10px 0 0;font-size:clamp(32px,4vw,58px);line-height:1;letter-spacing:-.06em}.presentation-pdf-frame{height:min(75vw,780px);min-height:480px;overflow:hidden;border-radius:16px;background:#fff;box-shadow:0 24px 60px rgba(0,0,0,.22)}.presentation-pdf-frame iframe{display:block;width:100%;height:100%;border:0}
@@ -1295,7 +1296,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
 @media(max-width:560px){.article-hero{min-height:520px}.article-hero-in{padding:92px 20px 68px}.article-back{margin-bottom:70px}.article-hero h1{font-size:clamp(44px,13vw,68px)}.article-hero p{font-size:14px}.article-block{padding-bottom:32px;margin-bottom:32px}}
 
 
-/* в•ђв•ђв•ђ Navigation dropdowns and internal business pages в•ђв•ђв•ђ */
+/* ═══ Navigation dropdowns and internal business pages ═══ */
 .nav-menu{position:relative;display:flex;align-items:center}
 .nav-menu-trigger{padding:8px 14px;border-radius:var(--rs);font-size:14px;color:rgba(255,255,255,.72);transition:background .15s,color .15s;white-space:nowrap}
 .nav-menu-trigger:hover,.nav-menu-trigger.on,.nav-menu.open .nav-menu-trigger{background:rgba(255,255,255,.08);color:#fff}
@@ -1341,7 +1342,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
 @media(max-width:420px){.market-grid{grid-template-columns:1fr 1fr}.nav-menu-panel a{font-size:12px}}
 
 
-/* в•ђв•ђв•ђ Interactive brands showcase в•ђв•ђв•ђ */
+/* ═══ Interactive brands showcase ═══ */
 .lp-brand-showcase{display:grid;grid-template-columns:minmax(280px,.9fr) minmax(0,1.35fr);gap:16px;margin-top:42px}
 .lp-brand-feature{position:relative;min-height:360px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;padding:28px;border-radius:18px;background:#0b1d2c;color:#fff;box-shadow:0 18px 46px rgba(13,30,46,.15);isolation:isolate}
 .lp-brand-feature-glow{position:absolute;inset:-30%;z-index:-1;background:radial-gradient(circle at 70% 32%,rgba(255,87,28,.28),transparent 32%),radial-gradient(circle at 10% 90%,rgba(49,164,183,.18),transparent 36%);animation:brandGlow 8s ease-in-out infinite alternate}
@@ -1374,7 +1375,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
 @media(max-width:560px){.lp-brand-choice-grid{grid-template-columns:repeat(2,1fr)}.lp-brand-choice{min-height:76px;padding:10px}.lp-brand-choice-logo{width:72px;flex-basis:72px}.lp-brand-choice-name{font-size:10px}.lp-brand-feature{min-height:340px;padding:22px}.lp-brand-feature-status{font-size:8px}.lp-brand-ticker-track{gap:24px}}
 
 
-/* в•ђв•ђв•ђ Brand pages and interactive comparison в•ђв•ђв•ђ */
+/* ═══ Brand pages and interactive comparison ═══ */
 .nav-menu-feature{grid-column:1/-1;border-bottom:1px solid #e5ecef;margin-bottom:4px;color:var(--orange,#ff571c)!important}
 .brand-page,.compare-page{background:#f4f7f8;color:var(--ink,#0d1e2e)}
 .brand-page-hero{position:relative;overflow:hidden;background:#0b1d2c;color:#fff}.brand-page-hero-glow{position:absolute;inset:-25%;background:radial-gradient(circle at 82% 20%,rgba(255,87,28,.3),transparent 25%),radial-gradient(circle at 35% 70%,rgba(55,173,190,.2),transparent 30%);animation:brandHeroGlow 10s ease-in-out infinite alternate}@keyframes brandHeroGlow{from{transform:translate(-2%,1%) scale(1)}to{transform:translate(3%,-3%) scale(1.1)}}
@@ -1394,4 +1395,3 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
   .hdr-nav> .nav-menu{display:flex;align-items:center;height:38px}
   .header-quote-btn{height:38px;box-sizing:border-box}
 }
-
