@@ -2,13 +2,13 @@
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
-const LOCAL_PRODUCTS = [{"id":101,"name":"Hyundai XTeer TOP PAO C3 5W-30 1L","description":"Premium PAO-based fully synthetic passenger-car engine oil. Visible pack claims: ACEA C3, ILSAC GF-6 and MB 229.51.","litres":"1L","price":null,"quantity":200,"images":["assets/products/hyundai-xteer-c3-5w30-1l.png"],"brand":"Hyundai XTeer","viscosity":"5W-30","category":"passenger","is_active":1,"sort_order":1,"fuel":"diesel,gasoline","name_en":"Hyundai XTeer TOP PAO C3 5W-30 1L","desc_en":"Premium PAO-based fully synthetic passenger-car engine oil. Pack claims include ACEA C3, ILSAC GF-6 and MB 229.51.","specs":["PAO based","100% fully synthetic","ACEA C3","ILSAC GF-6","MB 229.51"]},{"id":102,"name":"Hyundai XTeer TOP PAO C5 0W-20 1L","description":"Premium PAO-based fully synthetic engine oil for passenger cars. Visible pack claims: ACEA C5, ILSAC GF-6 and MB 229.71.","litres":"1L","price":null,"quantity":200,"images":["assets/products/hyundai-xteer-c5-0w20-1l.png"],"brand":"Hyundai XTeer","viscosity":"0W-20","category":"passenger","is_active":1,"sort_order":2,"fuel":"diesel,gasoline","name_en":"Hyundai XTeer TOP PAO C5 0W-20 1L","desc_en":"Premium PAO-based fully synthetic passenger-car engine oil. Pack claims include ACEA C5, ILSAC GF-6 and MB 229.71.","specs":["PAO based","100% fully synthetic","ACEA C5","ILSAC GF-6","MB 229.71"]},{"id":103,"name":"SK ZIC X7 5W-30 1L","description":"Fully synthetic VHVI passenger-car engine oil. The supplied pack shows ZIC X7, SAE 5W-30 and 1L packaging.","litres":"1L","price":null,"quantity":200,"images":["assets/products/sk-zic-x7-5w30-1l.jpg"],"brand":"SK ZIC","viscosity":"5W-30","category":"passenger","is_active":1,"sort_order":3,"fuel":"diesel,gasoline","name_en":"SK ZIC X7 5W-30 1L","desc_en":"Fully synthetic VHVI passenger-car engine oil. Supplied pack: ZIC X7, SAE 5W-30, 1L.","specs":["Fully synthetic","VHVI technology","SAE 5W-30"]},{"id":104,"name":"SK ZIC X7 0W-30 1L","description":"SK ZIC X7 passenger-car engine oil in SAE 0W-30 viscosity and 1L packaging, based on the supplied product photo.","litres":"1L","price":null,"quantity":200,"images":["assets/products/sk-zic-x7-0w30-1l.png"],"brand":"SK ZIC","viscosity":"0W-30","category":"passenger","is_active":1,"sort_order":4,"fuel":"diesel,gasoline","name_en":"SK ZIC X7 0W-30 1L","desc_en":"SK ZIC X7 passenger-car engine oil in SAE 0W-30 viscosity and 1L packaging.","specs":["ZIC X7","SAE 0W-30","1L packaging"]},{"id":105,"name":"SK ZIC X9 LS 5W-30 1L","description":"SK ZIC X9 LS fully synthetic low-SAPS passenger-car engine oil in SAE 5W-30 viscosity and 1L packaging.","litres":"1L","price":null,"quantity":200,"images":["assets/products/sk-zic-x9ls-5w30-1l.png"],"brand":"SK ZIC","viscosity":"5W-30","category":"passenger","is_active":1,"sort_order":5,"fuel":"diesel,gasoline","name_en":"SK ZIC X9 LS 5W-30 1L","desc_en":"SK ZIC X9 LS fully synthetic low-SAPS passenger-car engine oil in SAE 5W-30 viscosity.","specs":["X9 LS","Low SAPS","Fully synthetic","SAE 5W-30"]},{"id":106,"name":"SK ZIC X9 LS 5W-40 1L","description":"SK ZIC X9 LS fully synthetic low-SAPS passenger-car engine oil in SAE 5W-40 viscosity and 1L packaging.","litres":"1L","price":null,"quantity":200,"images":["assets/products/sk-zic-x9ls-5w40-1l.png"],"brand":"SK ZIC","viscosity":"5W-40","category":"passenger","is_active":1,"sort_order":6,"fuel":"diesel,gasoline","name_en":"SK ZIC X9 LS 5W-40 1L","desc_en":"SK ZIC X9 LS fully synthetic low-SAPS passenger-car engine oil in SAE 5W-40 viscosity.","specs":["X9 LS","Low SAPS","Fully synthetic","SAE 5W-40"]}];
+const LOCAL_PRODUCTS = [{"id":101,"name":"Hyundai XTeer TOP PAO C3 5W-30 1L","description":"Premium PAO-based fully synthetic passenger-car engine oil. Visible pack claims: ACEA C3, ILSAC GF-6 and MB 229.51.","litres":"1L","price":null,"quantity":200,"images":["/assets/products/hyundai-xteer-c3-5w30-1l.png"],"brand":"Hyundai XTeer","viscosity":"5W-30","category":"passenger","is_active":1,"sort_order":1,"fuel":"diesel,gasoline","name_en":"Hyundai XTeer TOP PAO C3 5W-30 1L","desc_en":"Premium PAO-based fully synthetic passenger-car engine oil. Pack claims include ACEA C3, ILSAC GF-6 and MB 229.51.","specs":["PAO based","100% fully synthetic","ACEA C3","ILSAC GF-6","MB 229.51"]},{"id":102,"name":"Hyundai XTeer TOP PAO C5 0W-20 1L","description":"Premium PAO-based fully synthetic engine oil for passenger cars. Visible pack claims: ACEA C5, ILSAC GF-6 and MB 229.71.","litres":"1L","price":null,"quantity":200,"images":["/assets/products/hyundai-xteer-c5-0w20-1l.png"],"brand":"Hyundai XTeer","viscosity":"0W-20","category":"passenger","is_active":1,"sort_order":2,"fuel":"diesel,gasoline","name_en":"Hyundai XTeer TOP PAO C5 0W-20 1L","desc_en":"Premium PAO-based fully synthetic passenger-car engine oil. Pack claims include ACEA C5, ILSAC GF-6 and MB 229.71.","specs":["PAO based","100% fully synthetic","ACEA C5","ILSAC GF-6","MB 229.71"]},{"id":103,"name":"SK ZIC X7 5W-30 1L","description":"Fully synthetic VHVI passenger-car engine oil. The supplied pack shows ZIC X7, SAE 5W-30 and 1L packaging.","litres":"1L","price":null,"quantity":200,"images":["/assets/products/sk-zic-x7-5w30-1l.jpg"],"brand":"SK ZIC","viscosity":"5W-30","category":"passenger","is_active":1,"sort_order":3,"fuel":"diesel,gasoline","name_en":"SK ZIC X7 5W-30 1L","desc_en":"Fully synthetic VHVI passenger-car engine oil. Supplied pack: ZIC X7, SAE 5W-30, 1L.","specs":["Fully synthetic","VHVI technology","SAE 5W-30"]},{"id":104,"name":"SK ZIC X7 0W-30 1L","description":"SK ZIC X7 passenger-car engine oil in SAE 0W-30 viscosity and 1L packaging, based on the supplied product photo.","litres":"1L","price":null,"quantity":200,"images":["/assets/products/sk-zic-x7-0w30-1l.png"],"brand":"SK ZIC","viscosity":"0W-30","category":"passenger","is_active":1,"sort_order":4,"fuel":"diesel,gasoline","name_en":"SK ZIC X7 0W-30 1L","desc_en":"SK ZIC X7 passenger-car engine oil in SAE 0W-30 viscosity and 1L packaging.","specs":["ZIC X7","SAE 0W-30","1L packaging"]},{"id":105,"name":"SK ZIC X9 LS 5W-30 1L","description":"SK ZIC X9 LS fully synthetic low-SAPS passenger-car engine oil in SAE 5W-30 viscosity and 1L packaging.","litres":"1L","price":null,"quantity":200,"images":["/assets/products/sk-zic-x9ls-5w30-1l.png"],"brand":"SK ZIC","viscosity":"5W-30","category":"passenger","is_active":1,"sort_order":5,"fuel":"diesel,gasoline","name_en":"SK ZIC X9 LS 5W-30 1L","desc_en":"SK ZIC X9 LS fully synthetic low-SAPS passenger-car engine oil in SAE 5W-30 viscosity.","specs":["X9 LS","Low SAPS","Fully synthetic","SAE 5W-30"]},{"id":106,"name":"SK ZIC X9 LS 5W-40 1L","description":"SK ZIC X9 LS fully synthetic low-SAPS passenger-car engine oil in SAE 5W-40 viscosity and 1L packaging.","litres":"1L","price":null,"quantity":200,"images":["/assets/products/sk-zic-x9ls-5w40-1l.png"],"brand":"SK ZIC","viscosity":"5W-40","category":"passenger","is_active":1,"sort_order":6,"fuel":"diesel,gasoline","name_en":"SK ZIC X9 LS 5W-40 1L","desc_en":"SK ZIC X9 LS fully synthetic low-SAPS passenger-car engine oil in SAE 5W-40 viscosity.","specs":["X9 LS","Low SAPS","Fully synthetic","SAE 5W-40"]}];
 
 const S = {
   products: [], cat: 'all', brand: 'all', fuel: 'all', q: '',
   cart: [], me: null, cfg: {}, cur: 'UZS',
   orders: [], adminTab: 'stats', orderFilter: 'all', newImgs: [],
-  lang: null, langLock: false
+  lang: null, langLock: false, booted: false
 };
 
 // ── i18n ──
@@ -125,6 +125,14 @@ function applyLang(code, { persist = true, sync = true } = {}) {
   if (persist) try { localStorage.setItem(LS_LANG, S.lang); } catch {}
   if (sync && S.me?.authenticated) api('/api/lang', { method: 'POST', body: JSON.stringify({ lang: S.lang }) }).catch(() => {});
   paintStatic();
+  // paintStatic only touches [data-i18n] in the static shell. #main is built by
+  // JS, so without this the body keeps the old language until the user navigates.
+  if (S.booted) {
+    const y = window.scrollY;
+    paintAuth();
+    router();
+    window.scrollTo(0, y);
+  }
 }
 
 // `force` = first visit: no close button, scrim/Escape do nothing until a choice is made.
@@ -133,7 +141,7 @@ function openLangPicker(force = false) {
   openModal(`
     ${force ? '' : `<button class="modal-x" id="mx"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`}
     <div class="lang-pick">
-      <img class="lang-pick-logo" src="assets/logo.png" alt="Carmon Oil" onerror="this.style.display='none'">
+      <img class="lang-pick-logo" src="/assets/logo.png" alt="Carmon Oil" onerror="this.style.display='none'">
       <h2>${I18N.LANGS.map(l => esc(I18N.t(l.code, 'lang.title'))).join(' · ')}</h2>
       <p>${esc(t('lang.sub'))}</p>
       <div class="lang-grid">
@@ -191,16 +199,16 @@ function router() {
 const CATS = ['all', ...I18N.CATS.map(c => c.key)];
 const BRANDS = [
   { id: 'all',           label: 'Все',           logo: null },
-  { id: 'Kixx',          label: 'Kixx',          logo: 'assets/kixx-logo.png' },
-  { id: 'Hyundai XTeer', label: 'Hyundai XTeer', logo: 'assets/hyundailogo1.png' },
-  { id: 'SK ZIC',        label: 'SK ZIC',        logo: 'assets/SK-ZIC-LOGO.png' },
-  { id: 'Castrol',       label: 'Castrol',       logo: 'assets/Castrol-Logo-2001.png' },
-  { id: 'S-OIL',         label: 'S-OIL',         logo: 'assets/S-OIL_Logo.svg.webp' },
-  { id: 'Shell',         label: 'Shell',         logo: 'assets/Color-Shell-Logo.png' },
-  { id: 'SpeedMate',     label: 'SpeedMate',     logo: 'assets/speedmate-logo.png' },
-  { id: 'Mobil',         label: 'Mobil',         logo: 'assets/mobil-logo.png' },
-  { id: 'Autous',        label: 'Autous',        logo: 'assets/autous-logo.png' },
-  { id: 'Hyundai Mobis', label: 'Hyundai Mobis', logo: 'assets/Hyundai_Mobis-Logo.wine.png' },
+  { id: 'Kixx',          label: 'Kixx',          logo: '/assets/kixx-logo.png' },
+  { id: 'Hyundai XTeer', label: 'Hyundai XTeer', logo: '/assets/hyundailogo1.png' },
+  { id: 'SK ZIC',        label: 'SK ZIC',        logo: '/assets/SK-ZIC-LOGO.png' },
+  { id: 'Castrol',       label: 'Castrol',       logo: '/assets/Castrol-Logo-2001.png' },
+  { id: 'S-OIL',         label: 'S-OIL',         logo: '/assets/S-OIL_Logo.svg.webp' },
+  { id: 'Shell',         label: 'Shell',         logo: '/assets/Color-Shell-Logo.png' },
+  { id: 'SpeedMate',     label: 'SpeedMate',     logo: '/assets/speedmate-logo.png' },
+  { id: 'Mobil',         label: 'Mobil',         logo: '/assets/mobil-logo.png' },
+  { id: 'Autous',        label: 'Autous',        logo: '/assets/autous-logo.png' },
+  { id: 'Hyundai Mobis', label: 'Hyundai Mobis', logo: '/assets/Hyundai_Mobis-Logo.wine.png' },
 ];
 const BRAND_IDS = BRANDS.slice(1).map(b => b.id);
 const BRAND_STORIES = {
@@ -277,10 +285,10 @@ function goCatalog(opts = {}) {
 
 const CAT_ICONS = { passenger: '🚗', heavy: '🚛', transmission: '⚙️', brake: '🛑', grease: '🛢️', others: '📦' };
 const ART = [
-  { icon: '🧪', img: 'assets/viscosity.jpg', bg: 'linear-gradient(135deg,#fde7dc,#f9c9b4)' },
-  { icon: '⛽', img: 'assets/gasoline.jpg',  bg: 'linear-gradient(135deg,#e3f0ff,#c6dcff)' },
-  { icon: '✅', img: 'assets/product.jpg',   bg: 'linear-gradient(135deg,#e6f7ea,#c9ecd2)' },
-  { icon: '🚚', img: 'assets/delivery.jpg',  bg: 'linear-gradient(135deg,#fff3d6,#ffe3a3)' },
+  { icon: '🧪', img: '/assets/viscosity.jpg', bg: 'linear-gradient(135deg,#fde7dc,#f9c9b4)' },
+  { icon: '⛽', img: '/assets/gasoline.jpg',  bg: 'linear-gradient(135deg,#e3f0ff,#c6dcff)' },
+  { icon: '✅', img: '/assets/product.jpg',   bg: 'linear-gradient(135deg,#e6f7ea,#c9ecd2)' },
+  { icon: '🚚', img: '/assets/delivery.jpg',  bg: 'linear-gradient(135deg,#fff3d6,#ffe3a3)' },
 ];
 
 // ═══ HOME (landing) ═══
@@ -439,7 +447,7 @@ function homePage() {
           </div>
         </div>
         <div class="lp-logistics-photo-single">
-          <img src="assets/shipp.png" alt="Global Shipping">
+          <img src="/assets/shipp.png" alt="Global Shipping">
         </div>
       </div>
     </div>
@@ -492,7 +500,7 @@ function homePage() {
       </div>
     </div>
     <div class="lp-world-img">
-      <img src="assets/shipping.png" alt="Export Efficiency">
+      <img src="/assets/shipping.png" alt="Export Efficiency">
     </div>
   </section>
 
@@ -1352,7 +1360,7 @@ function articlePage(slug) {
     viscosity: {
       kicker: 'How to Choose Oil', title: 'How to pick the right viscosity.',
       intro: 'The right viscosity helps the oil flow correctly during cold starts and protect the engine at operating temperature.',
-      image: 'assets/viscosity.jpg',
+      image: '/assets/viscosity.jpg',
       sections: [
         ['Read the SAE grade', '<p>Grades such as <b>5W-30</b> or <b>0W-20</b> describe how the oil behaves in cold and hot conditions. The number before W relates to low-temperature flow; the number after the dash describes viscosity at operating temperature.</p>'],
         ['Match the vehicle requirement', '<p>Start with the owner’s manual or the vehicle manufacturer’s current specification. Do not choose only by climate or marketing name: the required SAE grade and performance standard should match the engine.</p>'],
@@ -1362,7 +1370,7 @@ function articlePage(slug) {
     fuel: {
       kicker: 'Application Guide', title: 'Diesel, gasoline or LPG?',
       intro: 'Fuel type is one of the first details to confirm when selecting engine oil because engines and operating conditions can require different standards.',
-      image: 'assets/gasoline.jpg',
+      image: '/assets/gasoline.jpg',
       sections: [
         ['Gasoline engines', '<p>Confirm the manufacturer’s required viscosity and performance category. Modern gasoline engines may also require a specific low-SAPS or fuel-economy standard.</p>'],
         ['Diesel engines', '<p>Diesel applications can have different soot, temperature and after-treatment requirements. Check whether the vehicle uses a particulate filter or other emissions equipment before choosing the oil.</p>'],
@@ -1372,7 +1380,7 @@ function articlePage(slug) {
     genuine: {
       kicker: 'Product Confidence', title: 'How to spot a genuine product.',
       intro: 'Packaging details are useful, but a genuine-product check should combine the container, documentation, seller and supply chain.',
-      image: 'assets/product.jpg',
+      image: '/assets/product.jpg',
       sections: [
         ['Check the packaging', '<p>Look for consistent print quality, correct labels, intact seals, batch or lot markings and clear product information. Compare the pack with current official brand references where available.</p>'],
         ['Confirm the source', '<p>Ask who supplied the product, where it was stored and whether the batch can be connected to a clear invoice or export document. Unusually low prices and unclear provenance deserve additional caution.</p>'],
@@ -1382,7 +1390,7 @@ function articlePage(slug) {
     delivery: {
       kicker: 'Export Guide', title: 'Delivery across the CIS.',
       intro: 'Carmon Oil prepares supply conversations around product availability, destination, documentation and the agreed delivery route.',
-      image: 'assets/delivery.jpg',
+      image: '/assets/delivery.jpg',
       sections: [
         ['Start with the destination', '<p>Tell us the destination country, city, preferred delivery point and whether you are buying for a workshop, fleet, distributor or retail network.</p>'],
         ['Confirm the order details', '<p>We review the product list, viscosity, packaging, requested quantity and availability before preparing a quotation. Prices and lead times are confirmed per product and destination.</p>'],
@@ -1529,7 +1537,7 @@ function logisticsPage() {
       </section>
       <section class="info-split">
         <div class="info-split-copy"><div class="lp-kicker lp-kicker-or">Export Support</div><h2>Built around your destination.</h2><p>Share the country, city, delivery point, product list and requested quantity. Carmon Oil can prepare a destination-specific supply conversation for distributors, workshops, fleets and retail networks.</p><div class="info-checks"><span>✓ Destination and product confirmation</span><span>✓ Warehouse and loading coordination</span><span>✓ Partner-aligned delivery support</span><span>✓ Documentation review before dispatch</span></div><a class="btn-or" href="#/business">Request a delivery plan <span class="arr">→</span></a></div>
-        <div class="info-split-image"><img src="assets/shipping.png" alt="Carmon Oil export logistics"></div>
+        <div class="info-split-image"><img src="/assets/shipping.png" alt="Carmon Oil export logistics"></div>
       </section>
       <section class="markets-section"><div class="wrap"><div class="lp-kicker lp-kicker-or">Delivery Markets</div><h2>Discuss the route for your market.</h2><div class="market-grid">${['Uzbekistan','Kyrgyzstan','Kazakhstan','Russia','Turkmenistan','Azerbaijan','Libya','Vietnam','Thailand','Georgia'].map((x, i) => `<div class="market-chip"><span>0${i + 1}</span>${x}</div>`).join('')}</div></div></section>
     </main>`;
@@ -2049,6 +2057,7 @@ async function init() {
   S.products = await api('/api/products').catch(() => []);
   if (!Array.isArray(S.products) || !S.products.length) S.products = LOCAL_PRODUCTS;
   router();
+  S.booted = true;
 
   // First visit and nothing to go on: ask before anything else
   if (!S.lang) openLangPicker(true);
