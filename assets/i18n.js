@@ -30,6 +30,8 @@
     ru: {
       'lang.title': 'Выберите язык', 'lang.sub': 'Язык можно изменить в любой момент',
       'nav.catalog': 'Каталог', 'nav.orders': 'Заказы', 'nav.help': 'Помощь', 'nav.admin': 'Админ',
+      'nav.products': 'Продукция', 'nav.process': 'Как мы работаем',
+      'nav.presentation': 'Презентация', 'nav.compare': 'Сравнить бренды', 'nav.quote': 'Запросить цену',
       'nav.cart': 'Корзина', 'nav.profile': 'Профиль', 'nav.login': 'Войти', 'nav.logout_q': 'Выйти из аккаунта?',
       'meta.title': 'Carmon Oil — оригинальное масло из Кореи',
       'meta.desc': 'Carmon Oil — оригинальные масла Kixx, Hyundai XTeer, SK ZIC, Castrol, S-OIL, Shell, SpeedMate, Mobil, Autous из Южной Кореи. Доставка по Узбекистану и странам СНГ.',
@@ -157,6 +159,8 @@
     uz: {
       'lang.title': 'Tilni tanlang', 'lang.sub': 'Tilni istalgan vaqtda o‘zgartirish mumkin',
       'nav.catalog': 'Katalog', 'nav.orders': 'Buyurtmalar', 'nav.help': 'Yordam', 'nav.admin': 'Admin',
+      'nav.products': 'Mahsulotlar', 'nav.process': 'Qanday ishlaymiz',
+      'nav.presentation': 'Taqdimot', 'nav.compare': 'Brendlarni solishtirish', 'nav.quote': 'Narx so‘rash',
       'nav.cart': 'Savat', 'nav.profile': 'Profil', 'nav.login': 'Kirish', 'nav.logout_q': 'Hisobdan chiqasizmi?',
       'meta.title': 'Carmon Oil — Koreyadan original moy',
       'meta.desc': 'Carmon Oil — Janubiy Koreyadan original Kixx, Hyundai XTeer, SK ZIC, Castrol, S-OIL, Shell, SpeedMate, Mobil, Autous moylari. O‘zbekiston va MDH davlatlari bo‘ylab yetkazib berish.',
@@ -282,6 +286,8 @@
     en: {
       'lang.title': 'Choose your language', 'lang.sub': 'You can change it at any time',
       'nav.catalog': 'Catalog', 'nav.orders': 'Orders', 'nav.help': 'Help', 'nav.admin': 'Admin',
+      'nav.products': 'Products', 'nav.process': 'Working Process',
+      'nav.presentation': 'Presentation', 'nav.compare': 'Compare Brands', 'nav.quote': 'Request a Quote',
       'nav.cart': 'Cart', 'nav.profile': 'Profile', 'nav.login': 'Log in', 'nav.logout_q': 'Log out?',
       'meta.title': 'Carmon Oil — genuine oil from Korea',
       'meta.desc': 'Carmon Oil — genuine Kixx, Hyundai XTeer, SK ZIC, Castrol, S-OIL, Shell, SpeedMate, Mobil and Autous oils from South Korea. Delivery across Uzbekistan and the CIS.',
@@ -299,7 +305,7 @@
       'catalog.title': 'Oil catalog', 'catalog.search': 'Search by name or viscosity…',
       'cat.all': 'All', 'cat.passenger': 'Passenger oil', 'cat.heavy': 'Heavy duty oil', 'cat.transmission': 'Transmission oil', 'cat.brake': 'Brake oil', 'cat.grease': 'Grease & hydraulic oil', 'cat.others': 'Other oils',
       'catf.passenger': 'Passenger vehicle oil', 'catf.heavy': 'Heavy duty / commercial vehicle oil', 'catf.transmission': 'Transmission fluid / axle oil', 'catf.brake': 'Brake fluid', 'catf.grease': 'Grease / hydraulic fluid', 'catf.others': 'Others',
-      'fuel.label': 'Fuel type', 'fuel.diesel': 'Diesel', 'fuel.gasoline': 'Gasoline', 'fuel.lpg': 'LPG', 'fuel.hybrid': '하이브리드', 'fuel.tgdi': 'TGDI', 'fuel.hybrid': 'Hybrid', 'fuel.tgdi': 'TGDI',
+      'fuel.label': 'Fuel type', 'fuel.diesel': 'Diesel', 'fuel.gasoline': 'Gasoline', 'fuel.lpg': 'LPG', 'fuel.hybrid': 'Hybrid', 'fuel.tgdi': 'TGDI',
       'admin.f_fuel': 'Engine / fuel type', 'admin.f_sort': 'Catalog position (1, 2, 3…)', 'admin.f_sort_hint': 'Lower numbers show first', 'admin.th_sort': 'Order',
       'admin.f_i18n': 'Name & description translations', 'admin.f_i18n_hint': 'Leave blank to show the Russian text',
       'admin.f_desc_hint': 'Blank line = paragraph, lists with "- ", **bold**, *italic*',
@@ -407,6 +413,8 @@
     ko: {
       'lang.title': '언어를 선택하세요', 'lang.sub': '언제든지 변경할 수 있습니다',
       'nav.catalog': '카탈로그', 'nav.orders': '주문', 'nav.help': '도움말', 'nav.admin': '관리자',
+      'nav.products': '제품', 'nav.process': '업무 절차',
+      'nav.presentation': '프레젠테이션', 'nav.compare': '브랜드 비교', 'nav.quote': '견적 요청',
       'nav.cart': '장바구니', 'nav.profile': '프로필', 'nav.login': '로그인', 'nav.logout_q': '로그아웃하시겠습니까?',
       'meta.title': 'Carmon Oil — 한국 정품 오일',
       'meta.desc': 'Carmon Oil — 대한민국 정품 Kixx, Hyundai XTeer, SK ZIC, Castrol, S-OIL, Shell, SpeedMate, Mobil, Autous 오일. 우즈베키스탄 및 CIS 국가 배송.',
@@ -424,7 +432,7 @@
       'catalog.title': '오일 카탈로그', 'catalog.search': '제품명 또는 점도로 검색…',
       'cat.all': '전체', 'cat.passenger': '승용차 오일', 'cat.heavy': '상용차 오일', 'cat.transmission': '변속기 오일', 'cat.brake': '브레이크 오일', 'cat.grease': '그리스·유압 오일', 'cat.others': '기타 오일',
       'catf.passenger': '승용차 오일', 'catf.heavy': '대형·상용차 오일', 'catf.transmission': '변속기·차축 오일', 'catf.brake': '브레이크액', 'catf.grease': '그리스·유압유', 'catf.others': '기타',
-      'fuel.label': '연료 유형', 'fuel.diesel': '디젤', 'fuel.gasoline': '가솔린', 'fuel.lpg': 'LPG',
+      'fuel.label': '연료 유형', 'fuel.diesel': '디젤', 'fuel.gasoline': '가솔린', 'fuel.lpg': 'LPG', 'fuel.hybrid': '하이브리드', 'fuel.tgdi': 'TGDI',
       'admin.f_fuel': '엔진 / 연료 유형', 'admin.f_sort': '카탈로그 순서 (1, 2, 3…)', 'admin.f_sort_hint': '숫자가 낮을수록 먼저 표시', 'admin.th_sort': '순서',
       'admin.f_i18n': '이름·설명 번역', 'admin.f_i18n_hint': '비우면 러시아어 텍스트가 표시됩니다',
       'admin.f_desc_hint': '빈 줄 = 단락, 목록은 "- ", **굵게**, *기울임*',
