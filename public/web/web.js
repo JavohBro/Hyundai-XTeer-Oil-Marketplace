@@ -727,6 +727,7 @@ function initNavMenus() {
     if (!trigger) return;
     trigger.onclick = e => {
       e.preventDefault();
+      if (menu.dataset.navMenu === 'home') location.hash = '#/';
       const open = menu.classList.toggle('open');
       trigger.setAttribute('aria-expanded', String(open));
       $$('.nav-menu').filter(x => x !== menu).forEach(x => x.classList.remove('open'));
