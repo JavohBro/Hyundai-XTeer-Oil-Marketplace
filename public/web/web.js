@@ -211,31 +211,21 @@ const BRANDS = [
   { id: 'Hyundai Mobis', label: 'Hyundai Mobis', logo: '/assets/Hyundai_Mobis-Logo.wine.png' },
 ];
 const BRAND_IDS = BRANDS.slice(1).map(b => b.id);
-const BRAND_STORIES = {
-  'Kixx': 'Korean lubricant solutions for passenger cars, commercial vehicles and modern service networks.',
-  'Hyundai XTeer': 'Hyundai XTeer engine oils and fluids for passenger-car and heavy-duty applications.',
-  'SK ZIC': 'SK ZIC product families with application-led options across engine and driveline categories.',
-  'Castrol': 'A recognized global lubricant range presented for confirmed product and destination availability.',
-  'S-OIL': 'South Korean lubricant products for automotive, commercial and industrial requirements.',
-  'Shell': 'Global lubricant brand options selected by application, product specification and supply need.',
-  'SpeedMate': 'Service-oriented Korean product range for workshops, fleets and distribution partners.',
-  'Mobil': 'Global automotive lubricant options for everyday vehicle and fleet requirements.',
-  'Autous': 'Product families prepared for automotive applications and export-focused catalogue review.',
-  'Hyundai Mobis': 'Hyundai Mobis product references for vehicle parts, service and aftermarket supply conversations.'
+const BRAND_STORY_KEYS = {
+  'Kixx': 'kixx', 'Hyundai XTeer': 'xteer', 'SK ZIC': 'zic', 'Castrol': 'castrol', 'S-OIL': 'soil',
+  'Shell': 'shell', 'SpeedMate': 'speedmate', 'Mobil': 'mobil', 'Autous': 'autous', 'Hyundai Mobis': 'mobis'
 };
+const brandStory = id => BRAND_STORY_KEYS[id] ? t(`bs.${BRAND_STORY_KEYS[id]}`) : t('hm.brand_fallback');
 
-const BRAND_PROFILES = {
-  'Kixx': { eyebrow: 'Korean lubricant range', title: 'Kixx for everyday performance.', benefits: ['Application-led product selection', 'Passenger and commercial supply conversations', 'Product availability checked by destination'] },
-  'Hyundai XTeer': { eyebrow: 'Hyundai lubricant range', title: 'Hyundai XTeer for modern vehicle applications.', benefits: ['Passenger-car engine oil focus', 'Viscosity and specification-led selection', 'Real pack data shown where available'] },
-  'SK ZIC': { eyebrow: 'SK lubricant range', title: 'SK ZIC across engine and driveline needs.', benefits: ['Engine and driveline product families', 'Clear viscosity and pack references', 'Suitable for workshop and fleet discussions'] },
-  'Castrol': { eyebrow: 'Global lubricant range', title: 'Castrol options for confirmed supply requests.', benefits: ['Brand-specific product sourcing', 'Application and destination review', 'Product list prepared before quotation'] },
-  'S-OIL': { eyebrow: 'South Korean lubricant range', title: 'S-OIL for automotive and industrial conversations.', benefits: ['South Korean sourcing reference', 'Automotive and industrial request support', 'Availability confirmed per product'] },
-  'Shell': { eyebrow: 'Global lubricant range', title: 'Shell options matched to the application.', benefits: ['Application-led product review', 'Destination-specific availability check', 'Documentation discussed before supply'] },
-  'SpeedMate': { eyebrow: 'Korean service range', title: 'SpeedMate for workshop and fleet supply.', benefits: ['Service-network oriented selection', 'Workshop and fleet request support', 'Product and packaging confirmation'] },
-  'Mobil': { eyebrow: 'Global lubricant range', title: 'Mobil options for vehicle and fleet requirements.', benefits: ['Vehicle and fleet application review', 'Product sourcing by specification', 'Availability confirmed before quotation'] },
-  'Autous': { eyebrow: 'Carmon Oil catalogue range', title: 'Autous product families for export review.', benefits: ['Export-focused catalogue review', 'Application and product-family matching', 'Technical details shown when confirmed'] },
-  'Hyundai Mobis': { eyebrow: 'Hyundai aftermarket reference', title: 'Hyundai Mobis for aftermarket conversations.', benefits: ['Aftermarket supply discussion', 'Brand and destination confirmation', 'Product list prepared for review'] }
-};
+function brandProfile(id, label) {
+  const k = BRAND_STORY_KEYS[id];
+  if (!k) return { eyebrow: t('hm.part_kicker'), title: label, benefits: [] };
+  return {
+    eyebrow: t(`bp.${k}_eyebrow`),
+    title: t(`bp.${k}_title`),
+    benefits: [1, 2, 3].map(i => t(`bp.${k}_b${i}`))
+  };
+}
 
 function brandSlug(name) { return encodeURIComponent(name); }
 function brandFromPath(path) { try { return decodeURIComponent(path.slice('/brand/'.length)); } catch { return path.slice('/brand/'.length); } }
@@ -261,13 +251,13 @@ function initBrandShowcase() {
     feature.classList.remove('brand-switching');
     void feature.offsetWidth;
     feature.classList.add('brand-switching');
-    feature.querySelector('.lp-brand-feature-index').textContent = `${String(idx).padStart(2, '0')} / FEATURED BRAND`;
+    feature.querySelector('.lp-brand-feature-index').textContent = `${String(idx).padStart(2, '0')} / ${t('hm.feat_label')}`;
     feature.querySelector('.lp-brand-feature-logo img').src = b.logo;
     feature.querySelector('.lp-brand-feature-logo img').alt = b.label;
     feature.querySelector('.lp-brand-feature-copy h3').textContent = b.label;
-    feature.querySelector('.lp-brand-feature-copy p').textContent = BRAND_STORIES[b.id] || 'Product availability is confirmed by application and destination.';
+    feature.querySelector('.lp-brand-feature-copy p').textContent = brandStory(b.id);
     feature.querySelector('.lp-brand-feature-cta').href = `#/brand/${brandSlug(b.id)}`;
-    feature.querySelector('.lp-brand-feature-cta').innerHTML = `Explore ${esc(b.label)} <span>↗</span>`;
+    feature.querySelector('.lp-brand-feature-cta').innerHTML = `${esc(t('hm.explore_brand', { name: b.label }))} <span>↗</span>`;
     choices.forEach(c => c.classList.toggle('on', c.dataset.brand === b.id));
   };
   choices.forEach(c => c.onclick = () => paint(c.dataset.brand));
@@ -307,7 +297,7 @@ function homePage() {
   <section class="lp-hero">
     <div class="lp-hero-in">
       <div class="lp-hero-txt">
-        <div class="lp-kicker lp-kicker-or" style="margin-bottom:16px">Made in Korea · Trusted Worldwide</div>
+        <div class="lp-kicker lp-kicker-or" style="margin-bottom:16px">${esc(t('hm.hero_kicker'))}</div>
         <h1>${t('home.hero_title')}</h1>
         <p>${esc(t('home.hero_sub'))}</p>
         <div class="lp-actions">
@@ -315,9 +305,9 @@ function homePage() {
           <a class="btn-gl" href="#/business">${esc(t('home.hero_tg'))}</a>
         </div>
         <div class="lp-hero-badges">
-          <span class="lp-hero-badge-txt"><span class="lp-hero-badge-flag">KR</span> Engineered in Korea</span>
-          <span class="lp-hero-badge-txt">Technical product information</span>
-          <span class="lp-hero-badge-txt">Supply support</span>
+          <span class="lp-hero-badge-txt"><span class="lp-hero-badge-flag">KR</span> ${esc(t('hm.badge_kr'))}</span>
+          <span class="lp-hero-badge-txt">${esc(t('hm.badge_tech'))}</span>
+          <span class="lp-hero-badge-txt">${esc(t('hm.badge_sup'))}</span>
         </div>
       </div>
     </div>
@@ -327,20 +317,20 @@ function homePage() {
   <section class="lp-section-two" data-section="2">
     <div class="lp-section-two-overlay"></div>
     <div class="lp-section-two-inner">
-      <div class="lp-section-two-kicker">Global Lubrication Solutions</div>
-      <h2>Improving B2B and B2C Markets with Premium<br class="lp-section-two-break"> Engine Oils and Reliable Global Logistics.</h2>
-      <p>We provide premium automotive and industrial lubrication solutions for engines,<br class="lp-section-two-break"> fleets, workshops and international distribution partners.</p>
-      <a class="lp-section-two-btn" href="#/business">Talk to Carmon <span>→</span></a>
+      <div class="lp-section-two-kicker">${esc(t('hm.s2_kicker'))}</div>
+      <h2>${esc(t('hm.s2_h2a'))}<br class="lp-section-two-break"> ${esc(t('hm.s2_h2b'))}</h2>
+      <p>${esc(t('hm.s2_pa'))}<br class="lp-section-two-break"> ${esc(t('hm.s2_pb'))}</p>
+      <a class="lp-section-two-btn" href="#/business">${esc(t('hm.s2_btn'))} <span>→</span></a>
     </div>
   </section>
 
   <section class="lp-proof">
     <div class="wrap lp-proof-grid">
-      <div class="lp-proof-item"><b>KR</b><span>Products from South Korea</span></div>
-      <div class="lp-proof-item"><b>6</b><span>Core product categories</span></div>
-      <div class="lp-proof-item"><b>B2B</b><span>Distributor support</span></div>
-      <div class="lp-proof-item"><b>10</b><span>Confirmed delivery markets</span></div>
-      <div class="lp-proof-item"><b>24/7</b><span>Online request intake</span></div>
+      <div class="lp-proof-item"><b>KR</b><span>${esc(t('hm.pr1'))}</span></div>
+      <div class="lp-proof-item"><b>6</b><span>${esc(t('hm.pr2'))}</span></div>
+      <div class="lp-proof-item"><b>B2B</b><span>${esc(t('hm.pr3'))}</span></div>
+      <div class="lp-proof-item"><b>10</b><span>${esc(t('hm.pr4'))}</span></div>
+      <div class="lp-proof-item"><b>24/7</b><span>${esc(t('hm.pr5'))}</span></div>
     </div>
   </section>
 
@@ -348,23 +338,23 @@ function homePage() {
     <div class="wrap">
       <div class="lp-cats-hd">
         <div class="lp-cats-hd-left">
-          <div class="lp-kicker">Choose Your Route</div>
-          <h2>One supply partner.<br>Two clear journeys.</h2>
-          <p>Find a suitable product for your vehicle, or start a supply conversation for your workshop, fleet or distribution business.</p>
+          <div class="lp-kicker">${esc(t('hm.paths_kicker'))}</div>
+          <h2>${t('hm.paths_h2')}</h2>
+          <p>${esc(t('hm.paths_p'))}</p>
         </div>
       </div>
       <div class="lp-path-grid">
         <article class="lp-path-card lp-path-card--consumer">
-          <div class="lp-path-num">01 / FOR DRIVERS &amp; WORKSHOPS</div>
-          <h3>Find the right oil for your vehicle.</h3>
-          <p>Browse passenger-car oils by brand, viscosity and application. Every product stays inquiry-led with technical details before purchase.</p>
-          <a href="#/catalog">Browse passenger oils <span>↗</span></a>
+          <div class="lp-path-num">${esc(t('hm.path1_n'))}</div>
+          <h3>${esc(t('hm.path1_h'))}</h3>
+          <p>${esc(t('hm.path1_p'))}</p>
+          <a href="#/catalog">${esc(t('hm.path1_a'))} <span>↗</span></a>
         </article>
         <article class="lp-path-card lp-path-card--business">
-          <div class="lp-path-num">02 / FOR DISTRIBUTORS</div>
-          <h3>Build a reliable supply program.</h3>
-          <p>Discuss wholesale volumes, product availability, destination and export coordination with the Carmon team.</p>
-          <a href="#/business">Start a B2B conversation <span>↗</span></a>
+          <div class="lp-path-num">${esc(t('hm.path2_n'))}</div>
+          <h3>${esc(t('hm.path2_h'))}</h3>
+          <p>${esc(t('hm.path2_p'))}</p>
+          <a href="#/business">${esc(t('hm.path2_a'))} <span>↗</span></a>
         </article>
       </div>
     </div>
@@ -374,33 +364,24 @@ function homePage() {
     <div class="wrap">
       <div class="lp-cats-hd">
         <div class="lp-cats-hd-left">
-          <div class="lp-kicker">Product Categories</div>
-          <h2>Our Product Categories</h2>
-          <p>Lubricant solutions for passenger cars, heavy-duty diesel, racing, transmission and industrial applications.</p>
+          <div class="lp-kicker">${esc(t('hm.cats_kicker'))}</div>
+          <h2>${esc(t('hm.cats_h2'))}</h2>
+          <p>${esc(t('hm.cats_p'))}</p>
         </div>
-        <a class="btn-or" href="#/catalog">View All Products <span class="arr">→</span></a>
+        <a class="btn-or" href="#/catalog">${esc(t('hm.view_all'))} <span class="arr">→</span></a>
       </div>
       <div class="lp-catgrid">
-        <div class="lp-catcard" data-cat="passenger">
-          <div class="lp-catcard-top" style="background:#0d1e2e url('/assets/passenger_oil.jpg') center/cover no-repeat"><span>PASSENGER CAR<br>ENGINE OILS</span></div>
-          <div class="lp-catcard-body"><h3>Passenger Car Oils</h3><p>Maximum engine and fuel efficiency.</p></div>
-        </div>
-        <div class="lp-catcard" data-cat="heavy">
-          <div class="lp-catcard-top" style="background:#121f2c url('/assets/heavy_duty.jpg') center/cover no-repeat"><span>HEAVY-DUTY<br>DIESEL</span></div>
-          <div class="lp-catcard-body"><h3>Heavy-Duty Diesel Oils</h3><p>Engineered for durability and performance.</p></div>
-        </div>
-        <div class="lp-catcard" data-cat="transmission">
-          <div class="lp-catcard-top" style="background:#0f2438 url('/assets/transmission.jpg') center/cover no-repeat"><span>TRANSMISSION<br>FLUIDS</span></div>
-          <div class="lp-catcard-body"><h3>Transmission Fluids</h3><p>Advanced protection for smooth operation.</p></div>
-        </div>
-        <div class="lp-catcard" data-cat="grease">
-          <div class="lp-catcard-top" style="background:#181c10 url('/assets/product.jpg') center/cover no-repeat"><span>GREASE &<br>HYDRAULICS</span></div>
-          <div class="lp-catcard-body"><h3>Grease &amp; Hydraulics</h3><p>Chassis and hydraulic lubrication.</p></div>
-        </div>
-        <div class="lp-catcard" data-cat="others">
-          <div class="lp-catcard-top" style="background:#1e1a0e url('/assets/industrial.jpg') center/cover no-repeat"><span>INDUSTRIAL<br>OILS</span></div>
-          <div class="lp-catcard-body"><h3>Industrial Oils</h3><p>Reliable lubrication for industrial applications.</p></div>
-        </div>
+        ${[
+          { cat: 'passenger',    bg: '#0d1e2e', img: 'passenger_oil.jpg' },
+          { cat: 'heavy',        bg: '#121f2c', img: 'heavy_duty.jpg' },
+          { cat: 'transmission', bg: '#0f2438', img: 'transmission.jpg' },
+          { cat: 'grease',       bg: '#181c10', img: 'product.jpg' },
+          { cat: 'others',       bg: '#1e1a0e', img: 'industrial.jpg' }
+        ].map((c, i) => `
+        <div class="lp-catcard" data-cat="${c.cat}">
+          <div class="lp-catcard-top" style="background:${c.bg} url('/assets/${c.img}') center/cover no-repeat"><span>${t(`hm.c${i + 1}_t`)}</span></div>
+          <div class="lp-catcard-body"><h3>${esc(t(`hm.c${i + 1}_h`))}</h3><p>${esc(t(`hm.c${i + 1}_p`))}</p></div>
+        </div>`).join('')}
       </div>
     </div>
   </section>
@@ -409,21 +390,21 @@ function homePage() {
     <div class="wrap">
       <div class="lp-cats-hd">
         <div class="lp-cats-hd-left">
-          <div class="lp-kicker">Our Partners</div>
-          <h2>Brands We Work With</h2>
-          <p>Recognized Korean and global lubricant brands. Availability confirmed per product and destination.</p>
+          <div class="lp-kicker">${esc(t('hm.part_kicker'))}</div>
+          <h2>${esc(t('hm.part_h2'))}</h2>
+          <p>${esc(t('hm.part_p'))}</p>
         </div>
-        <a class="btn-or" href="#/catalog">View All Brands <span class="arr">→</span></a>
+        <a class="btn-or" href="#/catalog">${esc(t('hm.view_brands'))} <span class="arr">→</span></a>
       </div>
       <div class="lp-brand-showcase" id="lp-brand-showcase">
         <div class="lp-brand-feature" id="lp-brand-feature">
           <div class="lp-brand-feature-glow"></div>
-          <div class="lp-brand-feature-top"><span class="lp-brand-feature-index">01 / FEATURED BRAND</span><span class="lp-brand-feature-status">KOREAN &amp; GLOBAL RANGE</span></div>
+          <div class="lp-brand-feature-top"><span class="lp-brand-feature-index">01 / ${esc(t('hm.feat_label'))}</span><span class="lp-brand-feature-status">${esc(t('hm.feat_status'))}</span></div>
           <div class="lp-brand-feature-logo"><img src="${esc(BRANDS[1].logo)}" alt="${esc(BRANDS[1].label)}"></div>
-          <div class="lp-brand-feature-copy"><h3>${esc(BRANDS[1].label)}</h3><p>${esc(BRAND_STORIES[BRANDS[1].label])}</p><a class="lp-brand-feature-cta" href="#/brand/${brandSlug(BRANDS[1].id)}">Explore ${esc(BRANDS[1].label)} <span>↗</span></a></div>
+          <div class="lp-brand-feature-copy"><h3>${esc(BRANDS[1].label)}</h3><p>${esc(brandStory(BRANDS[1].id))}</p><a class="lp-brand-feature-cta" href="#/brand/${brandSlug(BRANDS[1].id)}">${esc(t('hm.explore_brand', { name: BRANDS[1].label }))} <span>↗</span></a></div>
         </div>
         <div class="lp-brand-choice-grid">
-          ${BRANDS.slice(1).map((b, i) => `<button type="button" class="lp-brand-choice${i === 0 ? ' on' : ''}" data-brand="${esc(b.id)}" aria-label="Explore ${esc(b.label)}"><span class="lp-brand-choice-no">${String(i + 1).padStart(2, '0')}</span><span class="lp-brand-choice-logo"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></span><span class="lp-brand-choice-name">${esc(b.label)}</span><span class="lp-brand-choice-arrow">↗</span></button>`).join('')}
+          ${BRANDS.slice(1).map((b, i) => `<button type="button" class="lp-brand-choice${i === 0 ? ' on' : ''}" data-brand="${esc(b.id)}" aria-label="${esc(t('hm.explore_brand', { name: b.label }))}"><span class="lp-brand-choice-no">${String(i + 1).padStart(2, '0')}</span><span class="lp-brand-choice-logo"><img src="${esc(b.logo)}" alt="${esc(b.label)}"></span><span class="lp-brand-choice-name">${esc(b.label)}</span><span class="lp-brand-choice-arrow">↗</span></button>`).join('')}
         </div>
       </div>
       <div class="lp-brand-ticker" aria-label="Carmon Oil brands"><div class="lp-brand-ticker-track">${[...BRANDS.slice(1), ...BRANDS.slice(1)].map(b => `<span><img src="${esc(b.logo)}" alt="${esc(b.label)}"><b>${esc(b.label)}</b></span>`).join('')}</div></div>
@@ -433,17 +414,14 @@ function homePage() {
 
   <section class="lp-logistics-sec">
     <div class="wrap">
-      <div class="lp-kicker">Built for Global Distribution</div>
+      <div class="lp-kicker">${esc(t('log.kicker'))}</div>
       <div class="lp-logistics-hd">
         <div>
-          <h2>Reliable Logistics.<br>Clear Supply Process.</h2>
-          <p>From product selection and documentation to order preparation, loading and agreed delivery.</p>
-          <a class="btn-or" href="#/logistics">Learn More About Logistics <span class="arr">→</span></a>
+          <h2>${t('hm.log_h2')}</h2>
+          <p>${esc(t('hm.log_p'))}</p>
+          <a class="btn-or" href="#/logistics">${esc(t('hm.log_btn'))} <span class="arr">→</span></a>
           <div class="lp-ticks">
-            <span>✓ Export-ready documentation</span>
-            <span>✓ Warehouse and loading coordination</span>
-            <span>✓ Partner-aligned delivery support</span>
-            <span>✓ Product and destination confirmation</span>
+            ${[1, 2, 3, 4].map(i => `<span>✓ ${esc(t(`hm.tick${i}`))}</span>`).join('')}
           </div>
         </div>
         <div class="lp-logistics-photo-single">
@@ -455,48 +433,33 @@ function homePage() {
 
   <section class="lp-services-sec">
     <div class="wrap">
-      <div class="lp-kicker">Our Services</div>
+      <div class="lp-kicker">${esc(t('hm.svc_kicker'))}</div>
       <div class="lp-cats-hd" style="margin-bottom:40px">
         <div class="lp-cats-hd-left">
-          <h2>Services for Lubricant Businesses</h2>
-          <p>From product sourcing to export coordination, Carmon Oil supports distributors, workshops and international buyers.</p>
+          <h2>${esc(t('hm.svc_h2'))}</h2>
+          <p>${esc(t('hm.svc_p'))}</p>
         </div>
       </div>
       <div class="lp-svc-grid">
+        ${[1, 2, 3].map(i => `
         <div class="lp-svc">
-          <span class="lp-svc-num">01</span>
-          <h3>Global Export</h3>
-          <h4>Partner Supply</h4>
-          <p>Product sourcing and distribution support for overseas buyers and strategic partners.</p>
-          <a href="#/business">Explore Service <span class="arr">→</span></a>
-        </div>
-        <div class="lp-svc">
-          <span class="lp-svc-num">02</span>
-          <h3>Wholesale Supply</h3>
-          <h4>Distributor Networks</h4>
-          <p>Supply conversations for distributors, workshops, service networks and fleet operators.</p>
-          <a href="#/business">Explore Service <span class="arr">→</span></a>
-        </div>
-        <div class="lp-svc">
-          <span class="lp-svc-num">03</span>
-          <h3>Brand Sourcing</h3>
-          <h4>Recognized Brands</h4>
-          <p>Help finding suitable products from confirmed Korean and global lubricant brands.</p>
-          <a href="#/business">Explore Service <span class="arr">→</span></a>
-        </div>
+          <span class="lp-svc-num">0${i}</span>
+          <h3>${esc(t(`hm.sv${i}_h`))}</h3>
+          <h4>${esc(t(`hm.sv${i}_h4`))}</h4>
+          <p>${esc(t(`hm.sv${i}_p`))}</p>
+          <a href="#/business">${esc(t('hm.svc_link'))} <span class="arr">→</span></a>
+        </div>`).join('')}
       </div>
     </div>
   </section>
 
   <section class="lp-world-sec">
     <div class="lp-world-copy">
-      <div class="lp-kicker lp-kicker-or">World-Class Logistics</div>
-      <h2>Export Efficiency</h2>
-      <p>We coordinate the supply chain from product sourcing and order preparation to loading, documentation and agreed delivery.</p>
+      <div class="lp-kicker lp-kicker-or">${esc(t('hm.world_kicker'))}</div>
+      <h2>${esc(t('hm.world_h2'))}</h2>
+      <p>${esc(t('hm.world_p'))}</p>
       <div class="lp-ticks" style="margin-top:20px">
-        <span>✓ Export-ready documentation</span>
-        <span>✓ Warehouse and loading coordination</span>
-        <span>✓ Partner-aligned delivery support</span>
+        ${[1, 2, 3].map(i => `<span>✓ ${esc(t(`hm.tick${i}`))}</span>`).join('')}
       </div>
     </div>
     <div class="lp-world-img">
@@ -507,32 +470,30 @@ function homePage() {
   <section class="lp-production-sec">
     <div class="wrap lp-production-top">
       <div>
-        <div class="lp-kicker lp-kicker-or">Carmon Oil Production Project</div>
-        <h2>Complete Product Introduction</h2>
-        <p>The production catalogue brings together Carmon Oil, Speedmate and SK AUTOUS product families, technical introductions and application-led ranges.</p>
+        <div class="lp-kicker lp-kicker-or">${esc(t('hm.prod_kicker'))}</div>
+        <h2>${esc(t('hm.prod_h2'))}</h2>
+        <p>${esc(t('hm.prod_p'))}</p>
       </div>
-      <a class="btn-or" href="#/catalog">View Catalogue <span class="arr">↓</span></a>
+      <a class="btn-or" href="#/catalog">${esc(t('proc.cta_btn2'))} <span class="arr">↓</span></a>
     </div>
     <div class="wrap">
       <div class="lp-production-hero">
         <div class="lp-production-hero-left">
-          <h3>Product Range. Technical Detail.<br>Export Ready.</h3>
-          <p>Explore the Carmon Oil, Speedmate and SK AUTOUS product families — technical introductions and product-story ranges now available in our catalogue.</p>
+          <h3>${t('hm.prod_h3')}</h3>
+          <p>${esc(t('hm.prod_hero_p'))}</p>
         </div>
         <div class="lp-production-hero-right">
-          <a class="lp-btn-outline" href="#/catalog">Explore Product Families <span class="arr">↓</span></a>
-          <a class="btn-or" href="#/business">Request Product List <span class="arr">→</span></a>
+          <a class="lp-btn-outline" href="#/catalog">${esc(t('hm.prod_btn1'))} <span class="arr">↓</span></a>
+          <a class="btn-or" href="#/business">${esc(t('hm.prod_btn2'))} <span class="arr">→</span></a>
         </div>
       </div>
       <div class="lp-prod-family-grid">
-        <div class="lp-prod-family"><span class="lp-svc-num">01 / PCMO</span><h4>Passenger Car Motor Oils</h4><p>Gasoline, diesel and LPG applications with fully synthetic, synthetic and mineral ranges.</p><div class="lp-prod-skus">FX-S · FX-SE · FX-PAO · FX-1 · FX-2 · FX-3</div></div>
-        <div class="lp-prod-family"><span class="lp-svc-num">02 / HDDEO</span><h4>Heavy-Duty Diesel Oils</h4><p>Engine oils for modern diesel engines, light trucks and demanding operating conditions.</p><div class="lp-prod-skus">K4 · J4 · I4 · H4 · F4</div></div>
-        <div class="lp-prod-family"><span class="lp-svc-num">03 / DRIVELINE</span><h4>Transmission Fluids</h4><p>Automatic, continuously variable and dual-clutch transmission support across vehicle platforms.</p></div>
-        <div class="lp-prod-family"><span class="lp-svc-num">04 / GEAR</span><h4>Automotive Gear Oils</h4><p>High-quality gear oils for smooth shifting, wear protection and stable performance.</p></div>
-        <div class="lp-prod-family"><span class="lp-svc-num">05 / SK AUTOUS</span><h4>SK AUTOUS Engine Oils</h4><p>Low-SAPS, gasoline, diesel and power oil introductions for modern vehicle applications.</p></div>
-        <div class="lp-prod-family"><span class="lp-svc-num">06 / POWER</span><h4>Diesel Power Oils</h4><p>Performance-focused diesel engine families developed for protection, economy and durability.</p></div>
-        <div class="lp-prod-family"><span class="lp-svc-num">07 / SK DRIVELINE</span><h4>SK AUTOUS Driveline</h4><p>Automatic and CVT fluid introductions with broad OEM application references.</p></div>
-        <div class="lp-prod-family"><span class="lp-svc-num">08 / TECHNICAL</span><h4>Specifications &amp; Benefits</h4><p>Product pages include viscosity, approvals, key characteristics, benefits and application notes.</p><div class="lp-prod-skus" style="color:rgba(255,255,255,.4)">Verify final SKU data against current official technical sheets.</div></div>
+        ${[
+          { skus: 'FX-S · FX-SE · FX-PAO · FX-1 · FX-2 · FX-3' },
+          { skus: 'K4 · J4 · I4 · H4 · F4' },
+          {}, {}, {}, {}, {},
+          { note: true }
+        ].map((f, i) => `<div class="lp-prod-family"><span class="lp-svc-num">0${i + 1} / ${esc(t(`hm.f${i + 1}_tag`))}</span><h4>${esc(t(`hm.f${i + 1}_h`))}</h4><p>${esc(t(`hm.f${i + 1}_p`))}</p>${f.skus ? `<div class="lp-prod-skus">${f.skus}</div>` : ''}${f.note ? `<div class="lp-prod-skus" style="color:rgba(255,255,255,.4)">${esc(t('hm.f8_note'))}</div>` : ''}</div>`).join('')}
       </div>
     </div>
   </section>
@@ -541,11 +502,11 @@ function homePage() {
     <div class="wrap">
       <div class="lp-presentation-top">
         <div>
-          <div class="lp-kicker lp-kicker-or">Carmon Oil Presentation</div>
-          <h2>Product Range. Brand Story. Export Ready.</h2>
-          <p>Explore the full Carmon Oil presentation with product families, technical introductions and visual references from the production catalogue.</p>
+          <div class="lp-kicker lp-kicker-or">${esc(t('hm.pres_kicker'))}</div>
+          <h2>${esc(t('hm.pres_h2'))}</h2>
+          <p>${esc(t('hm.pres_p'))}</p>
         </div>
-        <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Full Presentation <span class="arr">↗</span></a>
+        <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">${esc(t('pres.view_btn'))} <span class="arr">↗</span></a>
       </div>
       <div class="lp-presentation-frame">
         <iframe src="/assets/carmon-oil-presentation.pdf" title="Carmon Oil Presentation" loading="lazy"></iframe>
@@ -557,11 +518,11 @@ function homePage() {
     <div class="wrap">
       <div class="lp-cats-hd">
         <div class="lp-cats-hd-left">
-          <div class="lp-kicker">Technical Excellence in Every Drop</div>
-          <h2>Technical Product Catalog</h2>
-          <p>Compare products by application, viscosity, packaging and confirmed technical standards.</p>
+          <div class="lp-kicker">${esc(t('hm.tc_kicker'))}</div>
+          <h2>${esc(t('hm.tc_h2'))}</h2>
+          <p>${esc(t('hm.tc_p'))}</p>
         </div>
-        <a class="btn-or" href="#/catalog">View Technical Data <span class="arr">→</span></a>
+        <a class="btn-or" href="#/catalog">${esc(t('hm.tc_btn'))} <span class="arr">→</span></a>
       </div>
       <div class="lp-techcat-grid" id="lp-techcat-grid">
         ${[1,2,3,4,5].map(() => `<div class="lp-techcat-card lp-techcat-card--loading"><div class="lp-techcat-img"></div><div class="lp-techcat-body"><div class="lp-skel lp-skel-sm"></div><div class="lp-skel lp-skel-md"></div><div class="lp-skel lp-skel-sm"></div></div></div>`).join('')}
@@ -573,21 +534,21 @@ function homePage() {
     <div class="wrap">
       <div class="lp-finder-heading">
         <div>
-          <div class="lp-kicker lp-kicker-or">Product Finder</div>
-          <h2>Start with the application.<br>Leave with a shortlist.</h2>
+          <div class="lp-kicker lp-kicker-or">${esc(t('hm.fd_kicker'))}</div>
+          <h2>${t('hm.fd_h2')}</h2>
         </div>
-        <p>Choose a brand and viscosity to see the matching Carmon products currently represented in this catalogue.</p>
+        <p>${esc(t('hm.fd_p'))}</p>
       </div>
       <form class="finder-tool" id="finder-tool">
-        <label><span>Brand</span><select id="finder-brand"><option value="all">All brands</option><option value="Hyundai XTeer">Hyundai XTeer</option><option value="SK ZIC">SK ZIC</option></select></label>
-        <label><span>Viscosity</span><select id="finder-viscosity"><option value="all">All viscosities</option></select></label>
-        <label><span>Application</span><select id="finder-application"><option value="passenger">Passenger cars</option><option value="all">All applications</option></select></label>
-        <button class="finder-submit" type="submit">Find products <span>→</span></button>
+        <label><span>${esc(t('cmp.f_brand'))}</span><select id="finder-brand"><option value="all">${esc(t('cmp.all_brands'))}</option><option value="Hyundai XTeer">Hyundai XTeer</option><option value="SK ZIC">SK ZIC</option></select></label>
+        <label><span>${esc(t('cmp.f_visc'))}</span><select id="finder-viscosity"><option value="all">${esc(t('cmp.all_visc'))}</option></select></label>
+        <label><span>${esc(t('cmp.f_app'))}</span><select id="finder-application"><option value="passenger">${esc(t('hm.fd_passenger'))}</option><option value="all">${esc(t('cmp.all_apps'))}</option></select></label>
+        <button class="finder-submit" type="submit">${esc(t('hm.fd_submit'))} <span>→</span></button>
       </form>
       <div class="finder-results" id="finder-results" aria-live="polite"></div>
       <div class="lp-finder-business">
-        <div><b>Buying for a workshop, fleet or distribution business?</b><span>Request a product list, availability check or export quotation.</span></div>
-        <a class="btn-or" href="#/business">Request a B2B quote <span class="arr">↗</span></a>
+        <div><b>${esc(t('hm.fd_biz_b'))}</b><span>${esc(t('hm.fd_biz_s'))}</span></div>
+        <a class="btn-or" href="#/business">${esc(t('pres.cta_btn'))} <span class="arr">↗</span></a>
       </div>
     </div>
   </section>
@@ -1464,28 +1425,28 @@ function presentationPage() {
 // ═══ BRAND PAGES & COMPARISON ═══
 function brandPage(brandName) {
   const b = BRANDS.find(x => x.id === brandName) || BRANDS[1];
-  const profile = BRAND_PROFILES[b.id] || { eyebrow: 'Carmon Oil brand reference', title: `${b.label} product range.`, benefits: ['Product availability confirmed per request', 'Application-led selection', 'Destination-specific supply review'] };
+  const profile = brandProfile(b.id, b.label);
   const products = productDataForBrand(b.id);
   const categories = uniqueValues(products, p => p.category).map(x => catL(x, true));
   const viscosities = uniqueValues(products, p => p.viscosity);
   const applications = productApplications(products).map(x => x.charAt(0).toUpperCase() + x.slice(1));
-  const dataStatus = products.length ? 'Verified entries in current catalogue' : 'Catalogue lineup pending confirmation';
+  const dataStatus = t(products.length ? 'bp.status_ok' : 'bp.status_pending');
   $('#main').innerHTML = `
     <main class="brand-page">
       <section class="brand-page-hero">
         <div class="brand-page-hero-glow"></div>
         <div class="wrap brand-page-hero-in">
-          <a class="article-back" href="#/compare-brands">← Back to Brand Comparison</a>
+          <a class="article-back" href="#/compare-brands">${esc(t('bp.back'))}</a>
           <div class="brand-page-hero-grid">
-            <div><div class="lp-kicker lp-kicker-or">${esc(profile.eyebrow)}</div><h1>${esc(profile.title)}</h1><p>${esc(BRAND_STORIES[b.id] || '')}</p><div class="brand-page-actions"><a class="btn-or" href="#brand-products">View Product Lineup <span class="arr">↓</span></a><a class="btn-gl" href="#/business">Request Brand Availability <span class="arr">↗</span></a></div></div>
-            <div class="brand-page-logo-card"><span>BRAND REFERENCE</span><img src="${esc(b.logo)}" alt="${esc(b.label)}"><b>${esc(b.label)}</b></div>
+            <div><div class="lp-kicker lp-kicker-or">${esc(profile.eyebrow)}</div><h1>${esc(profile.title)}</h1><p>${esc(brandStory(b.id))}</p><div class="brand-page-actions"><a class="btn-or" href="#brand-products">${esc(t('bp.lineup_btn'))} <span class="arr">↓</span></a><a class="btn-gl" href="#/business">${esc(t('bp.avail_btn'))} <span class="arr">↗</span></a></div></div>
+            <div class="brand-page-logo-card"><span>${esc(t('bp.ref'))}</span><img src="${esc(b.logo)}" alt="${esc(b.label)}"><b>${esc(b.label)}</b></div>
           </div>
         </div>
       </section>
-      <section class="brand-page-summary"><div class="wrap"><div class="brand-summary-grid"><div><div class="lp-kicker lp-kicker-or">At a glance</div><h2>Review the range.<br>Then build the request.</h2></div><p>Use this brand page to review the product records currently represented in the Carmon Oil catalogue. Final availability, commercial terms and destination support are confirmed per request.</p></div><div class="brand-stat-grid"><div><b>${products.length}</b><span>Catalogue products</span></div><div><b>${viscosities.length || '—'}</b><span>Viscosities entered</span></div><div><b>${categories.length || '—'}</b><span>Product types entered</span></div><div><b>${applications.length || '—'}</b><span>Applications entered</span></div></div></div></section>
-      <section class="brand-benefits"><div class="wrap"><div class="lp-kicker lp-kicker-or">Why review ${esc(b.label)}</div><div class="brand-benefit-grid">${profile.benefits.map((x, i) => `<article><span>0${i + 1}</span><h3>${esc(x)}</h3><p>Reviewed against the product and destination details provided for the request.</p></article>`).join('')}</div></div></section>
-      <section class="brand-data"><div class="wrap"><div class="brand-data-grid"><div><div class="lp-kicker lp-kicker-or">Catalogue snapshot</div><h2>What is currently entered.</h2><p class="brand-status">${esc(dataStatus)}</p></div><div class="brand-data-lists"><div><span>Product types</span><b>${esc(categories.length ? categories.join(' · ') : 'To be confirmed')}</b></div><div><span>Viscosities</span><b>${esc(viscosities.length ? viscosities.join(' · ') : 'To be confirmed')}</b></div><div><span>Applications</span><b>${esc(applications.length ? applications.join(' · ') : 'To be confirmed')}</b></div></div></div></div></section>
-      <section class="brand-products" id="brand-products"><div class="wrap"><div class="brand-products-head"><div><div class="lp-kicker lp-kicker-or">${esc(b.label)} lineup</div><h2>Available products.</h2></div><a class="btn-or" href="#/compare-brands">Compare Brands <span class="arr">↗</span></a></div>${products.length ? `<div class="grid brand-product-grid">${products.map(p => `<div class="brand-product-card card" data-id="${p.id}">${cardHTML(p)}</div>`).join('')}</div>` : `<div class="brand-empty"><div class="brand-empty-mark">＋</div><h3>No confirmed products are entered for this brand yet.</h3><p>Request the current ${esc(b.label)} product list, packaging and availability for your destination.</p><a class="btn-or" href="#/business">Request Product List <span class="arr">↗</span></a></div>`}</div></section>
+      <section class="brand-page-summary"><div class="wrap"><div class="brand-summary-grid"><div><div class="lp-kicker lp-kicker-or">${esc(t('bp.glance'))}</div><h2>${t('bp.glance_h2')}</h2></div><p>${esc(t('bp.glance_p'))}</p></div><div class="brand-stat-grid"><div><b>${products.length}</b><span>${esc(t('bp.st_products'))}</span></div><div><b>${viscosities.length || '—'}</b><span>${esc(t('bp.st_visc'))}</span></div><div><b>${categories.length || '—'}</b><span>${esc(t('bp.st_types'))}</span></div><div><b>${applications.length || '—'}</b><span>${esc(t('bp.st_apps'))}</span></div></div></div></section>
+      <section class="brand-benefits"><div class="wrap"><div class="lp-kicker lp-kicker-or">${esc(t('bp.why', { name: b.label }))}</div><div class="brand-benefit-grid">${profile.benefits.map((x, i) => `<article><span>0${i + 1}</span><h3>${esc(x)}</h3><p>${esc(t('bp.benefit_note'))}</p></article>`).join('')}</div></div></section>
+      <section class="brand-data"><div class="wrap"><div class="brand-data-grid"><div><div class="lp-kicker lp-kicker-or">${esc(t('bp.snapshot'))}</div><h2>${esc(t('bp.snapshot_h2'))}</h2><p class="brand-status">${esc(dataStatus)}</p></div><div class="brand-data-lists"><div><span>${esc(t('bp.types'))}</span><b>${esc(categories.length ? categories.join(' · ') : t('bp.tbc'))}</b></div><div><span>${esc(t('bp.visc'))}</span><b>${esc(viscosities.length ? viscosities.join(' · ') : t('bp.tbc'))}</b></div><div><span>${esc(t('bp.apps'))}</span><b>${esc(applications.length ? applications.join(' · ') : t('bp.tbc'))}</b></div></div></div></div></section>
+      <section class="brand-products" id="brand-products"><div class="wrap"><div class="brand-products-head"><div><div class="lp-kicker lp-kicker-or">${esc(t('bp.lineup', { name: b.label }))}</div><h2>${esc(t('bp.available'))}</h2></div><a class="btn-or" href="#/compare-brands">${esc(t('nav.compare'))} <span class="arr">↗</span></a></div>${products.length ? `<div class="grid brand-product-grid">${products.map(p => `<div class="brand-product-card card" data-id="${p.id}">${cardHTML(p)}</div>`).join('')}</div>` : `<div class="brand-empty"><div class="brand-empty-mark">＋</div><h3>${esc(t('bp.empty_h3'))}</h3><p>${esc(t('bp.empty_p', { name: b.label }))}</p><a class="btn-or" href="#/business">${esc(t('hm.prod_btn2'))} <span class="arr">↗</span></a></div>`}</div></section>
     </main>`;
   brandProductsHandlers($('#main'));
 }
