@@ -1123,7 +1123,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
 .icon-action{color:#fff}
 
 /* Hero: make the proposition immediate and editorial */
-.lp-hero{min-height:660px;background:#081b2a url('/assets/shipp.png') center/cover no-repeat}
+.lp-hero{min-height:660px;background:#081b2a url('/assets/hero.png') center/cover no-repeat}
 .lp-hero::after{background:linear-gradient(90deg,rgba(4,18,30,.94) 0%,rgba(4,18,30,.73) 46%,rgba(4,18,30,.22) 100%),linear-gradient(180deg,rgba(4,18,30,.20),rgba(4,18,30,.72))}
 .lp-hero-in{max-width:var(--max);padding:116px 24px 92px}
 .lp-hero-txt{max-width:720px}
