@@ -155,6 +155,7 @@ const routes = {
   '': homePage, '/': homePage, '/catalog': catalogPage, '/orders': ordersPage, '/help': helpPage,
   '/logistics': logisticsPage, '/business': businessPage, '/compare-brands': compareBrandsPage,
   '/presentation': presentationPage,
+  '/process': processPage,
   '/article/viscosity': () => articlePage('viscosity'),
   '/article/fuel': () => articlePage('fuel'),
   '/article/genuine': () => articlePage('genuine'),
@@ -1578,6 +1579,151 @@ function helpPage() {
     <div class="sec-head" style="padding-top:8px"><h1 style="font-size:22px">${esc(t('help.faq'))}</h1></div>
     <div class="faq">${faqs.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div>
   </div>`;
+}
+
+// ═══ WORKING PROCESS ═══
+const PROCESS_STEPS = [
+  {
+    n: '01', icon: '📋',
+    title: 'Inquiry & Price Calculation',
+    body: 'Select the products and volume you need on the website and send us a request. We check stock availability at our Incheon warehouse (South Korea) and provide you with a competitive commercial offer.'
+  },
+  {
+    n: '02', icon: '✈️',
+    title: 'Agreement & Visa Support',
+    badge: 'Official Visa Support',
+    body: 'Once terms are agreed, we prepare an official business invitation letter for South Korea and a complete visa document package on your behalf.'
+  },
+  {
+    n: '03', icon: '🤝',
+    title: 'Meeting in Incheon & Contract',
+    body: 'We meet you at Incheon Airport, bring you to our office or warehouse, finalise logistics, sign the contract and issue the Invoice.'
+  },
+  {
+    n: '04', icon: '📦',
+    title: 'Cargo Preparation & Loading',
+    badge: '100% Real Process',
+    body: 'Within 2 weeks we fully prepare the shipment, build out the container, pack and dispatch to the port. You receive a real photo report of the loading process.'
+  },
+  {
+    n: '05', icon: '📄',
+    title: 'Certificates & Documents (MSDS / PDS)',
+    badge: 'MSDS / PDS Certified',
+    body: 'We provide a complete customs documentation package: quality certificates, MSDS safety data sheets, and PDS technical specifications compliant with your country\'s regulations.'
+  },
+  {
+    n: '06', icon: '🚢',
+    title: 'Delivery to Destination Port',
+    body: 'Shipping from South Korea to your destination port takes on average 20 to 45 days. We track the shipment and keep you updated throughout transit.'
+  }
+];
+
+const PROCESS_PHOTOS = [
+  'photo_2026-09-29_12-26-09.png',
+  'photo_2026-09-29_12-26-56.png',
+  'photo_2026-09-29_12-31-11.png',
+  'photo_2026-09-29_12-34-10.png',
+  'photo_2026-09-29_12-36-18.png',
+  'photo_2026-09-29_12-36-45.png',
+  'photo_2026-09-29_12-37-54.png',
+  'photo_2026-09-29_12-38-38.png'
+];
+
+function processPage() {
+  $('#main').innerHTML = `
+    <main class="process-page">
+
+      <section class="process-hero">
+        <div class="process-hero-overlay"></div>
+        <div class="wrap process-hero-in">
+          <div class="lp-kicker lp-kicker-or">Transparent Supply Chain</div>
+          <h1>How We Work:<br><span>From Inquiry to Delivery</span></h1>
+          <p>A transparent, step-by-step process with official visa support, real-time cargo photos, and full certification for every shipment.</p>
+          <div class="process-hero-badges">
+            <span class="proc-badge proc-badge--visa">Official Visa Support</span>
+            <span class="proc-badge proc-badge--msds">MSDS / PDS Certified</span>
+            <span class="proc-badge proc-badge--real">100% Real Process</span>
+          </div>
+          <a class="btn-or" href="#process-steps">See the Process <span class="arr">&#x2193;</span></a>
+        </div>
+      </section>
+
+      <section class="process-steps-sec" id="process-steps">
+        <div class="wrap">
+          <div class="proc-head">
+            <div class="lp-kicker lp-kicker-or">Step by Step</div>
+            <h2>6 steps from request<br>to your warehouse.</h2>
+          </div>
+          <div class="proc-steps">
+            ${PROCESS_STEPS.map((s, i) => `
+            <article class="proc-step anim">
+              <div class="proc-step-num">${esc(s.n)}</div>
+              ${s.badge ? `<span class="proc-step-badge">${esc(s.badge)}</span>` : ''}
+              <div class="proc-step-icon">${s.icon}</div>
+              <h3>${esc(s.title)}</h3>
+              <p>${esc(s.body)}</p>
+              ${i < PROCESS_STEPS.length - 1 ? '<div class="proc-step-connector"></div>' : ''}
+            </article>`).join('')}
+          </div>
+        </div>
+      </section>
+
+      <section class="proc-gallery-sec">
+        <div class="wrap">
+          <div class="proc-head">
+            <div class="lp-kicker lp-kicker-or">Real Shipments</div>
+            <h2>Our actual<br>loading operations.</h2>
+            <p>Every order receives a photo report. These are real images from our Incheon warehouse and loading operations.</p>
+          </div>
+          <div class="proc-gallery">
+            ${PROCESS_PHOTOS.map((f, i) => `<div class="proc-gallery-item anim"><img src="/assets/${esc(f)}" alt="Carmon Oil shipment photo ${i + 1}" loading="lazy"></div>`).join('')}
+          </div>
+        </div>
+      </section>
+
+      <section class="proc-trust-sec">
+        <div class="wrap">
+          <div class="proc-trust-grid">
+            <article class="proc-trust-card">
+              <div class="proc-trust-icon">&#x2708;&#xFE0F;</div>
+              <h3>Official Visa Support</h3>
+              <p>We prepare your business invitation letter and visa document package so you can visit our Incheon warehouse and sign the contract in person.</p>
+            </article>
+            <article class="proc-trust-card">
+              <div class="proc-trust-icon">&#x1F4CB;</div>
+              <h3>Full Documentation</h3>
+              <p>Every shipment includes MSDS safety data sheets, PDS technical specifications, quality certificates and all customs documents required for your country.</p>
+            </article>
+            <article class="proc-trust-card">
+              <div class="proc-trust-icon">&#x1F4F8;</div>
+              <h3>Real Photo Reports</h3>
+              <p>You receive photos at every stage: warehouse, packing, container loading and port dispatch. No surprises — only confirmed, verified product.</p>
+            </article>
+            <article class="proc-trust-card">
+              <div class="proc-trust-icon">&#x1F30E;</div>
+              <h3>20 to 45 Day Transit</h3>
+              <p>Standard shipping from Incheon to CIS and Central Asia ports. We track every shipment and send you updates throughout the transit period.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="proc-cta-sec">
+        <div class="wrap proc-cta-in">
+          <div>
+            <div class="lp-kicker lp-kicker-or">Start the Process</div>
+            <h2>Ready to place your first order?</h2>
+            <p>Send us your product list and required volume. We will check stock, calculate pricing and send a commercial offer within 24 hours.</p>
+          </div>
+          <div class="proc-cta-actions">
+            <a class="btn-or" href="#/business">Request a Quote <span class="arr">&#x2192;</span></a>
+            <a class="btn-gl" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">View Catalogue <span class="arr">&#x2197;</span></a>
+          </div>
+        </div>
+      </section>
+
+    </main>`;
+  requestAnimationFrame(() => initAnimations());
 }
 
 // ═══ ADMIN ═══
