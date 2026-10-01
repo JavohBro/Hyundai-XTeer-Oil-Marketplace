@@ -1415,14 +1415,14 @@ function presentationPage() {
       <section class="presentation-cover">
         <div class="presentation-cover-overlay"></div>
         <div class="wrap presentation-cover-in">
-          <div class="lp-kicker lp-kicker-or">Carmon Oil · Production Presentation</div>
-          <h1>Product Range.<br><span>Brand Story.</span><br>Export Ready.</h1>
-          <p>A visual introduction to Carmon Oil, our lubricant product families and the export solutions prepared for distributors, workshops, fleets and international buyers.</p>
+          <div class="lp-kicker lp-kicker-or">${esc(t('pres.kicker'))}</div>
+          <h1>${esc(t('pres.h1a'))}<br><span>${esc(t('pres.h1b'))}</span><br>${esc(t('pres.h1c'))}</h1>
+          <p>${esc(t('pres.sub'))}</p>
           <div class="presentation-actions">
-            <a class="btn-or" href="#presentation-view">View Presentation <span class="arr">↓</span></a>
-            <a class="btn-gl" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Fullscreen <span class="arr">↗</span></a>
+            <a class="btn-or" href="#presentation-view">${esc(t('pres.cta1'))} <span class="arr">↓</span></a>
+            <a class="btn-gl" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">${esc(t('pres.cta2'))} <span class="arr">↗</span></a>
           </div>
-          <div class="presentation-meta"><span>57-page production catalogue</span><span>Product families</span><span>Technical introductions</span><span>Export support</span></div>
+          <div class="presentation-meta"><span>${esc(t('pres.m1'))}</span><span>${esc(t('pres.m2'))}</span><span>${esc(t('pres.m3'))}</span><span>${esc(t('pres.m4'))}</span></div>
         </div>
       </section>
 
@@ -1430,19 +1430,16 @@ function presentationPage() {
         <div class="wrap">
           <div class="presentation-intro-grid">
             <div>
-              <div class="lp-kicker lp-kicker-or">Inside the Presentation</div>
-              <h2>One catalogue.<br>Multiple supply routes.</h2>
+              <div class="lp-kicker lp-kicker-or">${esc(t('pres.in_kicker'))}</div>
+              <h2>${t('pres.in_h2')}</h2>
             </div>
             <div class="presentation-intro-copy">
-              <p>The Carmon Oil presentation brings together the company story, service model, lubricant families, technical references and export-focused supply process in one visual reference.</p>
-              <a class="text-link" href="#/business">Request a product list <span>↗</span></a>
+              <p>${esc(t('pres.in_p'))}</p>
+              <a class="text-link" href="#/business">${esc(t('pres.in_link'))} <span>↗</span></a>
             </div>
           </div>
           <div class="presentation-points">
-            <article><span>01</span><h3>Brand &amp; Export</h3><p>Global lubricant export positioning, Korean sourcing and partner supply.</p></article>
-            <article><span>02</span><h3>Product Families</h3><p>PCMO, HDDEO, driveline, gear, SK AUTOUS engine and power ranges.</p></article>
-            <article><span>03</span><h3>Technical Detail</h3><p>Viscosity, application, packaging and standards where confirmed.</p></article>
-            <article><span>04</span><h3>Logistics Support</h3><p>Product selection, preparation, loading, documentation and delivery coordination.</p></article>
+            ${[1, 2, 3, 4].map(i => `<article><span>0${i}</span><h3>${esc(t(`pres.p${i}_h`))}</h3><p>${esc(t(`pres.p${i}_p`))}</p></article>`).join('')}
           </div>
         </div>
       </section>
@@ -1450,15 +1447,15 @@ function presentationPage() {
       <section class="presentation-view" id="presentation-view">
         <div class="wrap">
           <div class="presentation-view-head">
-            <div><div class="lp-kicker lp-kicker-or">Full Presentation</div><h2>Explore the Carmon Oil catalogue.</h2></div>
-            <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">Open Full Presentation <span class="arr">↗</span></a>
+            <div><div class="lp-kicker lp-kicker-or">${esc(t('pres.view_kicker'))}</div><h2>${esc(t('pres.view_h2'))}</h2></div>
+            <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">${esc(t('pres.view_btn'))} <span class="arr">↗</span></a>
           </div>
           <div class="presentation-pdf-frame"><iframe src="/assets/carmon-oil-presentation.pdf" title="Carmon Oil full presentation" loading="eager"></iframe></div>
         </div>
       </section>
 
       <section class="presentation-cta">
-        <div class="wrap presentation-cta-in"><div><div class="lp-kicker lp-kicker-or">Ready to Discuss Supply?</div><h2>Turn the presentation into a product conversation.</h2></div><a class="btn-or" href="#/business">Request a B2B quote <span class="arr">↗</span></a></div>
+        <div class="wrap presentation-cta-in"><div><div class="lp-kicker lp-kicker-or">${esc(t('pres.cta_kicker'))}</div><h2>${esc(t('pres.cta_h2'))}</h2></div><a class="btn-or" href="#/business">${esc(t('pres.cta_btn'))} <span class="arr">↗</span></a></div>
       </section>
     </main>`;
   requestAnimationFrame(() => initAnimations());
@@ -1518,28 +1515,25 @@ function logisticsPage() {
     <main class="info-page logistics-page">
       <section class="info-hero info-hero--logistics">
         <div class="wrap info-hero-in">
-          <div class="lp-kicker lp-kicker-or">Built for Global Distribution</div>
-          <h1>Reliable logistics.<br><span>Clear supply process.</span></h1>
-          <p>From product selection and documentation to order preparation, loading and agreed delivery, Carmon Oil helps buyers move with a clearer plan.</p>
-          <a class="btn-or" href="#/business">Plan a shipment <span class="arr">→</span></a>
+          <div class="lp-kicker lp-kicker-or">${esc(t('log.kicker'))}</div>
+          <h1>${esc(t('log.h1a'))}<br><span>${esc(t('log.h1b'))}</span></h1>
+          <p>${esc(t('log.sub'))}</p>
+          <a class="btn-or" href="#/business">${esc(t('log.hero_cta'))} <span class="arr">→</span></a>
         </div>
       </section>
       <section class="info-section">
         <div class="wrap">
-          <div class="info-section-head"><div><div class="lp-kicker lp-kicker-or">How It Works</div><h2>From product list<br>to destination.</h2></div><p>Each route is confirmed around the product, quantity, destination and documents required for the agreed shipment.</p></div>
+          <div class="info-section-head"><div><div class="lp-kicker lp-kicker-or">${esc(t('log.how_kicker'))}</div><h2>${t('log.how_h2')}</h2></div><p>${esc(t('log.how_p'))}</p></div>
           <div class="info-steps">
-            <article><span>01</span><h3>Choose the range</h3><p>Tell us the product family, brand, viscosity, packaging and intended application.</p></article>
-            <article><span>02</span><h3>Confirm availability</h3><p>We review the requested list, destination and available supply before preparing a quotation.</p></article>
-            <article><span>03</span><h3>Prepare documents</h3><p>Order preparation, loading coordination and agreed product documentation are aligned before dispatch.</p></article>
-            <article><span>04</span><h3>Move the shipment</h3><p>Delivery timing and route are confirmed for the destination country, city and receiving partner.</p></article>
+            ${[1, 2, 3, 4].map(i => `<article><span>0${i}</span><h3>${esc(t(`log.s${i}_h`))}</h3><p>${esc(t(`log.s${i}_p`))}</p></article>`).join('')}
           </div>
         </div>
       </section>
       <section class="info-split">
-        <div class="info-split-copy"><div class="lp-kicker lp-kicker-or">Export Support</div><h2>Built around your destination.</h2><p>Share the country, city, delivery point, product list and requested quantity. Carmon Oil can prepare a destination-specific supply conversation for distributors, workshops, fleets and retail networks.</p><div class="info-checks"><span>✓ Destination and product confirmation</span><span>✓ Warehouse and loading coordination</span><span>✓ Partner-aligned delivery support</span><span>✓ Documentation review before dispatch</span></div><a class="btn-or" href="#/business">Request a delivery plan <span class="arr">→</span></a></div>
+        <div class="info-split-copy"><div class="lp-kicker lp-kicker-or">${esc(t('log.exp_kicker'))}</div><h2>${esc(t('log.exp_h2'))}</h2><p>${esc(t('log.exp_p'))}</p><div class="info-checks">${[1, 2, 3, 4].map(i => `<span>✓ ${esc(t(`log.c${i}`))}</span>`).join('')}</div><a class="btn-or" href="#/business">${esc(t('log.exp_cta'))} <span class="arr">→</span></a></div>
         <div class="info-split-image"><img src="/assets/shipping.png" alt="Carmon Oil export logistics"></div>
       </section>
-      <section class="markets-section"><div class="wrap"><div class="lp-kicker lp-kicker-or">Delivery Markets</div><h2>Discuss the route for your market.</h2><div class="market-grid">${['Uzbekistan','Kyrgyzstan','Kazakhstan','Russia','Turkmenistan','Azerbaijan','Libya','Vietnam','Thailand','Georgia'].map((x, i) => `<div class="market-chip"><span>0${i + 1}</span>${x}</div>`).join('')}</div></div></section>
+      <section class="markets-section"><div class="wrap"><div class="lp-kicker lp-kicker-or">${esc(t('log.mk_kicker'))}</div><h2>${esc(t('log.mk_h2'))}</h2><div class="market-grid">${['uz','kg','kz','ru','tm','az','ly','vn','th','ge'].map((c, i) => `<div class="market-chip"><span>0${i + 1}</span>${esc(t(`country.${c}`))}</div>`).join('')}</div></div></section>
     </main>`;
 }
 
