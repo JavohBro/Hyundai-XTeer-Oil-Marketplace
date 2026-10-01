@@ -825,6 +825,7 @@ function renderAdmin() {
       <button class="admin-tab ${S.adminSection === 'stats' ? 'active' : ''}" data-sec="stats">${t('admin.stats')}</button>
       <button class="admin-tab ${S.adminSection === 'products' ? 'active' : ''}" data-sec="products">${t('admin.products')}</button>
       <button class="admin-tab ${S.adminSection === 'orders' ? 'active' : ''}" data-sec="orders">${t('admin.orders')}</button>
+      <button class="admin-tab ${S.adminSection === 'news' ? 'active' : ''}" data-sec="news">${t('admin.news')}</button>
       <button class="admin-tab ${S.adminSection === 'settings' ? 'active' : ''}" data-sec="settings">${t('admin.settings')}</button>
     </div>
     <div id="admin-content"></div>`;
@@ -844,6 +845,7 @@ async function loadAdminSection() {
     case 'stats':    await renderAdminStats(ac); break;
     case 'products': await renderAdminProducts(ac); break;
     case 'orders':   await renderAdminOrders(ac); break;
+    case 'news':     await renderAdminNews(ac); break;
     case 'settings': renderAdminSettings(ac); break;
   }
 }
@@ -964,6 +966,163 @@ function adminProductItem(p) {
       <button class="icon-btn icon-btn-delete admin-del-btn" data-id="${p.id}">🗑</button>
     </div>
   </div>`;
+}
+
+// ─── Admin: news ──────────────────────────────────────
+async function renderAdminNews(ac) {
+  try {
+    const news = await api('/api/admin/news');
+    ac.innerHTML = `
+      <div style="padding:12px 16px 0">
+        <button class="btn btn-primary btn-full" id="add-news-btn">${t('admin.n_add')}</button>
+      </div>
+      ${news.length
+        ? `<div class="admin-product-list">${news.map(adminNewsItem).join('')}</div>`
+        : `<div class="empty"><div class="empty-icon">📰</div><div class="empty-title">${t('admin.n_none')}</div></div>`}
+      <div class="scroll-pad"></div>`;
+    document.getElementById('add-news-btn').addEventListener('click', () => openNewsForm(null));
+    ac.querySelectorAll('.news-edit-btn').forEach(b => b.addEventListener('click', () => {
+      const n = news.find(x => x.id === parseInt(b.dataset.id));
+      if (n) openNewsForm(n);
+    }));
+    ac.querySelectorAll('.news-del-btn').forEach(b => b.addEventListener('click', async () => {
+      if (!await showConfirm(t('admin.n_del_q'))) return;
+      await api(`/api/news/${b.dataset.id}`, { method: 'DELETE' });
+      toast(t('admin.n_deleted'));
+      await renderAdminNews(ac);
+    }));
+    ac.querySelectorAll('.news-toggle-btn').forEach(b => b.addEventListener('click', async () => {
+      const n = news.find(x => x.id === parseInt(b.dataset.id));
+      if (!n) return;
+      const fd = new FormData();
+      fd.append('title', n.title);
+      fd.append('is_published', n.is_published ? '0' : '1');
+      await api(`/api/news/${n.id}`, { method: 'PUT', body: fd });
+      toast(n.is_published ? t('admin.hid') : t('admin.shown'));
+      await renderAdminNews(ac);
+    }));
+  } catch (e) { ac.innerHTML = `<div class="empty"><div class="empty-icon">❌</div><div class="empty-title">${e.message}</div></div>`; }
+}
+
+function adminNewsItem(n) {
+  const img = n.image ? `<img src="${n.image}" alt="">` : `<div class="no-img-xs">📰</div>`;
+  const date = new Date(n.created_at.replace(' ', 'T') + 'Z').toLocaleDateString(I18N.locale(S.lang));
+  return `
+  <div class="admin-product-item">
+    <div class="admin-product-img">${img}</div>
+    <div class="admin-product-info">
+      <div class="admin-product-name">${escH(n.title)}${!n.is_published ? `<span class="inactive-badge">${t('admin.n_draft')}</span>` : ''}</div>
+      <div class="admin-product-sub">${date}</div>
+      <div class="admin-product-price">${escH((n.body || '').slice(0, 60))}${(n.body || '').length > 60 ? '…' : ''}</div>
+    </div>
+    <div class="admin-product-actions">
+      <button class="icon-btn icon-btn-toggle news-toggle-btn" data-id="${n.id}" title="${n.is_published ? t('admin.hide') : t('admin.show')}">${n.is_published ? '👁' : '🙈'}</button>
+      <button class="icon-btn icon-btn-edit news-edit-btn" data-id="${n.id}">✏️</button>
+      <button class="icon-btn icon-btn-delete news-del-btn" data-id="${n.id}">🗑</button>
+    </div>
+  </div>`;
+}
+
+function openNewsForm(news) {
+  S.newImageFiles = [];
+  const isEdit = !!news;
+  const n = news || {};
+  const overlay = document.getElementById('modal-overlay');
+  const sheet   = document.getElementById('modal-sheet');
+
+  sheet.innerHTML = `
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">${isEdit ? t('admin.n_edit') : t('admin.n_add')}</div>
+      <button class="modal-close" id="modal-close-btn">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="news-form">
+        <div class="form-group"><label class="form-label">${t('admin.n_title')}</label>
+          <input class="form-input" name="title" required value="${escH(n.title || '')}">
+        </div>
+        <div class="form-group"><label class="form-label">${t('admin.n_body')}</label>
+          <textarea class="form-textarea" name="body" rows="6">${escH(n.body || '')}</textarea>
+          <div class="upload-hint">${t('admin.f_desc_hint')}</div>
+        </div>
+        <div class="form-group">
+          <label class="check"><input type="checkbox" name="is_published"${n.is_published === 0 ? '' : ' checked'}> ${t('admin.n_pub')}</label>
+        </div>
+        <details class="tr-box"${['uz','en','ko'].some(l => n['title_' + l] || n['body_' + l]) ? ' open' : ''}>
+          <summary>${t('admin.f_i18n')}<div class="upload-hint">${t('admin.f_i18n_hint')}</div></summary>
+          ${I18N.LANGS.filter(l => l.code !== 'ru').map(l => `
+            <div class="tr-lang"><div class="tr-lang-h">${l.flag} ${l.name}</div>
+              <div class="form-group"><label class="form-label">${t('admin.n_title').replace(' *', '')}</label><input class="form-input" name="title_${l.code}" value="${escH(n['title_' + l.code] || '')}"></div>
+              <div class="form-group"><label class="form-label">${t('admin.n_body')}</label><textarea class="form-textarea" name="body_${l.code}" rows="3">${escH(n['body_' + l.code] || '')}</textarea></div>
+            </div>`).join('')}
+        </details>
+        ${isEdit && n.image ? `<div class="section-title" style="margin-top:12px">${t('admin.f_cur_photos')}</div>
+          <div class="img-preview-grid"><div class="img-preview-item"><img src="${n.image}" alt=""></div></div>` : ''}
+        <div class="section-title" style="margin-top:12px">${t('admin.n_photo')}</div>
+        <label class="image-upload-box" for="news-file-input">
+          <div style="font-size:28px">📷</div>
+          <div style="font-size:14px;font-weight:600;margin-top:4px">${t('admin.f_pick')}</div>
+          <div class="upload-hint">${t('admin.f_hint')}</div>
+          <input type="file" id="news-file-input" accept="image/*">
+        </label>
+        <div class="img-preview-grid" id="news-img-previews"></div>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:16px">
+          ${isEdit ? t('admin.f_save') : t('admin.f_add')}
+        </button>
+      </form>
+    </div>
+    <div class="scroll-pad"></div>`;
+
+  overlay.classList.remove('hidden');
+  sheet.classList.remove('hidden');
+  requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
+
+  const close = () => {
+    overlay.classList.remove('visible');
+    sheet.classList.remove('visible');
+    setTimeout(() => { overlay.classList.add('hidden'); sheet.classList.add('hidden'); }, 300);
+  };
+  document.getElementById('modal-close-btn').addEventListener('click', close);
+  overlay.addEventListener('click', close);
+
+  document.getElementById('news-file-input').addEventListener('change', e => {
+    S.newImageFiles = Array.from(e.target.files).slice(0, 1);
+    const grid = document.getElementById('news-img-previews');
+    grid.innerHTML = '';
+    S.newImageFiles.forEach(f => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const div = document.createElement('div');
+        div.className = 'img-preview-item';
+        div.innerHTML = `<img src="${ev.target.result}">`;
+        grid.appendChild(div);
+      };
+      reader.readAsDataURL(f);
+    });
+  });
+
+  document.getElementById('news-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const form = e.target;
+    const fd = new FormData();
+    ['title', 'body', 'title_uz', 'title_en', 'title_ko', 'body_uz', 'body_en', 'body_ko']
+      .forEach(k => fd.append(k, form[k].value));
+    fd.append('is_published', form.is_published.checked ? '1' : '0');
+    S.newImageFiles.forEach(f => fd.append('images', f));
+
+    const submitBtn = form.querySelector('button[type=submit]');
+    submitBtn.disabled = true; submitBtn.textContent = t('admin.f_saving');
+    try {
+      if (isEdit) await api(`/api/news/${n.id}`, { method: 'PUT', body: fd });
+      else await api('/api/news', { method: 'POST', body: fd });
+      toast(isEdit ? t('admin.n_saved') : t('admin.n_added'));
+      close();
+      setTimeout(() => { S.adminSection = 'news'; loadAdminSection(); }, 310);
+    } catch (er) {
+      await showAlert(er.message);
+      submitBtn.disabled = false; submitBtn.textContent = isEdit ? t('admin.f_save') : t('admin.f_add');
+    }
+  });
 }
 
 async function renderAdminOrders(ac) {

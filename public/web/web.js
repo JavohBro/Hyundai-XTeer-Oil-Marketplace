@@ -20,6 +20,8 @@ const stL  = s => t('st.' + s);
 const pn    = p => I18N.pname(p, S.lang || I18N.DEFAULT);
 const pd    = p => I18N.pdesc(p, S.lang || I18N.DEFAULT);
 const fuelL = p => I18N.fuelLabels(S.lang || I18N.DEFAULT, p.fuel);
+const nt    = n => I18N.ntitle(n, S.lang || I18N.DEFAULT);
+const nb    = n => I18N.nbody(n, S.lang || I18N.DEFAULT);
 
 // ── API ──
 async function api(url, opts = {}) {
@@ -164,6 +166,7 @@ const routes = {
   '/logistics': logisticsPage, '/business': businessPage, '/compare-brands': compareBrandsPage,
   '/presentation': presentationPage,
   '/process': processPage,
+  '/news': newsPage,
   '/article/viscosity': () => articlePage('viscosity'),
   '/article/fuel': () => articlePage('fuel'),
   '/article/genuine': () => articlePage('genuine'),
@@ -180,7 +183,9 @@ function router() {
     S.fuel = 'all';
     S.q = '';
   }
-  const fn = path.startsWith('/brand/') ? () => brandPage(brandFromPath(path)) : (routes[path] || homePage);
+  const fn = path.startsWith('/brand/') ? () => brandPage(brandFromPath(path))
+    : path.startsWith('/news/') ? () => newsItemPage(path.slice('/news/'.length))
+    : (routes[path] || homePage);
   $$('[data-route]').forEach(el => {
     const route = el.dataset.route;
     const active = (route === 'home' && path === '/') ||
@@ -1658,6 +1663,77 @@ function processPage() {
   requestAnimationFrame(() => initAnimations());
 }
 
+// ═══ NEWS ═══
+const newsDate = n => {
+  // SQLite stores naive UTC ("YYYY-MM-DD HH:MM:SS"); make it explicit before parsing.
+  const d = new Date(String(n.created_at || '').replace(' ', 'T') + 'Z');
+  return isNaN(d) ? '' : d.toLocaleDateString(I18N.locale(S.lang), { day: '2-digit', month: 'long', year: 'numeric' });
+};
+
+function newsHero(extra = '') {
+  return `
+    <section class="news-hero">
+      <div class="wrap news-hero-in">
+        <div class="lp-kicker lp-kicker-or">${esc(t('news.kicker'))}</div>
+        <h1>${t('news.title')}</h1>
+        <p>${esc(t('news.sub'))}</p>
+        ${extra}
+      </div>
+    </section>`;
+}
+
+async function newsPage() {
+  $('#main').innerHTML = `<main class="news-page">${newsHero()}<section class="news-list-sec"><div class="wrap"><div class="spin"></div></div></section></main>`;
+  let items = [];
+  try { items = await api('/api/news'); } catch { items = []; }
+  const body = items.length ? `
+    <div class="news-grid">
+      ${items.map(n => {
+        const title = nt(n), text = nb(n);
+        return `<a class="news-card anim" href="#/news/${n.id}">
+          ${n.image ? `<div class="news-card-img"><img src="${esc(n.image)}" alt="${esc(title)}" loading="lazy"></div>` : ''}
+          <div class="news-card-body">
+            <time>${esc(newsDate(n))}</time>
+            <h3>${esc(title)}</h3>
+            ${text ? `<p>${esc(text.replace(/\s+/g, ' ').slice(0, 160))}${text.length > 160 ? '…' : ''}</p>` : ''}
+            <span class="news-card-more">${esc(t('news.read'))} <i>↗</i></span>
+          </div>
+        </a>`;
+      }).join('')}
+    </div>`
+    : `<div class="news-empty"><div class="news-empty-mark">📰</div><h3>${esc(t('news.empty'))}</h3><p>${esc(t('news.empty_sub'))}</p></div>`;
+  $('#main').innerHTML = `<main class="news-page">${newsHero()}<section class="news-list-sec"><div class="wrap">${body}</div></section></main>`;
+  requestAnimationFrame(() => initAnimations());
+}
+
+async function newsItemPage(id) {
+  $('#main').innerHTML = `<main class="news-page"><section class="news-list-sec"><div class="wrap"><div class="spin"></div></div></section></main>`;
+  let n = null;
+  try { n = await api(`/api/news/${encodeURIComponent(id)}`); } catch { n = null; }
+  if (!n) {
+    $('#main').innerHTML = `<main class="news-page">${newsHero()}<section class="news-list-sec"><div class="wrap"><div class="news-empty"><div class="news-empty-mark">📰</div><h3>${esc(t('news.empty'))}</h3><a class="btn-or" href="#/news">${esc(t('news.back'))}</a></div></div></section></main>`;
+    return;
+  }
+  const title = nt(n), text = nb(n);
+  $('#main').innerHTML = `
+    <main class="news-page news-article">
+      <section class="news-article-hero">
+        <div class="wrap news-article-in">
+          <a class="article-back" href="#/news">${esc(t('news.back'))}</a>
+          <time>${esc(newsDate(n))}</time>
+          <h1>${esc(title)}</h1>
+        </div>
+      </section>
+      <section class="news-article-body">
+        <div class="wrap">
+          ${n.image ? `<div class="news-article-img"><img src="${esc(n.image)}" alt="${esc(title)}"></div>` : ''}
+          ${text ? `<div class="news-article-text">${TextFmt.toHtml(text)}</div>` : ''}
+          <a class="btn-or news-article-cta" href="#/business">${esc(t('nav.quote'))} <span class="arr">→</span></a>
+        </div>
+      </section>
+    </main>`;
+}
+
 // ═══ ADMIN ═══
 function adminPage() {
   if (!S.me?.is_admin) {
@@ -1926,20 +2002,9 @@ function paintAuth() {
     };
     $('#nav-admin').hidden = !S.me.is_admin;
   } else {
-    slot.innerHTML = S.cfg.telegram_login_enabled ? `<button class="nav-login-ghost" id="lb">${esc(t('nav.login'))}</button>` : '';
-    const lb = $('#lb');
-    if (lb) lb.onclick = () => {
-      openModal(`<button class="modal-x" id="mx"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-        <div style="padding:40px 32px;text-align:center">
-          <div style="font-size:46px">✈️</div>
-          <h2 style="font-size:21px;font-weight:700;margin:12px 0 8px">${esc(t('login.title'))}</h2>
-          <p style="color:var(--tx2);font-size:14px;line-height:1.6;max-width:32ch;margin:0 auto 20px">${esc(t('login.p'))}</p>
-          <div id="tglm" style="display:flex;justify-content:center"></div>
-          <p style="color:var(--tx3);font-size:12px;margin-top:18px">${esc(t('login.guest'))}</p>
-        </div>`);
-      $('#mx').onclick = closeModal;
-      mountTelegramLogin($('#tglm'));
-    };
+    // No sign-in control in the navbar: the site is public. Admins still reach
+    // the login widget from #/admin, which mounts it when not signed in.
+    slot.innerHTML = '';
     $('#nav-admin').hidden = true;
   }
 }

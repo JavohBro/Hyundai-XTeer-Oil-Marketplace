@@ -541,6 +541,59 @@ app.delete('/api/products/:id', authMiddleware, adminOnly, (req, res) => {
   res.json({ success: true });
 });
 
+// ─── News ────────────────────────────────────────────────────────────────────
+const NEWS_TRANSLATION_COLS = ['title_uz', 'title_en', 'title_ko', 'body_uz', 'body_en', 'body_ko'];
+
+// Visitors only ever see published posts; the admin list returns drafts too.
+app.get('/api/news', (_req, res) => {
+  res.json(db.prepare('SELECT * FROM news WHERE is_published = 1 ORDER BY created_at DESC, id DESC').all());
+});
+
+app.get('/api/news/:id', (req, res) => {
+  const n = db.prepare('SELECT * FROM news WHERE id = ? AND is_published = 1').get(req.params.id);
+  if (!n) return res.status(404).json({ error: 'Not found' });
+  res.json(n);
+});
+
+app.get('/api/admin/news', authMiddleware, adminOnly, (_req, res) => {
+  res.json(db.prepare('SELECT * FROM news ORDER BY created_at DESC, id DESC').all());
+});
+
+app.post('/api/news', authMiddleware, adminOnly, upload.array('images', 1), async (req, res) => {
+  const title = String(req.body.title || '').trim();
+  if (!title) return res.status(400).json({ error: 'Заголовок обязателен' });
+  const images = await processUploads(req.files);
+  const tr = NEWS_TRANSLATION_COLS.map(c => req.body[c] || '');
+  const r = db.prepare(`
+    INSERT INTO news (title, body, image, is_published, title_uz, title_en, title_ko, body_uz, body_en, body_ko)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(title, req.body.body || '', images[0] || '', req.body.is_published === '0' ? 0 : 1, ...tr);
+  res.json(db.prepare('SELECT * FROM news WHERE id = ?').get(r.lastInsertRowid));
+});
+
+app.put('/api/news/:id', authMiddleware, adminOnly, upload.array('images', 1), async (req, res) => {
+  const existing = db.prepare('SELECT * FROM news WHERE id = ?').get(req.params.id);
+  if (!existing) return res.status(404).json({ error: 'Not found' });
+  const title = String(req.body.title || '').trim();
+  if (!title) return res.status(400).json({ error: 'Заголовок обязателен' });
+  // A new upload replaces the image; sending none keeps whatever is stored.
+  const images = await processUploads(req.files);
+  const tr = NEWS_TRANSLATION_COLS.map(c => req.body[c] ?? existing[c] ?? '');
+  db.prepare(`
+    UPDATE news SET title=?, body=?, image=?, is_published=?,
+      title_uz=?, title_en=?, title_ko=?, body_uz=?, body_en=?, body_ko=?,
+      updated_at=CURRENT_TIMESTAMP
+    WHERE id=?
+  `).run(title, req.body.body ?? existing.body, images[0] || existing.image,
+    req.body.is_published === '0' ? 0 : 1, ...tr, req.params.id);
+  res.json(db.prepare('SELECT * FROM news WHERE id = ?').get(req.params.id));
+});
+
+app.delete('/api/news/:id', authMiddleware, adminOnly, (req, res) => {
+  db.prepare('DELETE FROM news WHERE id=?').run(req.params.id);
+  res.json({ success: true });
+});
+
 // ─── Orders ──────────────────────────────────────────────────────────────────
 // Validates and trims guest contact details; returns null if anything is missing.
 function normalizeGuest(g) {

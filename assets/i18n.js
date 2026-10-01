@@ -210,6 +210,17 @@
       'bp.autous_b1': 'Обзор каталога с фокусом на экспорт', 'bp.autous_b2': 'Подбор по применению и линейке', 'bp.autous_b3': 'Технические данные — там, где подтверждены',
       'bp.mobis_eyebrow': 'Справка по вторичному рынку Hyundai', 'bp.mobis_title': 'Hyundai Mobis для вторичного рынка.',
       'bp.mobis_b1': 'Обсуждение поставок на вторичный рынок', 'bp.mobis_b2': 'Подтверждение бренда и направления', 'bp.mobis_b3': 'Список товаров готовится к обзору',
+      // news
+      'nav.news': 'Новости',
+      'admin.news': 'Новости', 'admin.n_add': 'Добавить новость', 'admin.n_edit': 'Редактировать новость',
+      'admin.n_title': 'Заголовок *', 'admin.n_body': 'Текст новости', 'admin.n_photo': 'Фото новости',
+      'admin.n_pub': 'Опубликовать на сайте', 'admin.n_draft': 'Черновик',
+      'admin.n_none': 'Новостей пока нет', 'admin.n_del_q': 'Удалить новость?',
+      'admin.n_added': 'Новость добавлена', 'admin.n_saved': 'Новость сохранена', 'admin.n_deleted': 'Новость удалена',
+      'news.kicker': 'Новости компании', 'news.title': 'Новости<br>и обновления',
+      'news.sub': 'Анонсы поставок, пополнение каталога и новости Carmon Oil.',
+      'news.empty': 'Новостей пока нет.', 'news.empty_sub': 'Загляните позже — мы публикуем обновления регулярно.',
+      'news.back': '← Все новости', 'news.read': 'Читать',
       'hm.log_h2': 'Надёжная логистика.<br>Понятный процесс поставки.',
       'hm.log_p': 'От подбора товара и документов до подготовки заказа, погрузки и согласованной доставки.',
       'hm.log_btn': 'Подробнее о логистике',
@@ -554,6 +565,17 @@
       'bp.autous_b1': 'Eksportga yo‘naltirilgan katalog ko‘rigi', 'bp.autous_b2': 'Qo‘llanilishi va liniya bo‘yicha tanlov', 'bp.autous_b3': 'Texnik ma’lumotlar — tasdiqlangan joylarda',
       'bp.mobis_eyebrow': 'Hyundai ikkilamchi bozor ma’lumoti', 'bp.mobis_title': 'Hyundai Mobis ikkilamchi bozor uchun.',
       'bp.mobis_b1': 'Ikkilamchi bozorga yetkazib berishni muhokama qilish', 'bp.mobis_b2': 'Brend va yo‘nalishni tasdiqlash', 'bp.mobis_b3': 'Mahsulot ro‘yxati ko‘rikka tayyorlanadi',
+      // news
+      'nav.news': 'Yangiliklar',
+      'admin.news': 'Yangiliklar', 'admin.n_add': 'Yangilik qo‘shish', 'admin.n_edit': 'Yangilikni tahrirlash',
+      'admin.n_title': 'Sarlavha *', 'admin.n_body': 'Yangilik matni', 'admin.n_photo': 'Yangilik rasmi',
+      'admin.n_pub': 'Saytda chop etish', 'admin.n_draft': 'Qoralama',
+      'admin.n_none': 'Hozircha yangiliklar yo‘q', 'admin.n_del_q': 'Yangilik o‘chirilsinmi?',
+      'admin.n_added': 'Yangilik qo‘shildi', 'admin.n_saved': 'Yangilik saqlandi', 'admin.n_deleted': 'Yangilik o‘chirildi',
+      'news.kicker': 'Kompaniya yangiliklari', 'news.title': 'Yangiliklar<br>va yangilanishlar',
+      'news.sub': 'Yetkazib berish e’lonlari, katalog yangilanishi va Carmon Oil yangiliklari.',
+      'news.empty': 'Hozircha yangiliklar yo‘q.', 'news.empty_sub': 'Keyinroq kiring — yangilanishlarni muntazam chop etamiz.',
+      'news.back': '← Barcha yangiliklar', 'news.read': 'O‘qish',
       'hm.log_h2': 'Ishonchli logistika.<br>Tushunarli yetkazib berish jarayoni.',
       'hm.log_p': 'Mahsulot tanlash va hujjatlardan tortib buyurtmani tayyorlash, ortish va kelishilgan yetkazib berishgacha.',
       'hm.log_btn': 'Logistika haqida batafsil',
@@ -896,6 +918,17 @@
       'bp.autous_b1': 'Export-focused catalogue review', 'bp.autous_b2': 'Application and product-family matching', 'bp.autous_b3': 'Technical details shown when confirmed',
       'bp.mobis_eyebrow': 'Hyundai aftermarket reference', 'bp.mobis_title': 'Hyundai Mobis for aftermarket conversations.',
       'bp.mobis_b1': 'Aftermarket supply discussion', 'bp.mobis_b2': 'Brand and destination confirmation', 'bp.mobis_b3': 'Product list prepared for review',
+      // news
+      'nav.news': 'News',
+      'admin.news': 'News', 'admin.n_add': 'Add news', 'admin.n_edit': 'Edit news',
+      'admin.n_title': 'Headline *', 'admin.n_body': 'News text', 'admin.n_photo': 'News photo',
+      'admin.n_pub': 'Publish on the website', 'admin.n_draft': 'Draft',
+      'admin.n_none': 'No news yet', 'admin.n_del_q': 'Delete this news item?',
+      'admin.n_added': 'News added', 'admin.n_saved': 'News saved', 'admin.n_deleted': 'News deleted',
+      'news.kicker': 'Company News', 'news.title': 'News<br>and updates',
+      'news.sub': 'Shipment announcements, catalogue additions and Carmon Oil news.',
+      'news.empty': 'No news yet.', 'news.empty_sub': 'Check back soon — we post updates regularly.',
+      'news.back': '← All news', 'news.read': 'Read',
       'hm.log_h2': 'Reliable Logistics.<br>Clear Supply Process.',
       'hm.log_p': 'From product selection and documentation to order preparation, loading and agreed delivery.',
       'hm.log_btn': 'Learn More About Logistics',
@@ -1238,6 +1271,17 @@
       'bp.autous_b1': '수출 중심 카탈로그 검토', 'bp.autous_b2': '용도 및 제품군 매칭', 'bp.autous_b3': '확인된 경우 기술 정보 제공',
       'bp.mobis_eyebrow': 'Hyundai 애프터마켓 자료', 'bp.mobis_title': '애프터마켓 상담을 위한 Hyundai Mobis.',
       'bp.mobis_b1': '애프터마켓 공급 상담', 'bp.mobis_b2': '브랜드 및 도착지 확인', 'bp.mobis_b3': '검토용 제품 목록 준비',
+      // news
+      'nav.news': '뉴스',
+      'admin.news': '뉴스', 'admin.n_add': '뉴스 추가', 'admin.n_edit': '뉴스 수정',
+      'admin.n_title': '제목 *', 'admin.n_body': '뉴스 본문', 'admin.n_photo': '뉴스 사진',
+      'admin.n_pub': '웹사이트에 게시', 'admin.n_draft': '임시 저장',
+      'admin.n_none': '등록된 뉴스가 없습니다', 'admin.n_del_q': '이 뉴스를 삭제하시겠습니까?',
+      'admin.n_added': '뉴스가 추가되었습니다', 'admin.n_saved': '뉴스가 저장되었습니다', 'admin.n_deleted': '뉴스가 삭제되었습니다',
+      'news.kicker': '회사 소식', 'news.title': '뉴스와<br>업데이트',
+      'news.sub': '선적 소식, 카탈로그 추가 및 Carmon Oil 소식을 전해 드립니다.',
+      'news.empty': '등록된 뉴스가 없습니다.', 'news.empty_sub': '곧 다시 확인해 주십시오 — 정기적으로 소식을 전해 드립니다.',
+      'news.back': '← 전체 뉴스', 'news.read': '읽기',
       'hm.log_h2': '신뢰할 수 있는 물류.<br>명확한 공급 절차.',
       'hm.log_p': '제품 선정과 서류 준비부터 주문 준비, 적재, 합의된 배송까지.',
       'hm.log_btn': '물류 자세히 보기',
@@ -1435,10 +1479,19 @@
     lang = normalize(lang);
     return (lang !== 'ru' && p['desc_' + lang]) || p.description || '';
   }
+  // News rows carry the same optional per-language columns as products.
+  function ntitle(n, lang) {
+    lang = normalize(lang);
+    return (lang !== 'ru' && n['title_' + lang]) || n.title || '';
+  }
+  function nbody(n, lang) {
+    lang = normalize(lang);
+    return (lang !== 'ru' && n['body_' + lang]) || n.body || '';
+  }
   // 'diesel,gasoline' → ['Дизель', 'Бензин']
   function fuelLabels(lang, fuel) {
     return String(fuel || '').split(',').map(s => s.trim()).filter(f => FUELS.includes(f)).map(f => t(lang, 'fuel.' + f));
   }
 
-  return { LANGS, DEFAULT, CATS, FUELS, CHOOSE, T, t, catLabel, locale, normalize, pname, pdesc, fuelLabels };
+  return { LANGS, DEFAULT, CATS, FUELS, CHOOSE, T, t, catLabel, locale, normalize, pname, pdesc, ntitle, nbody, fuelLabels };
 });

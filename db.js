@@ -63,6 +63,18 @@ db.exec(`
     key   TEXT PRIMARY KEY,
     value TEXT NOT NULL
   );
+
+  CREATE TABLE IF NOT EXISTS news (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    title        TEXT NOT NULL,
+    body         TEXT DEFAULT '',
+    image        TEXT DEFAULT '',
+    is_published INTEGER DEFAULT 1,
+    title_uz TEXT DEFAULT '', title_en TEXT DEFAULT '', title_ko TEXT DEFAULT '',
+    body_uz  TEXT DEFAULT '', body_en  TEXT DEFAULT '', body_ko  TEXT DEFAULT '',
+    created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
 `);
 
 // ─── Migrations ──────────────────────────────────────────────────────────────
