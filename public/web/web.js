@@ -1620,14 +1620,9 @@ const PROCESS_STEPS = [
 ];
 
 const PROCESS_PHOTOS = [
-  'photo_2026-09-29_12-26-09.png',
-  'photo_2026-09-29_12-26-56.png',
-  'photo_2026-09-29_12-31-11.png',
-  'photo_2026-09-29_12-34-10.png',
-  'photo_2026-09-29_12-36-18.png',
-  'photo_2026-09-29_12-36-45.png',
-  'photo_2026-09-29_12-37-54.png',
-  'photo_2026-09-29_12-38-38.png'
+  { f: 'photo_2026-09-30_07-02-47.jpg', cap: 'Incheon warehouse — palletised stock ready for container loading' },
+  { f: 'photo_2026-09-30_07-02-05.jpg', cap: 'Racked inventory: Kixx, Hyundai XTeer, SK ZIC and Castrol' },
+  { f: 'photo_2026-09-30_07-03-17.jpg', cap: 'Sealed pallets staged for dispatch to the port' }
 ];
 
 function processPage() {
@@ -1677,7 +1672,7 @@ function processPage() {
             <p>Every order receives a photo report. These are real images from our Incheon warehouse and loading operations.</p>
           </div>
           <div class="proc-gallery">
-            ${PROCESS_PHOTOS.map((f, i) => `<div class="proc-gallery-item anim"><img src="/assets/${esc(f)}" alt="Carmon Oil shipment photo ${i + 1}" loading="lazy"></div>`).join('')}
+            ${PROCESS_PHOTOS.map(p => `<figure class="proc-gallery-item anim"><img src="/assets/${esc(p.f)}" alt="${esc(p.cap)}" loading="lazy"><figcaption>${esc(p.cap)}</figcaption></figure>`).join('')}
           </div>
         </div>
       </section>
