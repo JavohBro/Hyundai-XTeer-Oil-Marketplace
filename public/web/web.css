@@ -1466,7 +1466,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
 
 .process-hero{position:relative;min-height:580px;display:flex;align-items:center;overflow:hidden;color:#fff;background:#0b1d2c url('/assets/hero.png') center/cover no-repeat}
 .process-hero-overlay{position:absolute;inset:0;background:linear-gradient(110deg,rgba(6,20,31,.97) 0%,rgba(6,20,31,.82) 45%,rgba(6,20,31,.42) 100%)}
-.process-hero-in{position:relative;z-index:1;padding-top:128px;padding-bottom:96px}
+.process-hero-in{position:relative;z-index:1;padding-top:128px;padding-bottom:96px;margin-left:0;margin-right:auto}
 .process-hero h1{max-width:800px;margin:14px 0 20px;font-size:clamp(48px,7vw,100px);line-height:.93;letter-spacing:-.075em;color:#fff}
 .process-hero h1 span{color:var(--orange,#ff571c)}
 .process-hero p{max-width:580px;margin:0 0 28px;color:rgba(255,255,255,.72);font-size:16px;line-height:1.75}
