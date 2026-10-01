@@ -1222,7 +1222,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
   .lp-proof-grid{grid-template-columns:repeat(3,1fr);row-gap:20px}
 }
 @media(max-width:720px){
-  #hdr{height:68px}.hdr-inner{padding:0 18px}.hdr-nav{display:none}
+  #hdr{height:68px}.hdr-inner{padding:0 18px}.hdr-nav:not(.open){display:none}
   .header-quote-btn{display:none}.lang-btn{padding:7px 9px}
   .lp-hero{min-height:600px;background-position:62% center}
   .lp-hero-in{padding:84px 20px 68px}.lp-hero h1{font-size:clamp(38px,11vw,60px)}
@@ -1394,4 +1394,58 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
   .hdr-nav> a,.hdr-nav> .nav-menu> .nav-menu-trigger{display:inline-flex;align-items:center;justify-content:center;height:38px;min-height:38px;box-sizing:border-box;padding:0 12px;font-size:12px;font-weight:700;line-height:1;white-space:nowrap}
   .hdr-nav> .nav-menu{display:flex;align-items:center;height:38px}
   .header-quote-btn{height:38px;box-sizing:border-box}
+}
+
+/* ── Phone (≤480px) responsive improvements ── */
+@media(max-width:480px){
+  /* Tighter section padding — 104/72px is too much on a 375px screen */
+  .lp-cats-sec,.lp-partners-sec,.lp-logistics-sec,.lp-services-sec,
+  .lp-world-sec,.lp-production-sec,.lp-techcat-sec,.lp-art,.lp-faq,
+  .lp-touch2,.lp-testi,.lp-touch{padding-top:52px;padding-bottom:52px}
+  .lp-paths-sec{padding:52px 0}
+  .lp-finder-sec--tool{padding-top:52px}
+
+  /* Section 2 hero banner — let height be driven by content */
+  .lp-section-two{min-height:auto}
+  .lp-section-two-inner{padding:48px 20px}
+  .lp-section-two h2{font-size:clamp(26px,8vw,40px)}
+
+  /* B2B/B2C path cards — reduce fixed min-height */
+  .lp-path-card{min-height:180px;padding:24px}
+
+  /* Production section — compact header and family cards */
+  .lp-production-top{padding-top:40px;padding-bottom:16px;flex-direction:column;gap:12px}
+  .lp-prod-family{padding:12px 14px}
+  .lp-prod-family h4{font-size:13px}
+
+  /* Testimonials — tighter gap between cards */
+  .lp-testi-g{gap:12px;margin-top:28px}
+  .lp-quote{padding:20px}
+
+  /* Articles grid */
+  .lp-art-g{gap:12px;margin-top:28px}
+
+  /* Tech catalog */
+  .lp-techcat-sec .sec-head{margin-bottom:20px}
+
+  /* Contact form */
+  .lp-touch2-in{padding:0 4px}
+  .lp-lead2{padding:18px}
+
+  /* Proof strip — stack to 2 columns */
+  .lp-proof-grid{grid-template-columns:repeat(2,1fr);gap:0}
+  .lp-proof-item{padding:14px 12px;border-right:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12)}
+  .lp-proof-item:nth-child(2n){border-right:none}
+
+  /* Section headings — slightly smaller on tiny screens */
+  .lp-cats-hd h2,.lp-partners-sec h2,.lp-logistics-sec h2,.lp-services-sec h2,
+  .lp-world-sec h2,.lp-production-sec h2,.lp-techcat-sec h2,.lp-faq h2{font-size:clamp(26px,8vw,40px)}
+
+  /* Hero — less top padding */
+  .lp-hero-in{padding-top:68px;padding-bottom:52px}
+  .lp-hero{min-height:auto}
+
+  /* Brand/compare pages */
+  .brand-data{padding:52px 0}
+  .brand-products{padding:52px 0}
 }

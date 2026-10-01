@@ -16,7 +16,12 @@
   <div class="hdr-inner">
     <a class="brand" href="#/" aria-label="Carmon Oil"><span class="brand-word">CARMON <span>OIL</span></span></a>
     <nav class="hdr-nav" id="hdr-nav">
-      <a href="#/" data-route="home">Home</a>
+      <div class="nav-menu" data-nav-menu="home">
+        <button class="nav-menu-trigger" type="button" aria-expanded="false" data-route="home">Home <span class="nav-chevron">v</span></button>
+        <div class="nav-menu-panel" role="menu">
+          <a href="#/presentation" data-route="presentation">Presentation</a>
+        </div>
+      </div>
       <div class="nav-menu" data-nav-menu="products">
         <button class="nav-menu-trigger" type="button" aria-expanded="false" data-route="products">Products <span class="nav-chevron">v</span></button>
         <div class="nav-menu-panel" role="menu">
@@ -44,7 +49,6 @@
       </div>
       <a href="#/logistics" data-route="logistics">Logistics</a>
       <a href="#/business" data-route="business">For Business</a>
-      <a href="#/presentation" data-route="presentation">Presentation</a>
       <a href="#/admin" data-route="admin" id="nav-admin" data-i18n="nav.admin" hidden>Admin</a>
     </nav>
     <div class="hdr-actions">
