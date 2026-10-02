@@ -955,8 +955,6 @@ function adminProductItem(p) {
     <div class="admin-product-img">${img}</div>
     <div class="admin-product-info">
       <div class="admin-product-name">${escH(p.name)}${!p.is_active ? `<span class="inactive-badge">${t('admin.hidden')}</span>` : ''}</div>
-      <div class="admin-product-sub">#${p.sort_order ?? 0} · ${escH([catL(p.category), p.viscosity, p.litres, ...fuelL(p)].filter(Boolean).join(' · '))}</div>
-      <div class="admin-product-price">${p.price !== null ? `${fmt(p.price)} ${S.settings.currency}` : t('price.ask')} · ${p.quantity} ${t('pcs')}</div>
     </div>
     <div class="admin-product-actions">
       <button class="icon-btn icon-btn-toggle admin-toggle-btn" data-id="${p.id}" title="${p.is_active ? t('admin.hide') : t('admin.show')}">${p.is_active ? '👁' : '🙈'}</button>

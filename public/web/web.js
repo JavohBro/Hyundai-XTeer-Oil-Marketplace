@@ -315,6 +315,7 @@ function homePage() {
           <span class="lp-hero-badge-txt">${esc(t('hm.badge_sup'))}</span>
         </div>
       </div>
+      <div class="lp-hero-ticker" aria-label="Carmon Oil brands"><div class="lp-brand-ticker-track lp-hero-ticker-track">${[...BRANDS.slice(1), ...BRANDS.slice(1)].map(b => `<span><img src="${esc(b.logo)}" alt="${esc(b.label)}"><b>${esc(b.label)}</b></span>`).join('')}</div></div>
     </div>
   </section>
 
