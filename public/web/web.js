@@ -494,12 +494,7 @@ function homePage() {
         </div>
       </div>
       <div class="lp-prod-family-grid">
-        ${[
-          { skus: 'FX-S · FX-SE · FX-PAO · FX-1 · FX-2 · FX-3' },
-          { skus: 'K4 · J4 · I4 · H4 · F4' },
-          {}, {}, {}, {}, {},
-          { note: true }
-        ].map((f, i) => `<div class="lp-prod-family"><span class="lp-svc-num">0${i + 1} / ${esc(t(`hm.f${i + 1}_tag`))}</span><h4>${esc(t(`hm.f${i + 1}_h`))}</h4><p>${esc(t(`hm.f${i + 1}_p`))}</p>${f.skus ? `<div class="lp-prod-skus">${f.skus}</div>` : ''}${f.note ? `<div class="lp-prod-skus" style="color:rgba(255,255,255,.4)">${esc(t('hm.f8_note'))}</div>` : ''}</div>`).join('')}
+        ${[{},{},{},{},{},{},{},{}].map((f, i) => `<div class="lp-prod-family"><span class="lp-svc-num">0${i + 1} / ${esc(t(`hm.f${i + 1}_tag`))}</span><h4>${esc(t(`hm.f${i + 1}_h`))}</h4><p>${esc(t(`hm.f${i + 1}_p`))}</p></div>`).join('')}
       </div>
     </div>
   </section>
