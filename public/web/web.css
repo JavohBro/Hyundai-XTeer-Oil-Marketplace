@@ -1159,7 +1159,8 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
 .lp-cats-sec,.lp-partners-sec,.lp-deliv,.lp-logistics-sec,.lp-services-sec,.lp-world-sec,.lp-production-sec,.lp-techcat-sec,.lp-art,.lp-faq,.lp-touch2{padding-top:104px;padding-bottom:104px}
 .lp-cats-sec,.lp-partners-sec,.lp-techcat-sec,.lp-art,.lp-faq{background:var(--paper)}
 .lp-cats-hd{align-items:end;margin-bottom:34px}
-.lp-cats-hd h2,.lp-partners-sec h2,.lp-logistics-sec h2,.lp-services-sec h2,.lp-world-sec h2,.lp-production-sec h2,.lp-techcat-sec h2,.lp-faq h2{font-size:clamp(30px,3.8vw,52px);letter-spacing:-.06em;line-height:1.02;color:var(--ink)}
+.lp-cats-hd h2,.lp-partners-sec h2,.lp-logistics-sec h2,.lp-services-sec h2,.lp-world-sec h2,.lp-techcat-sec h2,.lp-faq h2{font-size:clamp(30px,3.8vw,52px);letter-spacing:-.06em;line-height:1.02;color:var(--ink)}
+.lp-production-sec h2{font-size:clamp(30px,3.8vw,52px);letter-spacing:-.06em;line-height:1.02;color:#fff}
 .lp-cats-hd p,.lp-partners-sec p,.lp-logistics-sec p,.lp-services-sec p,.lp-world-sec p{font-size:15px;line-height:1.7;color:var(--muted);max-width:58ch}
 .lp-catgrid{gap:14px}
 .lp-catcard,.lp-techcat-card{border:1px solid var(--line);border-radius:var(--radius-md);background:#fff;box-shadow:none;transition:transform .22s,box-shadow .22s,border-color .22s}
@@ -1445,7 +1446,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
 
   /* Section headings — slightly smaller on tiny screens */
   .lp-cats-hd h2,.lp-partners-sec h2,.lp-logistics-sec h2,.lp-services-sec h2,
-  .lp-world-sec h2,.lp-production-sec h2,.lp-techcat-sec h2,.lp-faq h2{font-size:clamp(26px,8vw,40px)}
+  .lp-world-sec h2,.lp-techcat-sec h2,.lp-faq h2,.lp-production-sec h2{font-size:clamp(26px,8vw,40px)}
 
   /* Hero — less top padding */
   .lp-hero-in{padding-top:68px;padding-bottom:52px}
