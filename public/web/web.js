@@ -510,7 +510,7 @@ function homePage() {
         <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">${esc(t('pres.view_btn'))} <span class="arr">↗</span></a>
       </div>
       <div class="lp-presentation-frame">
-        <iframe src="/assets/carmon-oil-presentation.pdf" title="Carmon Oil Presentation" loading="lazy"></iframe>
+        <iframe src="/assets/carmon-oil-presentation.pdf#toolbar=0&navpanes=0" title="Carmon Oil Presentation" loading="lazy"></iframe>
       </div>
     </div>
   </section>
@@ -1412,7 +1412,7 @@ function presentationPage() {
             <div><div class="lp-kicker lp-kicker-or">${esc(t('pres.view_kicker'))}</div><h2>${esc(t('pres.view_h2'))}</h2></div>
             <a class="btn-or" href="/assets/carmon-oil-presentation.pdf" target="_blank" rel="noopener">${esc(t('pres.view_btn'))} <span class="arr">↗</span></a>
           </div>
-          <div class="presentation-pdf-frame"><iframe src="/assets/carmon-oil-presentation.pdf" title="Carmon Oil full presentation" loading="eager"></iframe></div>
+          <div class="presentation-pdf-frame"><iframe src="/assets/carmon-oil-presentation.pdf#toolbar=0&navpanes=0" title="Carmon Oil full presentation" loading="eager"></iframe></div>
         </div>
       </section>
 
