@@ -1466,6 +1466,8 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
   .proc-cta-in{flex-direction:column;gap:28px;text-align:center}
   .proc-cta-actions{justify-content:center}
 
+  /* Prevent horizontal page overflow from scrollable pill rows */
+  body{overflow-x:hidden}
   /* ── Catalog page: horizontal-scroll filters ── */
   .pills,.pills-fuel{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
   .pills::-webkit-scrollbar,.pills-fuel::-webkit-scrollbar{display:none}
