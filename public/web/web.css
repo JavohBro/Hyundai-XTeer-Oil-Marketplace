@@ -1466,16 +1466,15 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
   .proc-cta-in{flex-direction:column;gap:28px;text-align:center}
   .proc-cta-actions{justify-content:center}
 
-  /* Prevent horizontal page overflow from scrollable pill rows */
-  body{overflow-x:hidden}
+  /* Prevent horizontal page overflow */
+  html,body{overflow-x:hidden}
   /* ── Catalog page: horizontal-scroll filters ── */
   .pills,.pills-fuel{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
   .pills::-webkit-scrollbar,.pills-fuel::-webkit-scrollbar{display:none}
   .pill{flex-shrink:0}
-  /* Brand logo strip → single scrollable row */
-  .brands-strip-logos--compact{display:flex;grid-template-columns:none;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:8px;padding-bottom:4px}
-  .brands-strip-logos--compact::-webkit-scrollbar{display:none}
-  .brands-strip-logos--compact .brands-strip-logo{flex:0 0 64px;height:48px;padding:6px 10px;border-radius:10px}
+  /* Brand logo strip → 2-row grid */
+  .brands-strip-logos--compact{display:grid;grid-template-columns:repeat(3,1fr);overflow-x:unset;gap:8px;margin:8px 0 6px}
+  .brands-strip-logos--compact .brands-strip-logo{flex:unset;height:52px;padding:7px 10px;border-radius:10px}
   /* Toolbar: stack search on top, pills below */
   .toolbar{flex-direction:column;align-items:stretch;gap:8px;padding:14px 0 12px}
   .search{width:100%}
