@@ -934,32 +934,37 @@ function initAnimations() {
     el.style.cssText += ';opacity:0;transform:translate('+dx+'px,'+dy+'px);transition:none;will-change:transform,opacity';
     return { el, sx, sy, sa, on:false, done:false };
   });
+  let last = performance.now(), rafId = null;
+  function kick() {
+    if (rafId) return;
+    last = performance.now();
+    rafId = requestAnimationFrame(function tick(now) {
+      const dt = Math.min((now-last)/1000, 0.05); last = now;
+      let live = false;
+      items.forEach(it => {
+        if (!it.on || it.done) return;
+        live = true;
+        const a = it.sa.step(dt), x = it.sx.step(dt), y = it.sy.step(dt);
+        it.el.style.opacity = Math.min(1, Math.max(0, a));
+        it.el.style.transform = `translate(${x.toFixed(2)}px,${y.toFixed(2)}px)`;
+        if (it.sa.settled(0.003) && it.sx.settled(0.3) && it.sy.settled(0.3)) {
+          it.el.style.opacity='1'; it.el.style.transform='none'; it.el.style.willChange='auto';
+          it.el.classList.add('visible'); it.done=true;
+        }
+      });
+      if (live) rafId = requestAnimationFrame(tick);
+      else rafId = null;
+    });
+  }
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
       const it = items.find(i => i.el===e.target); if (!it||it.on) return;
       it.on=true; it.sx.t=0; it.sy.t=0; it.sa.t=1; obs.unobserve(e.target);
+      kick(); // restart RAF now that an item is active
     });
   }, { threshold:0.08 });
   els.forEach(el => obs.observe(el));
-  let last = performance.now();
-  (function tick(now) {
-    const dt = Math.min((now-last)/1000, 0.05); last = now;
-    let live = false;
-    items.forEach(it => {
-      if (!it.on || it.done) return;
-      live = true;
-      const a = it.sa.step(dt), x = it.sx.step(dt), y = it.sy.step(dt);
-      it.el.style.opacity = Math.min(1, Math.max(0, a));
-      it.el.style.transform = `translate(${x.toFixed(2)}px,${y.toFixed(2)}px)`;
-      if (it.sa.settled(0.003) && it.sx.settled(0.3) && it.sy.settled(0.3)) {
-        it.el.style.cssText = it.el.style.cssText.replace(/opacity:[^;]+;|transform:[^;]+;|will-change:[^;]+;/g,'');
-        it.el.style.opacity='1'; it.el.style.transform='none';
-        it.el.classList.add('visible'); it.done=true;
-      }
-    });
-    if (live) requestAnimationFrame(tick);
-  })(performance.now());
 }
 
 function initDeliveryMap() {
