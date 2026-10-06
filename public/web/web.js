@@ -1172,6 +1172,7 @@ function cardHTML(p) {
         <div class="card-p">${priced ? `${fmt(p.price)} <span>${esc(S.cur)}</span>` : `<span class="card-ask">Price on request</span>`}</div>
         <span class="card-view">View details <b>↗</b></span>
       </div>
+      ${ok ? `<button class="card-add" type="button" data-id="${p.id}">${esc(t('add'))}</button>` : ''}
     </div>
   </article>`;
 }
