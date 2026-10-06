@@ -1409,7 +1409,7 @@
       'footer.connect': '연결', 'footer.demo': '데모 콘셉트.', 'footer.privacy': '개인정보 처리방침',
       'tg.float': 'Telegram으로 문의',
       'nav.home': '홈',
-      'home.hero_title': '한국 정품 오일 —<br>중앙아시아 전역으로 배송합니다.',
+      'home.hero_title': '100% 한국 정품 오일 —<br>중앙아시아 전역 물류 네트워크 구축',
       'home.hero_sub': 'Kixx, Hyundai XTeer, SK ZIC, Castrol, Shell 등을 한국 창고에서 직접 공급합니다. 빠르고 믿을 수 있으며 가품이 없습니다.',
       'home.hero_cta': '카탈로그 보기', 'home.hero_tg': 'Telegram으로 문의', 'home.clients': '공급 브랜드',
       'home.deliv_title': '추천 제품', 'home.deliv_sub': '고양의 자체 창고와 검증된 물류로, 주문은 확인 당일 출고됩니다.',
