@@ -1473,11 +1473,18 @@ body{background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',Ar
   .pills::-webkit-scrollbar,.pills-fuel::-webkit-scrollbar{display:none}
   .pill{flex-shrink:0}
   /* Brand logo strip → 2-row grid */
-  .brands-strip-logos--compact{display:grid;grid-template-columns:repeat(3,1fr);overflow-x:unset;gap:8px;margin:8px 0 6px}
-  .brands-strip-logos--compact .brands-strip-logo{flex:unset;height:52px;padding:7px 10px;border-radius:10px}
+  .brands-strip-logos--compact{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));overflow-x:unset;gap:6px;margin:8px 0 6px}
+  .brands-strip-logos--compact .brands-strip-logo{flex:unset;height:46px;padding:6px 6px;border-radius:10px}
   /* Toolbar: stack search on top, pills below */
-  .toolbar{flex-direction:column;align-items:stretch;gap:8px;padding:14px 0 12px}
-  .search{width:100%}
+  .toolbar{flex-direction:column;align-items:stretch;gap:8px;padding:14px 0 12px;min-width:0}
+  .toolbar>*{min-width:0;max-width:100%}
+  .search{width:100%;min-width:0}
+  .pills,.pills-fuel{width:100%}
+  .pills-label{flex-shrink:0;white-space:nowrap}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .card-f{flex-wrap:wrap;gap:4px 8px;margin-top:10px;padding-top:10px}
+  .card-ask{letter-spacing:.04em;font-size:10px}
+  .card-view{font-size:10px}.card-view b{font-size:13px;margin-left:2px}
   /* Product cards: square image, compact body */
   .card-img{min-height:0;aspect-ratio:1}
   .card-img img{padding:14px}
