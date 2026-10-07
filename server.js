@@ -1,4 +1,7 @@
 require('dotenv').config();
+const TelegramAuth = require('./lib/telegram-auth');
+TelegramAuth.assertProductionAuth(process.env);
+const Leads = require('./lib/leads');
 const express  = require('express');
 const path     = require('path');
 const crypto   = require('crypto');
@@ -92,17 +95,7 @@ function setSessionCookie(req, res, user) {
 
 // Telegram Login Widget uses a different signing scheme than Mini App initData:
 // the secret is a plain SHA-256 of the bot token, not an HMAC keyed by "WebAppData".
-function validateLoginWidget(query) {
-  const { hash, ...rest } = query;
-  if (!hash) return null;
-  const checkString = Object.keys(rest).sort().map(k => `${k}=${rest[k]}`).join('\n');
-  const secret = crypto.createHash('sha256').update(BOT_TOKEN).digest();
-  const expected = crypto.createHmac('sha256', secret).update(checkString).digest('hex');
-  if (expected !== hash) return null;
-  // Reject stale logins (replay protection)
-  if (Date.now() / 1000 - Number(rest.auth_date || 0) > 86400) return null;
-  return { id: Number(rest.id), first_name: rest.first_name, last_name: rest.last_name, username: rest.username };
-}
+function validateLoginWidget(query) { return TelegramAuth.validateLoginWidget(query, BOT_TOKEN); }
 
 // ─── Bot setup ───────────────────────────────────────────────────────────────
 const bot = new TelegramBot(BOT_TOKEN, { polling: true });
@@ -220,23 +213,7 @@ if (WEB_AT_ROOT) {
 }
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
-function validateInitData(initData) {
-  try {
-    const params = new URLSearchParams(initData);
-    const hash = params.get('hash');
-    if (!hash) return null;
-    params.delete('hash');
-    const dataCheck = [...params.entries()]
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([k, v]) => `${k}=${v}`)
-      .join('\n');
-    const secret = crypto.createHmac('sha256', 'WebAppData').update(BOT_TOKEN).digest();
-    const expected = crypto.createHmac('sha256', secret).update(dataCheck).digest('hex');
-    if (hash !== expected) return null;
-    const userStr = params.get('user');
-    return userStr ? JSON.parse(userStr) : null;
-  } catch { return null; }
-}
+function validateInitData(initData) { return TelegramAuth.validateInitData(initData, BOT_TOKEN); }
 
 // Resolves the caller's identity from any supported source, or null for a guest.
 function resolveUser(req) {
@@ -746,31 +723,28 @@ app.post('/api/orders', orderRateLimit, optionalAuth, async (req, res) => {
   res.json({ success: true, order_id: orderId, total_price: totalPrice, currency });
 });
 
-// ─── Call-back requests from the landing page ────────────────────────────────
-// One request per phone number per 10 minutes keeps a stuck button from spamming admins.
-const leadSeen = new Map();
-const leadRateLimit = rateLimiter(5, 60_000); // 5 lead submissions/min per IP
-app.post('/api/lead', leadRateLimit, async (req, res) => {
-  const contact = String(req.body?.contact || req.body?.phone || '').trim();
-  const company = String(req.body?.company || '').trim();
-  const country = String(req.body?.country || '').trim();
-  const message = String(req.body?.message || '').trim();
-  if (contact.replace(/\s/g, '').length < 3) return res.status(400).json({ error: 'Некорректные данные' });
-  const dedupeKey = contact.replace(/\s+/g, '').toLowerCase();
-  const last = leadSeen.get(dedupeKey) || 0;
-  if (Date.now() - last < 10 * 60e3) return res.json({ success: true });
-  leadSeen.set(dedupeKey, Date.now());
-  const text = tt('ru', 'bot.lead', {
-    phone: esc(contact),
-    company: esc(company || '—'),
-    country: esc(country || '—'),
-    message: esc(message || '—'),
-  });
-  for (const adminId of ADMIN_IDS) {
-    try { await bot.sendMessage(adminId, text, { parse_mode: 'HTML' }); }
-    catch (e) { console.error(`Lead → admin ${adminId} failed:`, e.message); }
+// Durable inquiry receipt; notification delivery is independent of acceptance.
+const leadRateLimit = rateLimiter(5, 60_000);
+const drainLeads = Leads.createWorker(db,
+  (adminId, text) => bot.sendMessage(adminId, text, {parse_mode:'HTML'}),
+  job => tt('ru', 'bot.lead', {phone:esc(job.contact),company:esc(job.company || '—'),country:esc(job.country || '—'),message:esc(job.message || '—')}),
+  event => console.error('Lead notification needs attention:', event)
+);
+const leadTimer = setInterval(() => {
+  drainLeads().catch(() => console.error('Lead notification worker failed'));
+}, 15000);
+leadTimer.unref();
+app.post('/api/lead', leadRateLimit, (req,res) => {
+  try { Leads.validate(req.body); }
+  catch { return res.status(400).json({error:'Invalid inquiry fields or lengths'}); }
+  if (!ADMIN_IDS.length) return res.status(503).json({error:'Inquiry service is not configured'});
+  try {
+    const leadId = Leads.accept(db,req.body,ADMIN_IDS);
+    res.status(202).json({success:true,accepted:true,lead_id:leadId});
+    void drainLeads().catch(() => console.error('Lead notification worker failed'));
+  } catch {
+    res.status(503).json({error:'Unable to save inquiry. Please try again later.'});
   }
-  res.json({ success: true });
 });
 
 app.get('/api/orders', authMiddleware, (req, res) => {

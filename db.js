@@ -156,4 +156,6 @@ if (!userCols.includes('lang')) {
 const insertSetting = db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)');
 insertSetting.run('currency', 'UZS');
 
+require('./lib/leads').migrate(db);
+
 module.exports = db;
